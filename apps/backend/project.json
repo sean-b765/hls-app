@@ -1,0 +1,25 @@
+{
+  "name": "@hls-app/backend",
+  "root": "apps/backend",
+  "sourceRoot": "apps/backend/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvnw spring-boot:run",
+        "cwd": "apps/backend",
+        "envFile": "apps/backend/.env",
+        "jvmArgs": [
+          "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8200"
+        ]
+      }
+    },
+    "build": {
+      "command": "mvnw package",
+      "cwd": "apps/backend",
+      "outputs": [
+        "apps/backend/target"
+      ]
+    }
+  }
+}
