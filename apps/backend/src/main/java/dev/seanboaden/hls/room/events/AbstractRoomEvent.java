@@ -16,16 +16,16 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "eventType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RoomCreateEvent.class, name = RoomEventType.ROOM_CREATE),
-        @JsonSubTypes.Type(value = RoomLeaveEvent.class, name = RoomEventType.ROOM_LEAVE),
-        @JsonSubTypes.Type(value = RoomJoinEvent.class, name = RoomEventType.ROOM_JOIN)
+    @JsonSubTypes.Type(value = RoomCreateEvent.class, name = RoomEventType.ROOM_CREATE),
+    @JsonSubTypes.Type(value = RoomLeaveEvent.class, name = RoomEventType.ROOM_LEAVE),
+    @JsonSubTypes.Type(value = RoomJoinEvent.class, name = RoomEventType.ROOM_JOIN)
 })
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractRoomEvent extends AbstractBaseEvent {
-    private String eventType;
-    private String roomCode;
+  private String eventType;
+  private String roomCode;
 
-    {
-        setType(BaseEventType.ROOM);
-    }
+  {
+    setType(BaseEventType.ROOM);
+  }
 }

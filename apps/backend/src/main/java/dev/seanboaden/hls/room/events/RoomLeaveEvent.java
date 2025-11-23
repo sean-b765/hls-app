@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RoomLeaveEvent extends AbstractRoomEvent {
-    private LeaveReason reason;
+  private LeaveReason reason;
 
-    {
-        setEventType(ROOM_LEAVE);
-    }
+  {
+    setEventType(ROOM_LEAVE);
+  }
 }

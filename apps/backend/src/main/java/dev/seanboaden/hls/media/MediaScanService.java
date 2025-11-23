@@ -20,7 +20,9 @@ public class MediaScanService {
   public void doScan() {
     List<Path> paths = mediaService.listFilesRoot();
 
-    paths.stream().map(path -> new File(path.toUri())).filter(File::canRead)
+    paths.stream()
+        .map(path -> new File(path.toUri()))
+        .filter(File::canRead)
         .filter(file -> mimeTypeService.isVideoType(file.getAbsolutePath()))
         .forEach(this::createMediaIfNotExisting);
   }
@@ -30,7 +32,9 @@ public class MediaScanService {
     if (mediaOptional.isPresent())
       return;
     // Save to DB
-    Media media = Media.builder().path(file.getAbsolutePath()).build();
+    Media media = Media.builder()
+        .path(file.getAbsolutePath())
+        .build();
     mediaService.save(media);
   }
 

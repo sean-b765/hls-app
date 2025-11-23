@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse extends ResponseConverter {
-    @Builder.Default
-    private String type = "ERROR";
-    private String message;
+  @Builder.Default
+  private String type = "ERROR";
+  private String message;
 }

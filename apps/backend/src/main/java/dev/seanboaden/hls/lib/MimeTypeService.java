@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MimeTypeService {
-  public final Map<String, String> videoTypes =
-      Map.of("mkv", "video/x-matroska", "mp4", "video/mp4");
+  public final Map<String, String> videoTypes = Map.of(
+      "mkv", "video/x-matroska",
+      "mp4", "video/mp4");
 
   public boolean isVideoType(String fileName) {
     String extension = StringUtils.substringAfterLast(fileName, ".");

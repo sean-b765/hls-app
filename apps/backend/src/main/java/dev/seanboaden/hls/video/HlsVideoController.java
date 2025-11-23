@@ -20,32 +20,36 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/video")
 public class HlsVideoController {
-    @Value("${transcode.dir}")
-    private String transcodeDumpDirectory;
-    @Autowired
-    private MediaRepository mediaRepository;
+  @Value("${transcode.dir}")
+  private String transcodeDumpDirectory;
+  @Autowired
+  private MediaRepository mediaRepository;
 
-    @GetMapping("/{mediaId}/{qualityProfile}/{segmentName}")
-    public ResponseEntity<byte[]> getVideoSegment(@PathVariable long mediaId, @PathVariable String qualityProfile, @PathVariable String segmentName) {
-        Optional<Media> media = mediaRepository.findById(mediaId);
-        if (media.isEmpty()) return ResponseEntity.notFound().build();
+  @GetMapping("/{mediaId}/{qualityProfile}/{segmentName}")
+  public ResponseEntity<byte[]> getVideoSegment(@PathVariable long mediaId, @PathVariable String qualityProfile,
+      @PathVariable String segmentName) {
+    Optional<Media> media = mediaRepository.findById(mediaId);
+    if (media.isEmpty())
+      return ResponseEntity.notFound().build();
 
-        QualityProfiles.QualityProfile profile = QualityProfiles.findByName(qualityProfile);
-        if (profile == null) return ResponseEntity.notFound().build();
+    QualityProfiles.QualityProfile profile = QualityProfiles.findByName(qualityProfile);
+    if (profile == null)
+      return ResponseEntity.notFound().build();
 
-        // transcode entrypoint
-        String segmentPath = StringUtils.joinWith("/", transcodeDumpDirectory, mediaId, profile.getName(), segmentName);
-        Path path = Path.of(segmentPath);
-        if (!Files.exists(path)) return ResponseEntity.notFound().build();
+    // transcode entrypoint
+    String segmentPath = StringUtils.joinWith("/", transcodeDumpDirectory, mediaId, profile.getName(), segmentName);
+    Path path = Path.of(segmentPath);
+    if (!Files.exists(path))
+      return ResponseEntity.notFound().build();
 
-        try {
-            byte[] data = Files.readAllBytes(path);
-            return ResponseEntity.ok()
-                    .header("Content-Type", "video/mp2t")
-                    .header("Cache-Control", "public, max-age=31536000")
-                    .body(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    try {
+      byte[] data = Files.readAllBytes(path);
+      return ResponseEntity.ok()
+          .header("Content-Type", "video/mp2t")
+          .header("Cache-Control", "public, max-age=31536000")
+          .body(data);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+  }
 }

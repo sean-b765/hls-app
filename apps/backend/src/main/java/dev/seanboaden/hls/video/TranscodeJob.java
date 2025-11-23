@@ -10,15 +10,14 @@ import java.util.concurrent.CompletableFuture;
 @Builder
 @AllArgsConstructor
 public class TranscodeJob {
-    private final String roomId;
-    private final String inputFilePath;
-    private final long timestampMs;
-    private final JobType type;
-    private final CompletableFuture<VideoChunk> future = new CompletableFuture<>();
+  private final String roomId;
+  private final String inputFilePath;
+  private final long timestampMs;
+  private final JobType type;
+  private final CompletableFuture<VideoChunk> future = new CompletableFuture<>();
 
-    public enum JobType {
-        HLS,
-        MPEG_DASH
-    }
+  public enum JobType {
+    HLS,
+    MPEG_DASH
+  }
 }
-

@@ -18,13 +18,13 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "eventType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ChooseTrackEvent.class, name = PlayerEventType.CHOOSE_TRACK),
+    @JsonSubTypes.Type(value = ChooseTrackEvent.class, name = PlayerEventType.CHOOSE_TRACK),
 })
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractPlayerEvent extends AbstractBaseEvent {
-    private String eventType;
+  private String eventType;
 
-    {
-        setType(BaseEventType.PLAYER);
-    }
+  {
+    setType(BaseEventType.PLAYER);
+  }
 }

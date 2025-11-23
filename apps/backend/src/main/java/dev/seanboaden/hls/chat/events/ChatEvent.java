@@ -14,5 +14,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ChatEvent extends AbstractBaseEvent {
-    private Chat chat;
+  private Chat chat;
 }

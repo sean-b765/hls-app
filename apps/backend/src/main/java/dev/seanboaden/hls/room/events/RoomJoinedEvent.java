@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RoomJoinedEvent extends AbstractRoomEvent {
-    private Room room;
+  private Room room;
 
-    {
-        setEventType(ROOM_JOINED);
-    }
+  {
+    setEventType(ROOM_JOINED);
+  }
 }

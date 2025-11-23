@@ -34,6 +34,7 @@ build/
 
 ### SQLite ###
 *.db
+*.db-journal
 
 .env
 keyframeout.json

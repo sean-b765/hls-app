@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ChooseTrackEvent extends AbstractPlayerEvent {
-    private String trackId;
+  private String trackId;
 
-    {
-        setEventType(PlayerEventType.CHOOSE_TRACK);
-    }
+  {
+    setEventType(PlayerEventType.CHOOSE_TRACK);
+  }
 }

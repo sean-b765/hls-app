@@ -16,27 +16,35 @@ import java.util.Optional;
 @RestController()
 @RequestMapping("/api/playlist")
 public class PlaylistController {
-    @Autowired
-    private PlaylistManager playlistManager;
-    @Autowired
-    private MediaRepository mediaRepository;
+  @Autowired
+  private PlaylistManager playlistManager;
+  @Autowired
+  private MediaRepository mediaRepository;
 
-    @GetMapping("/{mediaId}")
-    public ResponseEntity<?> generateMultiVariantPlaylist(@PathVariable long mediaId) {
-        Optional<Media> media = mediaRepository.findById(mediaId);
-        if (media.isEmpty()) return ResponseEntity.notFound().build();
+  @GetMapping("/{mediaId}")
+  public ResponseEntity<?> generateMultiVariantPlaylist(@PathVariable long mediaId) {
+    Optional<Media> media = mediaRepository.findById(mediaId);
+    if (media.isEmpty())
+      return ResponseEntity.notFound().build();
 
-        String multiVariantPlaylist = playlistManager.generateMultiVariantPlaylist(media.get());
-        return ResponseEntity.ok().header("Content-Type", "application/vnd.apple.mpegurl").body(multiVariantPlaylist);
-    }
+    String multiVariantPlaylist = playlistManager.generateMultiVariantPlaylist(media.get());
 
-    @GetMapping("/{mediaId}/{qualityProfile}")
-    public ResponseEntity<?> generateVodPlaylist(@PathVariable long mediaId, @PathVariable String qualityProfile) {
-        Optional<Media> media = mediaRepository.findById(mediaId);
-        QualityProfiles.QualityProfile profile = QualityProfiles.findByName(qualityProfile);
-        if (media.isEmpty() || profile == null) return ResponseEntity.notFound().build();
+    return ResponseEntity.ok()
+        .header("Content-Type", "application/vnd.apple.mpegurl")
+        .body(multiVariantPlaylist);
+  }
 
-        String vodPlaylist = playlistManager.generateVodPlaylist(media.get(), profile);
-        return ResponseEntity.ok().header("Content-Type", "application/vnd.apple.mpegurl").body(vodPlaylist);
-    }
+  @GetMapping("/{mediaId}/{qualityProfile}")
+  public ResponseEntity<?> generateVodPlaylist(@PathVariable long mediaId, @PathVariable String qualityProfile) {
+    Optional<Media> media = mediaRepository.findById(mediaId);
+    QualityProfiles.QualityProfile profile = QualityProfiles.findByName(qualityProfile);
+    if (media.isEmpty() || profile == null)
+      return ResponseEntity.notFound().build();
+
+    String vodPlaylist = playlistManager.generateVodPlaylist(media.get(), profile);
+
+    return ResponseEntity.ok()
+        .header("Content-Type", "application/vnd.apple.mpegurl")
+        .body(vodPlaylist);
+  }
 }

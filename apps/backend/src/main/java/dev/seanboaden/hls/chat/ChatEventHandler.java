@@ -10,14 +10,14 @@ import dev.seanboaden.hls.room.RoomManager;
 
 @Component
 public class ChatEventHandler {
-    @Autowired
-    private RoomManager roomManager;
+  @Autowired
+  private RoomManager roomManager;
 
-    @EventListener
-    private void handleChatEvent(ChatEvent event) {
-        Room room = roomManager.findRoomBySession(event.getSession());
-        event.getChat().setUserId(event.getSession().getUserId());
-        room.getChat().add(event.getChat());
-        room.broadcastEvent(event);
-    }
+  @EventListener
+  private void handleChatEvent(ChatEvent event) {
+    Room room = roomManager.findRoomBySession(event.getSession());
+    event.getChat().setUserId(event.getSession().getUserId());
+    room.getChat().add(event.getChat());
+    room.broadcastEvent(event);
+  }
 }
