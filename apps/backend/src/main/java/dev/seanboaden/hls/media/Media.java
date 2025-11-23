@@ -1,18 +1,25 @@
 package dev.seanboaden.hls.media;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Media {
@@ -25,4 +32,14 @@ public class Media {
    */
   @Column(nullable = false, unique = true)
   private String path;
+
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
+  @JoinColumn(name = "metadataId", referencedColumnName = "id")
+  @JsonManagedReference
+  private MediaMetadata metadata;
+
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
+  @JoinColumn(name = "mediaInfoId", referencedColumnName = "id")
+  @JsonManagedReference
+  private MediaInfo info;
 }

@@ -1,10 +1,10 @@
-package dev.seanboaden.hls.playlist;
+package dev.seanboaden.hls.lib;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.seanboaden.hls.lib.FfmpegService;
+import dev.seanboaden.hls.playlist.KeyframeData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +21,9 @@ public class KeyframeExtractor {
     Process process = this.ffmpegProcessHelper.ffprobe(
         "-fflags",
         "+genpts",
-        "-v", "error",
+        "-v", "quiet",
         "-skip_frame", "nokey",
-        "-select_streams", "v",
+        "-select_streams", "v:0",
         "-show_entries", "format=duration",
         "-show_entries", "packet=pts_time",
         "-of", "json",

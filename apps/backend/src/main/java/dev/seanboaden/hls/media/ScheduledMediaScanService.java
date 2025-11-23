@@ -12,7 +12,7 @@ public class ScheduledMediaScanService {
   /**
    * Every 1 minute, scan the media root for files
    */
-  @Scheduled(cron = "0 */1 * * * *")
+  @Scheduled(cron = "*/5 */1 * * * *")
   public void doScan() {
     mediaScanService.doScan();
   }

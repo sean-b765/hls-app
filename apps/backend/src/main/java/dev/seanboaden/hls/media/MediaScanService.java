@@ -29,8 +29,9 @@ public class MediaScanService {
 
   public void createMediaIfNotExisting(File file) {
     Optional<Media> mediaOptional = mediaService.findByPath(file.getAbsolutePath());
-    if (mediaOptional.isPresent())
+    if (mediaOptional.isPresent()) {
       return;
+    }
     // Save to DB
     Media media = Media.builder()
         .path(file.getAbsolutePath())

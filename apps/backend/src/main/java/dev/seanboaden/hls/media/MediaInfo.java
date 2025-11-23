@@ -18,22 +18,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MediaMetadata {
+public class MediaInfo {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
-  private long sizeBytes;
-  private double durationSeconds;
-  private double framerate;
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  private LocalDateTime lastScanDateTime;
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  private LocalDateTime lastModified;
+
+  private String name;
+  private String description;
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private LocalDateTime releaseDate;
+  private String thumbnail;
+  private String banner;
 
   @OneToOne
   @JoinColumn(name = "mediaId", nullable = false, unique = true)

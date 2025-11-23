@@ -3,6 +3,7 @@ package dev.seanboaden.hls.playlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.seanboaden.hls.lib.KeyframeExtractor;
 import dev.seanboaden.hls.media.Media;
 import dev.seanboaden.hls.video.QualityProfiles;
 

@@ -15,14 +15,14 @@ import java.util.Optional;
 
 @RestController()
 @RequestMapping("/api/playlist")
-public class PlaylistController {
+public class HlsPlaylistController {
   @Autowired
   private PlaylistManager playlistManager;
   @Autowired
   private MediaRepository mediaRepository;
 
   @GetMapping("/{mediaId}")
-  public ResponseEntity<?> generateMultiVariantPlaylist(@PathVariable long mediaId) {
+  public ResponseEntity<?> generateMultiVariantPlaylist(@PathVariable String mediaId) {
     Optional<Media> media = mediaRepository.findById(mediaId);
     if (media.isEmpty())
       return ResponseEntity.notFound().build();
@@ -35,7 +35,7 @@ public class PlaylistController {
   }
 
   @GetMapping("/{mediaId}/{qualityProfile}")
-  public ResponseEntity<?> generateVodPlaylist(@PathVariable long mediaId, @PathVariable String qualityProfile) {
+  public ResponseEntity<?> generateVodPlaylist(@PathVariable String mediaId, @PathVariable String qualityProfile) {
     Optional<Media> media = mediaRepository.findById(mediaId);
     QualityProfiles.QualityProfile profile = QualityProfiles.findByName(qualityProfile);
     if (media.isEmpty() || profile == null)
