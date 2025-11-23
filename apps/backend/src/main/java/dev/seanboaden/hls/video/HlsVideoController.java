@@ -26,7 +26,9 @@ public class HlsVideoController {
   private MediaRepository mediaRepository;
 
   @GetMapping("/{mediaId}/{qualityProfile}/{segmentName}")
-  public ResponseEntity<byte[]> getVideoSegment(@PathVariable long mediaId, @PathVariable String qualityProfile,
+  public ResponseEntity<byte[]> getVideoSegment(
+      @PathVariable long mediaId,
+      @PathVariable String qualityProfile,
       @PathVariable String segmentName) {
     Optional<Media> media = mediaRepository.findById(mediaId);
     if (media.isEmpty())
