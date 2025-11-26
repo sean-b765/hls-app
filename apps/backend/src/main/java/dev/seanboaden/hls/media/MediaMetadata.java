@@ -27,6 +27,9 @@ public class MediaMetadata {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+  private String fileExtension;
+  private String videoCodec;
+  private String audioCodec;
   private long sizeBytes;
   private double durationSeconds;
   private double framerate;

@@ -4,5 +4,6 @@
   "editor.detectIndentation": false,
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

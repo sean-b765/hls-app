@@ -10,9 +10,9 @@ public class ScheduledMediaScanService {
   private MediaScanService mediaScanService;
 
   /**
-   * Every 1 minute, scan the media root for files
+   * Every day, scan the media root for files
    */
-  @Scheduled(cron = "*/5 */1 * * * *")
+  @Scheduled(cron = "0 0 0 * * *")
   public void doScan() {
     mediaScanService.doScan();
   }
