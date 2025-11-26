@@ -8,12 +8,11 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
-
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractTimestampedEvent {
-    @Builder.Default
-    private String timestamp = Instant.now().toString();
+  @Builder.Default
+  private String timestamp = Instant.now().toString();
 }

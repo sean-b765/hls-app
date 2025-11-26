@@ -10,15 +10,15 @@ import dev.seanboaden.hls.logging.Logging;
 import org.springframework.web.socket.TextMessage;
 
 public abstract class ResponseConverter extends AbstractTimestampedEvent {
-    @JsonIgnore
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  @JsonIgnore
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TextMessage convert() {
-        try {
-            return new TextMessage(objectMapper.writeValueAsString(this));
-        } catch (JsonProcessingException e) {
-            Logging.info("ERROR WHILE CONVERTING");
-            return null;
-        }
+  public TextMessage convert() {
+    try {
+      return new TextMessage(objectMapper.writeValueAsString(this));
+    } catch (JsonProcessingException e) {
+      Logging.info("ERROR WHILE CONVERTING");
+      return null;
     }
+  }
 }

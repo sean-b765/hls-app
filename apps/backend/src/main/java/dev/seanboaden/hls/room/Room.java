@@ -20,28 +20,27 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Room {
-    private String code;
-    private String name;
-    @JsonIgnore
-    private String password;
-    @Builder.Default
-    private List<Chat> chat = new ArrayList<>();
-    @Builder.Default
-    @JsonIgnore
-    private Map<String, SessionWrapper> sessions = new HashMap<>();
+  private String code;
+  private String name;
+  @JsonIgnore
+  private String password;
+  @Builder.Default
+  private List<Chat> chat = new ArrayList<>();
+  @Builder.Default
+  @JsonIgnore
+  private Map<String, SessionWrapper> sessions = new HashMap<>();
 
-    public void broadcastEvent(AbstractBaseEvent event) {
-        for (SessionWrapper session : sessions.values()) {
-            session.sendEvent(event);
-        }
+  public void broadcastEvent(AbstractBaseEvent event) {
+    for (SessionWrapper session : sessions.values()) {
+      session.sendEvent(event);
     }
+  }
 
-    public void leave(SessionWrapper session) {
-        sessions.remove(session.getId());
-    }
+  public void leave(SessionWrapper session) {
+    sessions.remove(session.getId());
+  }
 
-    public void join(SessionWrapper session) {
-        sessions.put(session.getId(), session);
-    }
+  public void join(SessionWrapper session) {
+    sessions.put(session.getId(), session);
+  }
 }
-

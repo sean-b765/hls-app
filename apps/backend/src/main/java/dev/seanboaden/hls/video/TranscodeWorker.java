@@ -10,31 +10,31 @@ import java.util.concurrent.Callable;
  */
 
 public class TranscodeWorker implements Callable<VideoChunk> {
-    private static final String outputDir = "./";
-    private final TranscodeJob job;
+  private static final String outputDir = "./";
+  private final TranscodeJob job;
 
-    public TranscodeWorker(TranscodeJob job) {
-        this.job = job;
+  public TranscodeWorker(TranscodeJob job) {
+    this.job = job;
+  }
+
+  @Override
+  public VideoChunk call() throws Exception {
+    switch (job.getType()) {
+      case HLS:
+        startHls(job.getInputFilePath(), job.getTimestampMs());
+
+      default:
+        throw new IllegalArgumentException("Invalid job type");
     }
+  }
 
-    @Override
-    public VideoChunk call() throws Exception {
-        switch (job.getType()) {
-            case HLS:
-                startHls(job.getInputFilePath(), job.getTimestampMs());
+  private void startHls(String file, long timestamp) throws Exception {
+    ffmpegOutputToHls(file, timestamp);
+  }
 
-            default:
-                throw new IllegalArgumentException("Invalid job type");
-        }
-    }
-
-    private void startHls(String file, long timestamp) throws Exception {
-        ffmpegOutputToHls(file, timestamp);
-    }
-
-    // Placeholder test
-    private void ffmpegOutputToHls(String inputFile, long timestampMs) {
-        String outputFile = outputDir + "/master.m3u8";
-        //transcode
-    }
+  // Placeholder test
+  private void ffmpegOutputToHls(String inputFile, long timestampMs) {
+    String outputFile = outputDir + "/master.m3u8";
+    // transcode
+  }
 }

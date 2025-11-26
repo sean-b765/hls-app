@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RoomCreateEvent extends AbstractRoomEvent {
-    private String roomName;
+  private String roomName;
 }

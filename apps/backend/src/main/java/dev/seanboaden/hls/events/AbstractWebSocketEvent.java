@@ -15,9 +15,9 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractWebSocketEvent extends AbstractTimestampedEvent {
-    /**
-     * This comes from my SessionEventMiddleware listener ...
-     */
-    @JsonIgnore
-    private SessionWrapper session;
+  /**
+   * This comes from my SessionEventMiddleware listener ...
+   */
+  @JsonIgnore
+  private SessionWrapper session;
 }

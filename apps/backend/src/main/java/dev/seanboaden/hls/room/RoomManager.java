@@ -16,126 +16,138 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RoomManager {
-    private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
-    private final Map<String, String> sessionRoomIds = new HashMap<>();
+  private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
+  private final Map<String, String> sessionRoomIds = new HashMap<>();
 
-    public void printState() {
-        ObjectMapper mapper = new ObjectMapper();
-        StringBuilder builder = new StringBuilder().append("\nRoomManager state:");
-        try {
-            rooms.entrySet().forEach(entry -> {
-                builder.append("\n\nRoom code: " + entry.getValue().getCode());
-                builder.append("\nSessionIds: ");
-                entry.getValue().getSessions().keySet().forEach(session -> {
-                    builder.append(session + ", ");
-                });
+  public void printState() {
+    ObjectMapper mapper = new ObjectMapper();
+    StringBuilder builder = new StringBuilder().append("\nRoomManager state:");
+    try {
+      rooms.entrySet().forEach(entry -> {
+        builder.append("\n\nRoom code: " + entry.getValue().getCode());
+        builder.append("\nSessionIds: ");
+        entry.getValue()
+            .getSessions()
+            .keySet()
+            .forEach(session -> {
+              builder.append(session + ", ");
             });
-            builder.append("\n\nSESSION MAP:\n");
-            builder.append(mapper.writeValueAsString(sessionRoomIds));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        Logging.info(builder.toString());
+      });
+      builder.append("\n\nSESSION MAP:\n");
+      builder.append(mapper.writeValueAsString(sessionRoomIds));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
+    Logging.info(builder.toString());
+  }
 
-    /**
-     * @param name
-     * @return the room
-     */
-    public Room create(String name) {
-        Room room = Room.builder()
-                .name(name)
-                .code(generateRoomCode())
-                .build();
+  /**
+   * @param name
+   * @return the room
+   */
+  public Room create(String name) {
+    Room room = Room.builder()
+        .name(name)
+        .code(generateRoomCode())
+        .build();
 
-        this.rooms.put(room.getCode(), room);
-        return room;
+    this.rooms.put(room.getCode(), room);
+    return room;
+  }
+
+  public RoomJoinedEvent join(SessionWrapper session, String roomCode) throws RoomNotFoundException {
+    if (!doesRoomExist(roomCode))
+      throw new RoomNotFoundException();
+    Room room = this.findRoomByCode(roomCode);
+    if (room == null)
+      throw new RoomNotFoundException();
+
+    room.join(session);
+    this.sessionRoomIds.put(session.getId(), roomCode);
+
+    return RoomJoinedEvent.builder().room(room).build();
+  }
+
+  public void leave(SessionWrapper session) {
+    if (!isSessionInARoom(session))
+      return;
+    String roomCode = findRoomCodeBySession(session);
+    this.sessionRoomIds.remove(session.getId());
+
+    if (!doesRoomExist(roomCode))
+      return;
+    Room room = this.findRoomByCode(roomCode);
+    if (room == null)
+      return;
+    room.leave(session);
+    if (room.getSessions().isEmpty()) {
+      // Delete room if no one is left in it
+      rooms.remove(room.getCode());
     }
+  }
 
-    public RoomJoinedEvent join(SessionWrapper session, String roomCode) throws RoomNotFoundException {
-        if (!doesRoomExist(roomCode)) throw new RoomNotFoundException();
-        Room room = this.findRoomByCode(roomCode);
-        if (room == null) throw new RoomNotFoundException();
+  public boolean isSessionInThisRoom(SessionWrapper session, String roomCode) {
+    if (!this.sessionRoomIds.containsKey(session.getId()))
+      return false;
+    return this.sessionRoomIds.get(session.getId()).equals(roomCode);
+  }
 
-        room.join(session);
-        this.sessionRoomIds.put(session.getId(), roomCode);
+  public boolean isSessionInARoom(SessionWrapper session) {
+    return this.sessionRoomIds.containsKey(session.getId());
+  }
 
-        return RoomJoinedEvent.builder().room(room).build();
-    }
+  public String findRoomCodeBySession(SessionWrapper session) {
+    return this.sessionRoomIds.get(session.getId());
+  }
 
-    public void leave(SessionWrapper session) {
-        if (!isSessionInARoom(session)) return;
-        String roomCode = findRoomCodeBySession(session);
-        this.sessionRoomIds.remove(session.getId());
+  public Room findRoomBySession(SessionWrapper session) {
+    String roomCode = this.findRoomCodeBySession(session);
+    return this.rooms.get(roomCode);
+  }
 
-        if (!doesRoomExist(roomCode)) return;
-        Room room = this.findRoomByCode(roomCode);
-        if (room == null) return;
-        room.leave(session);
-        if (room.getSessions().isEmpty()) {
-            // Delete room if no one is left in it
-            rooms.remove(room.getCode());
-        }
-    }
+  public @Nullable Room findRoomByCode(String roomCode) {
+    return this.rooms.get(roomCode);
+  }
 
-    public boolean isSessionInThisRoom(SessionWrapper session, String roomCode) {
-        if (!this.sessionRoomIds.containsKey(session.getId())) return false;
-        return this.sessionRoomIds.get(session.getId()).equals(roomCode);
-    }
+  /**
+   * @param roomCode
+   * @return <code>true</code> if the room exists
+   */
+  private boolean doesRoomExist(String roomCode) {
+    if (roomCode == null)
+      return false;
+    return this.rooms.containsKey(roomCode);
+  }
 
-    public boolean isSessionInARoom(SessionWrapper session) {
-        return this.sessionRoomIds.containsKey(session.getId());
-    }
+  /**
+   * @return a unique room code
+   */
+  private String generateRoomCode() {
+    String roomCode;
+    do {
+      roomCode = this.generateCode();
+    } while (doesRoomExist(roomCode));
 
-    public String findRoomCodeBySession(SessionWrapper session) {
-        return this.sessionRoomIds.get(session.getId());
-    }
+    return roomCode;
+  }
 
-    public Room findRoomBySession(SessionWrapper session) {
-        String roomCode = this.findRoomCodeBySession(session);
-        return this.rooms.get(roomCode);
-    }
+  /**
+   * @return a random code like "XT53A2"
+   */
+  private String generateCode() {
+    String letters = RandomStringUtils.random(3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    String digits = RandomStringUtils.random(3, "123456789");
+    String combined = letters + digits;
 
-    public @Nullable Room findRoomByCode(String roomCode) {
-        return this.rooms.get(roomCode);
-    }
+    List<Character> chars = new ArrayList<>();
+    for (char c : combined.toCharArray())
+      chars.add(c);
+    Collections.shuffle(chars);
 
-    /**
-     * @param roomCode
-     * @return <code>true</code> if the room exists
-     */
-    private boolean doesRoomExist(String roomCode) {
-        if (roomCode == null) return false;
-        return this.rooms.containsKey(roomCode);
-    }
+    StringBuilder sb = new StringBuilder();
+    for (char c : chars)
+      sb.append(c);
 
-    /**
-     * @return a unique room code
-     */
-    private String generateRoomCode() {
-        String roomCode;
-        do {
-            roomCode = this.generateCode();
-        } while (doesRoomExist(roomCode));
-
-        return roomCode;
-    }
-
-    /**
-     * @return a random code like "XT53A2"
-     */
-    private String generateCode() {
-        String letters = RandomStringUtils.random(3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        String digits = RandomStringUtils.random(3, "123456789");
-        String combined = letters + digits;
-
-        List<Character> chars = new ArrayList<>();
-        for (char c : combined.toCharArray()) chars.add(c);
-        Collections.shuffle(chars);
-
-        StringBuilder sb = new StringBuilder();
-        for (char c : chars) sb.append(c);
-
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 }

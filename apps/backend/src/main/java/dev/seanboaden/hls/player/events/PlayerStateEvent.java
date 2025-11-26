@@ -12,9 +12,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class PlayerStateEvent extends AbstractPlayerEvent {
-    private PlayerState state;
-    
-    {
-        setEventType(PlayerEventType.PLAYER_STATE);
-    }
+  private PlayerState state;
+
+  {
+    setEventType(PlayerEventType.PLAYER_STATE);
+  }
 }

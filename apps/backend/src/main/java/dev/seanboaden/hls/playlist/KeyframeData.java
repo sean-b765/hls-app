@@ -7,17 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A keyframe is the complete [I] frame of video which marks the starting/end point of a group of pictures
+ * A keyframe is the complete [I] frame of video which marks the starting/end
+ * point of a group of pictures
  */
 @Data
 @NoArgsConstructor
 public class KeyframeData {
-    /**
-     * Total duration of video
-     */
-    private double duration;
-    /**
-     * List of keyframe's positions
-     */
-    private List<Double> positions = new ArrayList<>();
+  /**
+   * Total duration of video
+   */
+  private double duration;
+  /**
+   * List of keyframe's positions
+   */
+  private List<Double> positions = new ArrayList<>();
 }

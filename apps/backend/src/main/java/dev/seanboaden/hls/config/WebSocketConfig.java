@@ -12,13 +12,12 @@ import dev.seanboaden.hls.events.BaseEventHandler;
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-    @Autowired
-    private BaseEventHandler handler;
+  @Autowired
+  private BaseEventHandler handler;
 
-    @Override
-    public void registerWebSocketHandlers(@NonNull WebSocketHandlerRegistry registry) {
-        registry
-                .addHandler(handler, "/ws")
-                .setAllowedOrigins("*"); // or restrict to your frontend origin
-    }
+  @Override
+  public void registerWebSocketHandlers(@NonNull WebSocketHandlerRegistry registry) {
+    registry.addHandler(handler, "/ws")
+        .setAllowedOrigins("*");
+  }
 }

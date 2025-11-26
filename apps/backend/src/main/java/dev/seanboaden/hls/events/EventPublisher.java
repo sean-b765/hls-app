@@ -10,19 +10,19 @@ import dev.seanboaden.hls.session.SessionWrapper;
 
 @Component
 public class EventPublisher {
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
-    @Autowired
-    private SessionRegistry sessionRegistry;
+  @Autowired
+  private ApplicationEventPublisher eventPublisher;
+  @Autowired
+  private SessionRegistry sessionRegistry;
 
-    public void publish(SessionWrapper session, AbstractWebSocketEvent event) {
-        event.setSession(session);
-        eventPublisher.publishEvent(event);
-    }
+  public void publish(SessionWrapper session, AbstractWebSocketEvent event) {
+    event.setSession(session);
+    eventPublisher.publishEvent(event);
+  }
 
-    public void publish(WebSocketSession session, AbstractWebSocketEvent event) {
-        SessionWrapper sessionWrapper = sessionRegistry.get(session.getId());
-        event.setSession(sessionWrapper);
-        eventPublisher.publishEvent(event);
-    }
+  public void publish(WebSocketSession session, AbstractWebSocketEvent event) {
+    SessionWrapper sessionWrapper = sessionRegistry.get(session.getId());
+    event.setSession(sessionWrapper);
+    eventPublisher.publishEvent(event);
+  }
 }

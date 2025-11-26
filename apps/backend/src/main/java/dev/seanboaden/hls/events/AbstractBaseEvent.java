@@ -12,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractBaseEvent extends AbstractWebSocketEvent {
-    private String type;
+  private String type;
 }
