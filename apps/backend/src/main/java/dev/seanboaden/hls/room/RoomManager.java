@@ -100,7 +100,7 @@ public class RoomManager {
     return this.sessionRoomIds.get(session.getId());
   }
 
-  public Room findRoomBySession(SessionWrapper session) {
+  public @Nullable Room findRoomBySession(SessionWrapper session) {
     String roomCode = this.findRoomCodeBySession(session);
     return this.rooms.get(roomCode);
   }
