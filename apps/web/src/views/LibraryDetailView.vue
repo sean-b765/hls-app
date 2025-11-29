@@ -14,11 +14,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full flex gap-2 flex-wrap">
+  <div
+    class="w-full grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
+  >
     <Card
       v-for="m of media"
       :key="m.id"
-      class="max-w-xs flex items-end aspect-video h-68 group relative overflow-hidden border-2 border-card"
+      class="flex items-end h-68 group relative overflow-hidden border-2 border-card cursor-pointer"
     >
       <div class="h-full w-full z-0 p-1 absolute transition-all group-hover:p-0">
         <div
@@ -32,8 +34,10 @@ onMounted(async () => {
         <div
           class="w-full h-full bg-muted/90 flex backdrop-blur-lg items-start rounded-b-lg gap-2 flex-col py-2 px-4 z-1 transition-all duration-150 group-hover:bg-muted/80 group-hover:pb-3 group-hover:px-5"
         >
-          <span class="w-full truncate text-sm">{{ m.path?.split(/[\\/]/g).at(-1) }}</span>
-          <span class="w-full truncate text-xs">
+          <span class="w-full truncate text-sm opacity-70 group-hover:opacity-100">
+            {{ m.path?.split(/[\\/]/g).at(-1) }}
+          </span>
+          <span class="w-full truncate text-xs opacity-50 group-hover:opacity-80">
             {{ formatSeconds(m.metadata?.durationSeconds) }}
           </span>
         </div>
