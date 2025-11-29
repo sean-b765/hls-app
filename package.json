@@ -9,6 +9,7 @@
     "nx": "nx",
     "dev": "nx run-many --target=dev --parallel",
     "dev:backend": "nx dev --verbose backend",
+    "test:backend": "nx test --verbose backend",
     "dev:web": "nx dev --verbose web",
     "build": "nx run-many --target=build --parallel"
   },

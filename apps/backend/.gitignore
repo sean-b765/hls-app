@@ -38,3 +38,5 @@ build/
 
 .env
 keyframeout.json
+ffprobe-error.txt
+ffmpeg-error.txt

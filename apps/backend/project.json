@@ -11,6 +11,13 @@
         "envFile": "apps/backend/.env"
       }
     },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvnw test",
+        "cwd": "apps/backend"
+      }
+    },
     "build": {
       "command": "mvnw package",
       "cwd": "apps/backend",
