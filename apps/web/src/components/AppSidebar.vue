@@ -54,7 +54,7 @@ const data = {
                         class="rounded-full cursor-pointer"
                         size="icon"
                         variant="outline"
-                        @click="() => client.connect()"
+                        @click.prevent.stop="() => client.connect()"
                       >
                         <CloudCheck
                           v-if="client.state.connected"

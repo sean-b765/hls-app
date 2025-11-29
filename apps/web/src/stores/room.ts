@@ -13,6 +13,7 @@ export const useRoomStore = defineStore('room', () => {
   function createRoom(name: string) {
     const payload: RoomCreateEvent = { type: 'ROOM', eventType: 'ROOM_CREATE', roomName: name }
     client.sendJson(payload)
+    console.log(payload)
   }
 
   function joinRoom(roomCode: string) {

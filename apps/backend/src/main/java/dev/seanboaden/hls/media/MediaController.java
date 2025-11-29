@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api/media")
+@Tag(name = "Media", description = "Manage and retrieve Media")
 public class MediaController {
   @Autowired
   private MediaService mediaService;
