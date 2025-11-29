@@ -6,11 +6,13 @@
     "noEmit": true,
     "composite": true,
     "baseUrl": ".",
-    "lib": ["DOM"],
+    "lib": ["DOM", "ESNext"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@hls-app/sdk": ["../../packages/sdk"]
     }
-  }
+  },
+  "references": [{ "path": "../../packages/sdk" }]
 }
