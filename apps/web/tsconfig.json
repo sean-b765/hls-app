@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.base.json",
   "files": [],
   "references": [
     {
@@ -7,5 +8,14 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "lib": ["DOM"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
 }

@@ -2,7 +2,7 @@
 import Hls from 'hls.js'
 import { onMounted, useTemplateRef } from 'vue'
 
-const url = 'http://localhost:8080/api/playlist/bc13593d-28c9-4ca4-a1bd-22c2b13af7c4'
+const url = 'http://localhost:8080/api/playlist/c4'
 
 const player = useTemplateRef<HTMLVideoElement>('player')
 let hls: Hls
