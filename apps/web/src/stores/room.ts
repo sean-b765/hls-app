@@ -2,10 +2,16 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { client } from '@/lib/SocketClient'
 import type { ChatEvent, ChooseTrackEvent, JoinRoomEvent, RoomCreateEvent } from '@/types/event'
+import { PlayerState } from '@/types/room'
 
 export const useRoomStore = defineStore('room', () => {
   const room = ref({
     code: null,
+  })
+  const playerState = ref<PlayerState>({
+    buffering: false,
+    loaded: false,
+    playing: false,
   })
 
   const isConnected = computed(() => room.value.code !== null)
@@ -32,5 +38,5 @@ export const useRoomStore = defineStore('room', () => {
     client.sendJson(payload)
   }
 
-  return { room, isConnected, createRoom, joinRoom, chat, chooseMedia }
+  return { room, isConnected, playerState, createRoom, joinRoom, chat, chooseMedia }
 })

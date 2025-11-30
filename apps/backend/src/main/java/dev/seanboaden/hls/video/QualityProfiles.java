@@ -43,7 +43,7 @@ public class QualityProfiles {
       .build();
 
   public static QualityProfile[] AllProfiles = new QualityProfile[] {
-      QHD1440P,
+      // QHD1440P,
       FHD1080P,
       HD720P,
       SD480P,

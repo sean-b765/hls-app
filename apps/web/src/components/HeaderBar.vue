@@ -11,8 +11,28 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { uniq } from 'lodash'
+import { useMediaStore } from '@/stores/media'
+import { storeToRefs } from 'pinia'
+import { Media } from '@hls-app/sdk'
 const route = useRoute()
 const router = useRouter()
+const mediaStore = useMediaStore()
+const { media } = storeToRefs(mediaStore)
+
+const selectedMedia = computed<Media | undefined>(() => {
+  const id = route.params['mediaId'] as string
+  const m = media.value.find((el) => el.id === id)
+  return m
+})
+
+function resolveName(name: string) {
+  switch (name) {
+    case 'WatchMedia':
+      return selectedMedia.value?.info?.name
+    default:
+      return name
+  }
+}
 
 const breadcrumbs = computed(() => {
   const routesAccumulated: string[] = []
@@ -29,8 +49,9 @@ const breadcrumbs = computed(() => {
   return uniq(routesAccumulated)
     .map((r) => router.resolve(r))
     .filter(Boolean)
+    .filter((r) => r.name)
     .map((r) => ({
-      name: r.name as string,
+      name: resolveName(r.name as string),
       path: r.path,
       meta: r.meta,
     }))

@@ -23,6 +23,7 @@ import dev.seanboaden.hls.video.TranscodeJob.JobType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @RestController
@@ -73,13 +74,14 @@ public class HlsVideoController {
         .quality(quality)
         .type(JobType.HLS)
         .build();
-    this.transcodingManager.startOrRetrieveWorker(transcodeJob).join();
 
     String segmentPath = this.fileSystemService.getSegmentDirectory(transcodeJob);
 
-    Path path = Path.of(segmentPath);
-    if (!Files.exists(path))
+    Path path = Paths.get(segmentPath, segmentName);
+    if (!Files.exists(path)) {
+      this.transcodingManager.startOrRetrieveWorker(transcodeJob).join();
       return ResponseEntity.notFound().build();
+    }
 
     try {
       byte[] data = Files.readAllBytes(path);
@@ -88,6 +90,7 @@ public class HlsVideoController {
           .header("Cache-Control", "public, max-age=31536000")
           .body(data);
     } catch (IOException e) {
+      e.printStackTrace();
       return ResponseEntity.internalServerError().build();
     }
   }

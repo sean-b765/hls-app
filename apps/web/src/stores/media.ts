@@ -71,5 +71,15 @@ export const useMediaStore = defineStore('media', () => {
     })
   }
 
-  return { media, movies, series, getMovies, getSeries, getAll, startScanProgress, scanProgress }
+  return {
+    media,
+    movies,
+    series,
+    getMovies,
+    getSeries,
+    getAll,
+    getMedia,
+    startScanProgress,
+    scanProgress,
+  }
 })

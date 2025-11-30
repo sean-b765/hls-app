@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, CardFooter } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { formatSeconds } from '@/lib/utils'
+import { formatDuration } from '@/lib/utils'
 import { useMediaStore } from '@/stores/media'
 import moment from 'moment'
 import { storeToRefs } from 'pinia'
@@ -62,7 +62,7 @@ const progress = computed(() => {
         </Tooltip>
         <span class="w-full truncate flex justify-between">
           <span class="truncate flex-1 text-xs opacity-50 group-hover:opacity-80">
-            {{ durationSeconds ? formatSeconds(durationSeconds) : '' }}
+            {{ durationSeconds ? formatDuration(durationSeconds) : '' }}
           </span>
           <span class="truncate text-xs opacity-50 group-hover:opacity-80">
             {{ moment(releaseDate).get('year') }}
@@ -77,7 +77,7 @@ const progress = computed(() => {
 .loader {
   width: 24px;
   height: 24px;
-  border: 5px solid var(--color-card-foreground);
+  border: 5px solid var(--color-muted);
   border-bottom-color: var(--color-primary);
   border-radius: 50%;
   display: inline-block;
