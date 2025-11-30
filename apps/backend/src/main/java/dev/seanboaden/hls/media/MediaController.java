@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Flux;
 
@@ -48,12 +51,17 @@ public class MediaController {
   }
 
   @GetMapping(path = "/scan-progress")
-  public Flux<ServerSentEvent<Map<String, MediaProgressEnum>>> streamProgress() {
+  public Flux<ServerSentEvent<String>> streamProgress() {
     return Flux.interval(Duration.ofMillis(1000))
         .map(tick -> {
-          return ServerSentEvent.<Map<String, MediaProgressEnum>>builder()
+          String json = "{}";
+          try {
+            json = new ObjectMapper().writeValueAsString(mediaScanProgressRegistry.getProgress());
+          } catch (JsonProcessingException ignored) {
+          }
+          return ServerSentEvent.<String>builder()
               .event("progress")
-              .data(mediaScanProgressRegistry.getProgress())
+              .data(json)
               .build();
         });
   }

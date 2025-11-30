@@ -1,6 +1,7 @@
 package dev.seanboaden.hls.media;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,14 @@ public class MediaInfoService {
     return mediaInfoRepository.save(mediaInfo);
   }
 
-  private Movie getTmdbMovie(String search) {
+  private Movie getTmdbMovie(MediaInfo mediaInfo) {
     try {
       TmdbSearch tmdbSearch = new TmdbSearch(this.tmdbApi);
-      MovieResultsPage movieResultsPage = tmdbSearch.searchMovie(search, true, null, null, 0, null, null);
+      String year = null;
+      if (mediaInfo.getReleaseDate() != null) {
+        year = String.valueOf(Objects.requireNonNull(mediaInfo.getReleaseDate()).getYear());
+      }
+      MovieResultsPage movieResultsPage = tmdbSearch.searchMovie(mediaInfo.getName(), true, null, year, 0, null, null);
       Optional<Movie> movie = movieResultsPage.getResults().stream().findFirst();
       if (movie.isEmpty())
         return null;
@@ -43,10 +48,14 @@ public class MediaInfoService {
     }
   }
 
-  private TvSeries getTmdbTv(String search, int season, int episode) {
+  private TvSeries getTmdbTv(MediaInfo mediaInfo) {
     try {
       TmdbSearch tmdbSearch = new TmdbSearch(this.tmdbApi);
-      TvSeriesResultsPage tvResultsPage = tmdbSearch.searchTv(search, null, null, null, 0, null);
+      Integer year = null;
+      if (mediaInfo.getReleaseDate() != null) {
+        year = Objects.requireNonNull(mediaInfo.getReleaseDate()).getYear();
+      }
+      TvSeriesResultsPage tvResultsPage = tmdbSearch.searchTv(mediaInfo.getName(), year, null, null, 0, null);
       Optional<TvSeries> tv = tvResultsPage.getResults().stream().findFirst();
       if (tv.isEmpty())
         return null;
@@ -77,7 +86,7 @@ public class MediaInfoService {
 
     if (mediaInfo.getSeason() != null) {
       // tv
-      TvSeries tv = this.getTmdbTv(mediaInfo.getName(), mediaInfo.getSeason(), mediaInfo.getEpisode());
+      TvSeries tv = this.getTmdbTv(mediaInfo);
       if (tv != null) {
         mediaInfo.setDescription(tv.getOverview());
         mediaInfo.setBanner(tv.getBackdropPath());
@@ -86,7 +95,7 @@ public class MediaInfoService {
       }
     } else {
       // movie
-      Movie movie = this.getTmdbMovie(mediaInfo.getName());
+      Movie movie = this.getTmdbMovie(mediaInfo);
       if (movie != null) {
         mediaInfo.setDescription(movie.getOverview());
         mediaInfo.setBanner(movie.getBackdropPath());

@@ -1,5 +1,8 @@
 package dev.seanboaden.hls.media;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -27,6 +30,9 @@ public class StartupMediaService {
       mediaInfoService.getInfo(media);
       mediaScanProgressRegistry.updateProgress(media.getId(), MediaProgressEnum.READY);
     });
-    mediaScanProgressRegistry.clear();
+
+    // Wait 3 seconds before clear
+    Executors.newSingleThreadScheduledExecutor()
+        .schedule(() -> mediaScanProgressRegistry.clear(), 3, TimeUnit.SECONDS);
   }
 }
