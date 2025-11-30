@@ -3,19 +3,25 @@ import { Card, CardFooter } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatSeconds } from '@/lib/utils'
 import { useMediaStore } from '@/stores/media'
-import { Progress } from '@/types/media'
-import { Media } from '@hls-app/sdk'
+import moment from 'moment'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
-const { media } = defineProps<{ media: Media }>()
+const { thumbnail, id, durationSeconds, name, releaseDate } = defineProps<{
+  thumbnail?: string
+  id?: string
+  releaseDate?: string
+  name?: string
+  durationSeconds?: number
+}>()
 const mediaStore = useMediaStore()
 const { scanProgress } = storeToRefs(mediaStore)
-function progress(media: Media): Progress {
-  if (scanProgress.value[media.id as string]) return scanProgress.value[media.id as string]
-  if (media.metadata && media.info) return 'READY'
-  if (!media.metadata) return 'METADATA'
+
+const progress = computed(() => {
+  if (!id) return 'READY'
+  if (scanProgress.value[id]) return scanProgress.value[id]
   return 'INFO'
-}
+})
 </script>
 
 <template>
@@ -24,10 +30,10 @@ function progress(media: Media): Progress {
   >
     <div class="h-full w-full z-0 p-1 absolute transition-all group-hover:p-0">
       <div
-        v-if="media.info?.thumbnail"
+        v-if="thumbnail"
         class="bg-cover bg-center w-full h-full transition-all duration-150 rounded-lg group-hover:rounded-xl"
         :style="{
-          backgroundImage: `url('https://image.tmdb.org/t/p/w1280${media.info?.thumbnail}')`,
+          backgroundImage: `url('https://image.tmdb.org/t/p/w1280${thumbnail}')`,
         }"
       ></div>
       <div v-else class="w-full h-full flex items-center justify-center">
@@ -47,20 +53,19 @@ function progress(media: Media): Progress {
         <Tooltip>
           <TooltipTrigger as="div" class="w-full truncate">
             <span class="w-full truncate text-sm opacity-70 group-hover:opacity-100">
-              {{ progress(media) }}
-              {{ media.info?.name }}
+              {{ name }}
             </span>
           </TooltipTrigger>
-          <TooltipContent>
-            <span>{{ media.info?.name }}</span>
+          <TooltipContent side="bottom" :side-offset="30">
+            <span>{{ name }}</span>
           </TooltipContent>
         </Tooltip>
         <span class="w-full truncate flex justify-between">
-          <span class="truncate text-xs opacity-50 group-hover:opacity-80">
-            {{ formatSeconds(media.metadata?.durationSeconds) }}
+          <span class="truncate flex-1 text-xs opacity-50 group-hover:opacity-80">
+            {{ durationSeconds ? formatSeconds(durationSeconds) : '' }}
           </span>
           <span class="truncate text-xs opacity-50 group-hover:opacity-80">
-            {{ media.info?.releaseDate }}
+            {{ moment(releaseDate).get('year') }}
           </span>
         </span>
       </div>

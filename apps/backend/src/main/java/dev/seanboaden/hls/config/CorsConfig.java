@@ -25,6 +25,12 @@ public class CorsConfig {
         registry.addMapping("/api/media/**")
             .allowedOrigins("*")
             .allowedMethods("*");
+        registry.addMapping("/api/movies/**")
+            .allowedOrigins("*")
+            .allowedMethods("*");
+        registry.addMapping("/api/series/**")
+            .allowedOrigins("*")
+            .allowedMethods("*");
       }
     };
   }

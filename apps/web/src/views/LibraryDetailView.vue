@@ -4,11 +4,12 @@ import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import MediaCard from '@/components/MediaCard.vue'
 const mediaStore = useMediaStore()
-const { media } = storeToRefs(mediaStore)
+const { movies, series } = storeToRefs(mediaStore)
 
 onMounted(async () => {
-  await mediaStore.getAll()
-  await mediaStore.startScanProgress()
+  await mediaStore.getMovies()
+  await mediaStore.getSeries()
+  // await mediaStore.startScanProgress()
 })
 </script>
 
@@ -16,6 +17,22 @@ onMounted(async () => {
   <div
     class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 overflow-y-auto"
   >
-    <MediaCard v-for="m of media" :key="m.id" :media="m" />
+    <MediaCard
+      v-for="m of movies"
+      :key="m.id"
+      :id="m.id"
+      :duration-seconds="m.metadata?.durationSeconds"
+      :name="m.info?.name"
+      :thumbnail="m.info?.thumbnail"
+      :release-date="m.info?.releaseDate"
+    />
+    <MediaCard
+      v-for="s of series"
+      :key="s.id"
+      :id="s.id"
+      :name="s.name"
+      :thumbnail="s.thumbnail"
+      :release-date="s.releaseDate"
+    />
   </div>
 </template>
