@@ -24,27 +24,27 @@ public class MediaService {
   public Media save(Media media) {
     if (media == null)
       return media;
-    return mediaRepository.save(media);
+    return this.mediaRepository.save(media);
   }
 
   public List<Media> saveAll(List<Media> media) {
     if (media == null)
       return new ArrayList<>();
-    return mediaRepository.saveAll(media);
+    return this.mediaRepository.saveAll(media);
   }
 
   public Optional<Media> findByPath(String absolutePath) {
-    return mediaRepository.findByPath(absolutePath);
+    return this.mediaRepository.findByPath(absolutePath);
   }
 
   public List<Media> findAll() {
-    return mediaRepository.findAll();
+    return this.mediaRepository.findAll();
   }
 
   public Optional<Media> findById(String id) {
     if (id == null)
       return Optional.empty();
-    return mediaRepository.findById(id);
+    return this.mediaRepository.findById(id);
   }
 
   public Path getMediaRootPath() {

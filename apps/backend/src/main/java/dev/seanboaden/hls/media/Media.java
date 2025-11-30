@@ -2,7 +2,8 @@ package dev.seanboaden.hls.media;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.seanboaden.hls.collection.MediaCollection;
+import dev.seanboaden.hls.collection.TvSeasonCollection;
+import dev.seanboaden.hls.collection.TvSeriesCollection;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +49,7 @@ public class Media {
   private MediaInfo info;
 
   @ManyToOne
-  @JoinColumn(name = "mediaCollectionId", referencedColumnName = "id")
+  @JoinColumn(name = "tvSeasonId", referencedColumnName = "id")
   @JsonManagedReference
-  private MediaCollection collection;
+  private TvSeasonCollection tvSeason;
 }

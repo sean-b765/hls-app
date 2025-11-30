@@ -1,12 +1,17 @@
 package dev.seanboaden.hls.collection;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
-import dev.seanboaden.hls.media.Media;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,21 +25,31 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "media_collection")
+@Table(name = "tv_series")
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MediaCollection {
+public class TvSeriesCollection {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+  @Column(unique = true)
+  private String externalId;
 
+  @Column(unique = true, nullable = false)
+  @NonNull
   private String name;
+  private String description;
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  @Nullable
+  private LocalDate releaseDate;
+  private String thumbnail;
+  private String banner;
 
-  @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "tvSeries", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonBackReference
   @Builder.Default
-  private List<Media> mediaItems = new ArrayList<>();
+  private List<TvSeasonCollection> tvSeasons = new ArrayList<>();
 }

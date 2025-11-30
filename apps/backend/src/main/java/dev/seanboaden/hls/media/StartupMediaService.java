@@ -27,7 +27,7 @@ public class StartupMediaService {
       mediaMetadataService.getMetadata(media);
       mediaScanProgressRegistry.updateProgress(media.getId(), MediaProgressEnum.INFO);
       // Retrieve info about the media
-      mediaInfoService.getInfo(media);
+      mediaInfoService.retrieveInfoAndEstablishTvSeriesSeason(media);
       mediaScanProgressRegistry.updateProgress(media.getId(), MediaProgressEnum.READY);
     });
 
