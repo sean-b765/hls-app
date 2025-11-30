@@ -1,6 +1,6 @@
 package dev.seanboaden.hls.media;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,9 +31,11 @@ public class MediaInfo {
   private String name;
   private String description;
   @JsonFormat(pattern = "yyyy-MM-dd")
-  private LocalDateTime releaseDate;
+  private LocalDate releaseDate;
   private String thumbnail;
   private String banner;
+  private Integer season;
+  private Integer episode;
 
   @OneToOne
   @JoinColumn(name = "mediaId", nullable = false, unique = true)

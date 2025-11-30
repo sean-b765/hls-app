@@ -1,6 +1,7 @@
 package dev.seanboaden.hls.lib;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FileNameParser {
-  private static final Pattern SEASON_EP = Pattern.compile("(?i)(S(?<s>[0-9]{1,2})E(?<e>[0-9]{2}))");
+  private static final Pattern SEASON_EP = Pattern.compile("(?i)(S(?<s>[0-9]{1,3})Ep?(?<e>[0-9]{1,3}))");
 
   private static final Pattern YEAR = Pattern.compile("(?<!\\d)(?<year>19\\d{2}|20[\\d]\\d)(?!\\d)");
 
@@ -42,7 +43,6 @@ public class FileNameParser {
     // cursor which will help in extracting the title later
     int cursor = base.length();
 
-    System.out.println(base);
     Matcher ext = CONTAINER.matcher(base);
     if (ext.find()) {
       md.container = ext.group("ext");
@@ -121,7 +121,10 @@ public class FileNameParser {
     raw = raw.replaceAll("[-_ ]+$", "");
     raw = raw.replaceAll("^[- ]+", "");
 
-    return raw.trim();
+    return StringUtils.joinWith(" ",
+        Arrays.stream(raw.trim()
+            .split(" "))
+            .map(StringUtils::capitalize).toArray());
   }
 
 }

@@ -99,7 +99,4 @@ public class MediaMetadataService {
       this.getVideoMetadata(media);
     }
   }
-
-  public void getInfo(Media media) {
-  }
 }

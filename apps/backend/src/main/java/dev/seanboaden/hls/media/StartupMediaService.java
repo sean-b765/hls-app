@@ -12,6 +12,8 @@ public class StartupMediaService {
   @Autowired
   private MediaMetadataService mediaMetadataService;
   @Autowired
+  private MediaInfoService mediaInfoService;
+  @Autowired
   private MediaScanProgressRegistry mediaScanProgressRegistry;
 
   @EventListener(ApplicationReadyEvent.class)
@@ -22,7 +24,7 @@ public class StartupMediaService {
       mediaMetadataService.getMetadata(media);
       mediaScanProgressRegistry.updateProgress(media.getId(), MediaProgressEnum.INFO);
       // Retrieve info about the media
-      mediaMetadataService.getInfo(media);
+      mediaInfoService.getInfo(media);
       mediaScanProgressRegistry.updateProgress(media.getId(), MediaProgressEnum.READY);
     });
     mediaScanProgressRegistry.clear();

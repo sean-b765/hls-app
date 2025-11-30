@@ -7,13 +7,17 @@ public class FileNameParserTests {
 
   @Test
   public void testFileNameParser() {
+    expectFrom("I, Robot.mp4")
+        .title("I, Robot");
+    expectFrom("Breaking Bad s02ep11 720p brrip.sujaidr.mkv")
+        .title("Breaking Bad");
     expectFrom("Pi (1998).mkv")
         .title("Pi");
     expectFrom("Catch-22.1970.DVDRip.mp4")
         .title("Catch-22")
         .year(1970);
     expectFrom("F Is for Family (2015–2021)")
-        .title("F Is for Family");
+        .title("F Is For Family");
     expectFrom("30 Rock (2006-2013)")
         .title("30 Rock");
     expectFrom("Mr. Robot")
@@ -29,16 +33,16 @@ public class FileNameParserTests {
         .season(1)
         .episode(7);
     expectFrom("Game of Thrones S05E09 - The Dance of Dragons.mkv")
-        .title("Game of Thrones")
+        .title("Game Of Thrones")
         .season(5)
         .episode(9);
     expectFrom("Demon Slayer - Kimetsu no Yaiba - s05e01 - To Defeat Muzan Kibutsuji WEBDL-1080p Proper.mkv")
-        .title("Demon Slayer - Kimetsu no Yaiba")
+        .title("Demon Slayer - Kimetsu No Yaiba")
         .season(5)
         .episode(1);
     expectFrom("Demon Slayer - Kimetsu no Yaiba - S05E01 - To Defeat Muzan Kibutsuji WEBDL-1080p Proper.mkv")
         .year(null)
-        .title("Demon Slayer - Kimetsu no Yaiba");
+        .title("Demon Slayer - Kimetsu No Yaiba");
     expectFrom("12.Angry.Men.1957.720p.BRrip.x264.YIFY.mp4")
         .title("12 Angry Men")
         .year(1957);
@@ -59,22 +63,22 @@ public class FileNameParserTests {
         .title("Source Code")
         .year(2011);
     expectFrom("The Fellowship of the Ring (2001).mp4")
-        .title("The Fellowship of the Ring")
+        .title("The Fellowship Of The Ring")
         .year(2001);
     expectFrom("SPY x FAMILY - S03E01 - BERLINT PANIC + THE INFORMANT AND NIGHTFALL WEBDL-1080p")
-        .title("SPY x FAMILY")
+        .title("SPY X FAMILY")
         .season(3)
         .episode(1);
     expectFrom("Game of Thrones S02E05  The Ghost Of Harrenhal (1080p x265 10bit Joy).mkv")
-        .title("Game of Thrones")
+        .title("Game Of Thrones")
         .season(2)
         .episode(5);
     expectFrom("A.Good.Girls.Guide.to.Murder.S01E06.720p.STAN.WEBRip.x264-GalaxyTV.mkv")
-        .title("A Good Girls Guide to Murder")
+        .title("A Good Girls Guide To Murder")
         .season(1)
         .episode(6);
     expectFrom("House of the Dragon - S02E08 - The Queen Who Ever Was WEBDL-1080p.mkv")
-        .title("House of the Dragon")
+        .title("House Of The Dragon")
         .season(2)
         .episode(8);
     expectFrom("Taxi Driver.mkv")
