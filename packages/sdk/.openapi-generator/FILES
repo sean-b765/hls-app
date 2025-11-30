@@ -4,6 +4,8 @@ api/hls-playlist-controller-api.ts
 api/hls-video-controller-api.ts
 api/media-api.ts
 api/media-metadata-controller-api.ts
+api/movies-api.ts
+api/tvseries-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -14,8 +16,14 @@ docs/MediaApi.md
 docs/MediaInfo.md
 docs/MediaMetadata.md
 docs/MediaMetadataControllerApi.md
+docs/MoviesApi.md
+docs/TVSeriesApi.md
+docs/TvSeasonCollection.md
+docs/TvSeriesCollection.md
 index.ts
 models/index.ts
 models/media-info.ts
 models/media-metadata.ts
 models/media.ts
+models/tv-season-collection.ts
+models/tv-series-collection.ts
