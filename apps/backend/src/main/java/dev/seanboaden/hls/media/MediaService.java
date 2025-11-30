@@ -41,6 +41,10 @@ public class MediaService {
     return this.mediaRepository.findAll();
   }
 
+  public List<Media> findAllWhereTvSeasonIsNull() {
+    return this.mediaRepository.findByTvSeasonIsNull();
+  }
+
   public Optional<Media> findById(String id) {
     if (id == null)
       return Optional.empty();
