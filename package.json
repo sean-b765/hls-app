@@ -11,6 +11,7 @@
     "dev:backend": "nx dev --verbose backend",
     "test:backend": "nx test --verbose backend",
     "dev:web": "nx dev --verbose web",
+    "generate-sdk": "pnpm --dir ./packages/sdk generate",
     "build": "nx run-many --target=build --parallel"
   },
   "private": true,

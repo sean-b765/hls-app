@@ -12,9 +12,9 @@ public class ScheduledMediaMetadataRetrievalService {
   private MediaMetadataService mediaMetadataService;
 
   /**
-   * Every day, ensure current metadata retrieval for each Media
+   * Every hour, ensure metadata is up-to-date for each Media
    */
-  @Scheduled(cron = "0 0 0 * * *")
+  @Scheduled(cron = "0 0 */1 * * *")
   public void doScan() {
     mediaMetadataService.getMetadata();
   }

@@ -35,13 +35,16 @@ public class MediaScanService {
   public void doScan(Consumer<Media> endConsumer) {
     List<Path> paths = mediaService.listFilesRoot();
 
-    paths.stream()
+    List<Media> createdMedia = paths.stream()
         .map(path -> new File(path.toUri()))
         .filter(File::canRead)
         .filter(file -> mimeTypeService.isVideoType(file.getAbsolutePath())
             || mimeTypeService.isMusicType(file.getAbsolutePath()))
         .map(this::createMediaIfNotExisting)
-        .forEach(endConsumer);
+        .toList();
+
+    createdMedia = this.mediaService.saveAll(createdMedia);
+    createdMedia.forEach(endConsumer);
   }
 
   public Media createMediaIfNotExisting(File file) {

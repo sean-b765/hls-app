@@ -24,6 +24,8 @@ export interface MediaInfo {
     'releaseDate'?: string;
     'thumbnail'?: string;
     'banner'?: string;
+    'season'?: number;
+    'episode'?: number;
     'media'?: Media;
 }
 

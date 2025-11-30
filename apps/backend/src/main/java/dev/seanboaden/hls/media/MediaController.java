@@ -3,11 +3,13 @@ package dev.seanboaden.hls.media;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,9 +39,17 @@ public class MediaController {
     return ResponseEntity.ok(theMedias);
   }
 
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<Media> getById(@PathVariable String id) {
+    Optional<Media> optionalMedia = mediaService.findById(id);
+    if (optionalMedia.isEmpty())
+      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(optionalMedia.get());
+  }
+
   @GetMapping(path = "/scan-progress")
   public Flux<ServerSentEvent<Map<String, MediaProgressEnum>>> streamProgress() {
-    return Flux.interval(Duration.ofMillis(250))
+    return Flux.interval(Duration.ofMillis(1000))
         .map(tick -> {
           return ServerSentEvent.<Map<String, MediaProgressEnum>>builder()
               .event("progress")

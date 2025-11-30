@@ -58,6 +58,10 @@ public class MediaInfoService {
   }
 
   public MediaInfo getInfo(Media media) {
+    Optional<MediaInfo> existingOptional = this.mediaInfoRepository.findByMedia_Id(media.getId());
+    if (existingOptional.isPresent())
+      return existingOptional.get();
+
     String fileName = this.fileNameParser.getFileName(media.getPath());
     FileNameMetadata fileNameMetadata = fileNameParser.parse(fileName);
 

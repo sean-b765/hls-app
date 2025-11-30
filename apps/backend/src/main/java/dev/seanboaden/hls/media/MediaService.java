@@ -22,7 +22,15 @@ public class MediaService {
   private String rootPath;
 
   public Media save(Media media) {
+    if (media == null)
+      return media;
     return mediaRepository.save(media);
+  }
+
+  public List<Media> saveAll(List<Media> media) {
+    if (media == null)
+      return new ArrayList<>();
+    return mediaRepository.saveAll(media);
   }
 
   public Optional<Media> findByPath(String absolutePath) {
@@ -31,6 +39,12 @@ public class MediaService {
 
   public List<Media> findAll() {
     return mediaRepository.findAll();
+  }
+
+  public Optional<Media> findById(String id) {
+    if (id == null)
+      return Optional.empty();
+    return mediaRepository.findById(id);
   }
 
   public Path getMediaRootPath() {

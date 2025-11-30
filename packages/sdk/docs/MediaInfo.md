@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **releaseDate** | **string** |  | [optional] [default to undefined]
 **thumbnail** | **string** |  | [optional] [default to undefined]
 **banner** | **string** |  | [optional] [default to undefined]
+**season** | **number** |  | [optional] [default to undefined]
+**episode** | **number** |  | [optional] [default to undefined]
 **media** | [**Media**](Media.md) |  | [optional] [default to undefined]
 
 ## Example
@@ -25,6 +27,8 @@ const instance: MediaInfo = {
     releaseDate,
     thumbnail,
     banner,
+    season,
+    episode,
     media,
 };
 ```
