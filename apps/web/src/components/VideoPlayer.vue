@@ -42,7 +42,7 @@ const hoverPercent = computed(() => {
 })
 
 const url = computed(() => {
-  if (media) return 'http://localhost:8080/api/playlist/' + media.id
+  if (media) return import.meta.env.VITE_BASE_URL + '/api/playlist/' + media.id
   else return ''
 })
 
@@ -101,12 +101,23 @@ function start() {
   if (player.value == null) return
 
   if (Hls.isSupported()) {
-    hls = new Hls()
+    hls = new Hls({
+      fragLoadingMaxRetry: 5,
+      fragLoadingRetryDelay: 1000,
+      fragLoadingTimeOut: 20_000,
+      levelLoadingMaxRetry: 3,
+      manifestLoadingMaxRetry: 3,
+      maxBufferHole: 0.5,
+    })
+
     hls.attachMedia(player.value)
     hls.on(Hls.Events.MEDIA_ATTACHED, function () {
       hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+        hls.currentLevel = 0
+        hls.nextLevel = 0
+        hls.loadLevel = 0
         qualities.value = data.levels
-        currentQuality.value = data.levels[data.firstLevel].id
+        currentQuality.value = hls.currentLevel
       })
 
       hls.loadSource(url.value)
@@ -140,12 +151,12 @@ onMounted(() => {
 
 <template>
   <div class="w-full h-fit flex flex-col items-center justify-center relative">
-    <span class="loader absolute"></span>
+    <span v-if="duration <= buffered" class="loader absolute"></span>
     <video
       ref="player"
       id="video-player"
       :autoplay="false"
-      class="w-full bg-muted/20 h-full border-2 shadow-2xl rounded-lg"
+      class="w-full bg-muted/20 h-full shadow-2xl rounded-lg"
     ></video>
     <div class="w-full flex gap-5 absolute bottom-0 p-4 justify-between items-center">
       <div class="controls-left flex">

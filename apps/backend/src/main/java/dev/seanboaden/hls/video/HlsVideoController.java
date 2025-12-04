@@ -9,22 +9,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import dev.seanboaden.hls.lib.FileSystemService;
 import dev.seanboaden.hls.media.Media;
-import dev.seanboaden.hls.media.MediaRepository;
+import dev.seanboaden.hls.media.MediaService;
 import dev.seanboaden.hls.room.Room;
 import dev.seanboaden.hls.room.RoomManager;
 import dev.seanboaden.hls.session.SessionRegistry;
 import dev.seanboaden.hls.session.SessionWrapper;
+import dev.seanboaden.hls.transcode.TranscodeJob;
+import dev.seanboaden.hls.transcode.TranscodeManager;
+import dev.seanboaden.hls.transcode.TranscodeJob.JobType;
 import dev.seanboaden.hls.video.QualityProfiles.QualityProfile;
-import dev.seanboaden.hls.video.TranscodeJob.JobType;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/video")
@@ -32,7 +36,7 @@ public class HlsVideoController {
   @Value("${transcode.dir}")
   private String transcodeDumpDirectory;
   @Autowired
-  private MediaRepository mediaRepository;
+  private MediaService mediaService;
   @Autowired
   private TranscodeManager transcodingManager;
   @Autowired
@@ -43,18 +47,20 @@ public class HlsVideoController {
   private RoomManager roomManager;
 
   @GetMapping("/{mediaId}/{qualityProfile}/{segmentName}")
-  public ResponseEntity<byte[]> getVideoSegment(
+  public DeferredResult<ResponseEntity<byte[]>> getVideoSegment(
       @PathVariable String mediaId,
       @PathVariable String qualityProfile,
       @PathVariable String segmentName,
       @RequestParam(required = false) String userId) {
-    Optional<Media> media = mediaRepository.findById(mediaId);
-    if (media.isEmpty())
-      return ResponseEntity.notFound().build();
+    DeferredResult<ResponseEntity<byte[]>> deferredResult = new DeferredResult<>(5000L,
+        ResponseEntity.status(503).build());
+    Optional<Media> media = this.mediaService.findById(mediaId);
+    if (media.isEmpty() || media.get().getInfo() == null)
+      deferredResult.setResult(ResponseEntity.notFound().build());
 
     QualityProfile quality = QualityProfiles.findByName(qualityProfile);
     if (quality == null)
-      return ResponseEntity.notFound().build();
+      deferredResult.setResult(ResponseEntity.notFound().build());
 
     // Attempt to retrieve roomId.
     // It's okay if this is unassigned,
@@ -66,7 +72,6 @@ public class HlsVideoController {
       roomCode = room.getCode();
     }
 
-    // Start transcoding
     TranscodeJob transcodeJob = TranscodeJob.builder()
         .fromSegmentName(segmentName)
         .roomCode(roomCode)
@@ -75,23 +80,37 @@ public class HlsVideoController {
         .type(JobType.HLS)
         .build();
 
-    String segmentPath = this.fileSystemService.getSegmentDirectory(transcodeJob);
+    CompletableFuture<Void> firstReady;
 
-    Path path = Paths.get(segmentPath, segmentName);
-    if (!Files.exists(path)) {
-      this.transcodingManager.startOrRetrieveWorker(transcodeJob).join();
-      return ResponseEntity.notFound().build();
+    boolean shouldTranscode = this.transcodingManager.shouldTranscode(transcodeJob);
+    Path segmentPath = this.transcodingManager.getSegmentPath(transcodeJob);
+    if (shouldTranscode) {
+      firstReady = this.transcodingManager.startOrRetrieveWorker(transcodeJob);
+    } else {
+      firstReady = this.transcodingManager.waitForSegment(transcodeJob, 5000L);
     }
 
-    try {
-      byte[] data = Files.readAllBytes(path);
-      return ResponseEntity.ok()
-          .header("Content-Type", "video/mp2t")
-          .header("Cache-Control", "public, max-age=31536000")
-          .body(data);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return ResponseEntity.internalServerError().build();
-    }
+    firstReady.whenComplete((response, exception) -> {
+      if (exception != null) {
+        deferredResult.setResult(ResponseEntity.status(500).build());
+      }
+
+      if (!Files.exists(segmentPath)) {
+        deferredResult.setResult(ResponseEntity.status(503).build());
+      }
+
+      try {
+        byte[] data = Files.readAllBytes(segmentPath);
+        deferredResult.setResult(ResponseEntity.ok()
+            .header("Content-Type", "video/mp2t")
+            .header("Cache-Control", "public, max-age=31536000")
+            .body(data));
+      } catch (IOException e) {
+        e.printStackTrace();
+        deferredResult.setResult(ResponseEntity.internalServerError().build());
+      }
+    });
+
+    return deferredResult;
   }
 }

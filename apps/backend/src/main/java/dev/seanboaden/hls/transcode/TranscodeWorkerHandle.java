@@ -1,4 +1,4 @@
-package dev.seanboaden.hls.video;
+package dev.seanboaden.hls.transcode;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -12,4 +12,5 @@ public class TranscodeWorkerHandle {
   private Process ffmpegProcess;
   private Future<?> future;
   private CompletableFuture<Void> firstSegmentReadyFuture;
+  private CompletableFuture<Void> allSegmentsReadyFuture;
 }

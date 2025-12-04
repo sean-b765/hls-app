@@ -83,7 +83,7 @@ export class SocketClient {
   }
 }
 
-export const client = new SocketClient('ws://localhost:8080/ws')
+export const client = new SocketClient(import.meta.env.VITE_BASE_URL.replace('http', 'ws') + '/ws')
 
 window.addEventListener('beforeunload', () => client.disconnect())
 if (import.meta.hot) {

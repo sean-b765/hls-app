@@ -8,9 +8,9 @@
   "scripts": {
     "nx": "nx",
     "dev": "nx run-many --target=dev --parallel",
-    "dev:backend": "nx dev --verbose backend",
+    "dev:backend": "nx dev backend",
     "test:backend": "nx test --verbose backend",
-    "dev:web": "nx dev --verbose web",
+    "dev:web": "nx dev web",
     "generate-sdk": "pnpm --dir ./packages/sdk generate",
     "build": "nx run-many --target=build --parallel"
   },

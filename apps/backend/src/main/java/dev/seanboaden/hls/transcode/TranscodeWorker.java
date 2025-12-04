@@ -1,36 +1,38 @@
-package dev.seanboaden.hls.video;
+package dev.seanboaden.hls.transcode;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
-import dev.seanboaden.hls.encoding.EncodingService;
 import dev.seanboaden.hls.lib.FfmpegService;
 import dev.seanboaden.hls.lib.FileSystemService;
-import dev.seanboaden.hls.video.TranscodeJob.JobType;
+import dev.seanboaden.hls.transcode.TranscodeJob.JobType;
 
 public class TranscodeWorker implements Runnable {
   private final FfmpegService ffmpegService;
-  private final EncodingService encodingService;
+  private final TranscodingService transcodingService;
   private final FileSystemService fileSystemService;
   private final TranscodeJob transcodeJob;
   private final String outputPath;
   private final CompletableFuture<Void> firstSegmentReadyFuture;
+  private final CompletableFuture<Void> allSegmentsReadyFuture;
 
   public TranscodeWorker(
       FfmpegService ffmpegService,
-      EncodingService encodingService,
+      TranscodingService encodingService,
       FileSystemService fileSystemService,
       TranscodeJob transcodeJob,
       String outputDirectory,
-      CompletableFuture<Void> firstSegmentReadyFuture) {
+      CompletableFuture<Void> firstSegmentReadyFuture,
+      CompletableFuture<Void> allSegmentsReadyFuture) {
     this.ffmpegService = ffmpegService;
-    this.encodingService = encodingService;
+    this.transcodingService = encodingService;
     this.fileSystemService = fileSystemService;
     this.transcodeJob = transcodeJob;
     this.outputPath = outputDirectory;
     this.firstSegmentReadyFuture = firstSegmentReadyFuture;
+    this.allSegmentsReadyFuture = allSegmentsReadyFuture;
   }
 
   @Override
@@ -40,7 +42,7 @@ public class TranscodeWorker implements Runnable {
       Files.createDirectories(outputDirectory);
 
       String[] arguments = JobType.HLS.equals(this.transcodeJob.getType())
-          ? this.encodingService.getHlsArgs(this.transcodeJob, this.outputPath)
+          ? this.transcodingService.getHlsArgs(this.transcodeJob, this.outputPath)
           : new String[] {};
 
       Process ffmpegProcess = this.ffmpegService.ffmpeg(this.outputPath, arguments);
@@ -50,8 +52,7 @@ public class TranscodeWorker implements Runnable {
         return;
       }
 
-      Path firstSegment = outputDirectory.resolve("segment00000.ts");
-      System.out.println("Looking for: " + firstSegment.toString() + "\n\tRunning with args:\n\t" + arguments);
+      Path firstSegment = outputDirectory.resolve(this.transcodeJob.getFromSegmentName());
       while (!Files.exists(firstSegment)) {
         if (Thread.currentThread().isInterrupted()) {
           ffmpegProcess.destroyForcibly();
@@ -60,16 +61,17 @@ public class TranscodeWorker implements Runnable {
         Thread.sleep(50);
       }
 
-      System.out.println("Found! sending back by continuing transcode");
-
       // The first segment has been completed
       this.firstSegmentReadyFuture.complete(null);
 
       ffmpegProcess.waitFor();
+      this.allSegmentsReadyFuture.complete(null);
     } catch (IOException exception) {
       this.firstSegmentReadyFuture.completeExceptionally(exception);
+      this.allSegmentsReadyFuture.completeExceptionally(exception);
     } catch (InterruptedException exception) {
       this.firstSegmentReadyFuture.completeExceptionally(exception);
+      this.allSegmentsReadyFuture.completeExceptionally(exception);
     }
   }
 

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import dev.seanboaden.hls.video.TranscodeJob;
+import dev.seanboaden.hls.transcode.TranscodeJob;
 
 @Service
 public class FileSystemService {
