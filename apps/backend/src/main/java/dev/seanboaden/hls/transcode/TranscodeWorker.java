@@ -23,16 +23,15 @@ public class TranscodeWorker implements Runnable {
       TranscodingService encodingService,
       FileSystemService fileSystemService,
       TranscodeJob transcodeJob,
-      String outputDirectory,
       CompletableFuture<Void> firstSegmentReadyFuture,
       CompletableFuture<Void> allSegmentsReadyFuture) {
     this.ffmpegService = ffmpegService;
     this.transcodingService = encodingService;
     this.fileSystemService = fileSystemService;
     this.transcodeJob = transcodeJob;
-    this.outputPath = outputDirectory;
     this.firstSegmentReadyFuture = firstSegmentReadyFuture;
     this.allSegmentsReadyFuture = allSegmentsReadyFuture;
+    this.outputPath = this.fileSystemService.getSegmentDirectory(transcodeJob);
   }
 
   @Override
@@ -47,30 +46,14 @@ public class TranscodeWorker implements Runnable {
 
       Process ffmpegProcess = this.ffmpegService.ffmpeg(this.outputPath, arguments);
       if (ffmpegProcess == null) {
-        this.firstSegmentReadyFuture
-            .completeExceptionally(new IllegalStateException("ffmpeg process failed to create"));
         return;
       }
-
-      Path firstSegment = outputDirectory.resolve(this.transcodeJob.getFromSegmentName());
-      while (!Files.exists(firstSegment)) {
-        if (Thread.currentThread().isInterrupted()) {
-          ffmpegProcess.destroyForcibly();
-          return;
-        }
-        Thread.sleep(50);
-      }
-
-      // The first segment has been completed
-      this.firstSegmentReadyFuture.complete(null);
 
       ffmpegProcess.waitFor();
       this.allSegmentsReadyFuture.complete(null);
     } catch (IOException exception) {
-      this.firstSegmentReadyFuture.completeExceptionally(exception);
       this.allSegmentsReadyFuture.completeExceptionally(exception);
     } catch (InterruptedException exception) {
-      this.firstSegmentReadyFuture.completeExceptionally(exception);
       this.allSegmentsReadyFuture.completeExceptionally(exception);
     }
   }

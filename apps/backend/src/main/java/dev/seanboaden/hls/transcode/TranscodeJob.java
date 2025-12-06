@@ -4,21 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.nio.file.Path;
-
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import dev.seanboaden.hls.media.Media;
-import dev.seanboaden.hls.video.QualityProfiles;
 import dev.seanboaden.hls.video.QualityProfiles.QualityProfile;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class TranscodeJob {
+  /**
+   * optional - provide one of either roomCode or userId
+   */
   @Nullable
   private String roomCode;
+  /**
+   * optional - provide one of either roomCode or userId
+   */
+  @Nullable
+  private String userId;
   @NonNull
   private Media media;
   @NonNull

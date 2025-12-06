@@ -66,7 +66,7 @@ public class HlsVideoController {
     // It's okay if this is unassigned,
     // we will share the media segments between rooms anyways
     SessionWrapper sessionWrapper = sessionRegistry.getByUserId(userId);
-    String roomCode = "unassigned";
+    String roomCode = null;
     if (sessionWrapper != null) {
       Room room = roomManager.findRoomBySession(sessionWrapper);
       roomCode = room.getCode();
@@ -75,28 +75,26 @@ public class HlsVideoController {
     TranscodeJob transcodeJob = TranscodeJob.builder()
         .fromSegmentName(segmentName)
         .roomCode(roomCode)
+        .userId(userId)
         .media(media.get())
         .quality(quality)
         .type(JobType.HLS)
         .build();
 
-    CompletableFuture<Void> firstReady;
+    CompletableFuture<Void> segmentReadyFuture;
 
-    boolean shouldTranscode = this.transcodingManager.shouldTranscode(transcodeJob);
-    Path segmentPath = this.transcodingManager.getSegmentPath(transcodeJob);
-    if (shouldTranscode) {
-      firstReady = this.transcodingManager.startOrRetrieveWorker(transcodeJob);
-    } else {
-      firstReady = this.transcodingManager.waitForSegment(transcodeJob, 5000L);
-    }
+    // Ensures endSegmentName is calculated
+    this.transcodingManager.ensureEndSegmentName(transcodeJob);
+    segmentReadyFuture = this.transcodingManager.startOrRetrieveWorker(transcodeJob);
 
-    firstReady.whenComplete((response, exception) -> {
+    segmentReadyFuture.whenComplete((response, exception) -> {
+      Path segmentPath = this.fileSystemService.getSegmentPath(transcodeJob);
       if (exception != null) {
         deferredResult.setResult(ResponseEntity.status(500).build());
       }
 
-      if (!Files.exists(segmentPath)) {
-        deferredResult.setResult(ResponseEntity.status(503).build());
+      if (!this.transcodingManager.isSegmentComplete(transcodeJob)) {
+        this.transcodingManager.waitForSegment(transcodeJob, 5000);
       }
 
       try {
@@ -106,7 +104,7 @@ public class HlsVideoController {
             .header("Cache-Control", "public, max-age=31536000")
             .body(data));
       } catch (IOException e) {
-        e.printStackTrace();
+        System.out.println("\n!!!!!! NOT FOUND: " + transcodeJob.getFromSegmentName());
         deferredResult.setResult(ResponseEntity.internalServerError().build());
       }
     });

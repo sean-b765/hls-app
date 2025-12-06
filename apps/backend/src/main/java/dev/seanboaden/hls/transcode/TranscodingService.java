@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.lib.MimeTypeService;
 import dev.seanboaden.hls.media.Media;
+import lombok.Getter;
 
 @Service
 public class TranscodingService {
@@ -52,7 +53,9 @@ public class TranscodingService {
    * ^^^ output playlist file
    */
   private final Pattern segmentPattern = Pattern.compile("segment(\\d+)\\.ts");
-  private final long segmentLength = 4;
+  @Getter
+  private final double segmentLength = 4.0;
+  @Getter
   private final long segmentCountLimit = 8;
 
   private final String inputArg = "-i \"%s\" ";
@@ -72,8 +75,9 @@ public class TranscodingService {
 
   private String getVideoArgs(Media media) {
     StringBuilder argsBuilder = new StringBuilder();
-    argsBuilder.append(String.format(baseVideoArgs, media.getMetadata().getFramerate()));
-    double gop = media.getMetadata().getFramerate() * this.segmentLength;
+    long fps = Math.round(media.getMetadata().getFramerate());
+    argsBuilder.append(String.format(baseVideoArgs, fps));
+    double gop = fps * this.segmentLength;
     argsBuilder.append(String.format(gopArgs, gop, gop));
 
     if ("x264".equals("x264")) {
@@ -115,57 +119,6 @@ public class TranscodingService {
     }
 
     throw new IllegalArgumentException("Invalid segment filename: " + filename);
-  }
-
-  /**
-   * Find the next segment number that already exists in the output directory.
-   * 
-   * @return the segment number of the next segment, or -1 if no next segment
-   */
-  public long findNextExistingSegment(String outputDirectory, long startFrom) {
-    long startingPoint = startFrom;
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(outputDirectory))) {
-      for (Path path : stream) {
-        if (!Files.isRegularFile(path))
-          continue;
-        Matcher matcher = this.segmentPattern.matcher(path.getFileName().toString());
-        if (matcher.find()) {
-          long segmentNumber = Long.parseLong(matcher.group(1));
-          if (segmentNumber > startingPoint) {
-            startingPoint = segmentNumber;
-          }
-        }
-      }
-    } catch (IOException e) {
-      // Directory might not exist yet, return -1
-      return -1;
-    }
-    return startingPoint;
-  }
-
-  /**
-   * This will determine how many segments to transcode from the requested point.
-   * 
-   * @return the number of segments to transcode, or the default segmentCountLimit
-   */
-  public long calculateSegmentRunLength(long requestedSegment, String outputDirectory) {
-    long nextExistingSegment = findNextExistingSegment(outputDirectory, requestedSegment);
-
-    if (nextExistingSegment == -1) {
-      return this.segmentCountLimit;
-    }
-
-    // If requested segment is beyond what already exists
-    if (requestedSegment <= nextExistingSegment) {
-      return 0L;
-    }
-
-    // Calculate how many segments to transcode to reach the next existing segment,
-    // but cap it at the segmentCountLimit
-    long segmentsToTranscode = nextExistingSegment - requestedSegment + 1;
-    if (segmentsToTranscode > this.segmentCountLimit)
-      return this.segmentCountLimit;
-    return segmentsToTranscode;
   }
 
   public String toSegmentName(long segmentNum) {

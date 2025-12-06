@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import dev.seanboaden.hls.lib.KeyframeExtractor;
 import dev.seanboaden.hls.media.Media;
+import dev.seanboaden.hls.transcode.TranscodingService;
 import dev.seanboaden.hls.video.QualityProfiles;
 
 import java.util.ArrayList;
@@ -12,7 +13,8 @@ import java.util.List;
 
 @Component
 public class PlaylistManager {
-  private final double segmentLength = 4.0;
+  @Autowired
+  private TranscodingService transcodingService;
   @Autowired
   private KeyframeExtractor keyframeExtractor;
 
@@ -36,12 +38,12 @@ public class PlaylistManager {
 
   public String generateVodPlaylist(Media media, QualityProfiles.QualityProfile qualityProfile) {
     KeyframeData keyframeData = keyframeExtractor.getKeyframeData(media.getPath());
-    List<Double> segments = this.getSegments(keyframeData);
+    List<Double> segments = this.getSegmentsExact(keyframeData);
 
     StringBuilder vodPlaylist = new StringBuilder();
     vodPlaylist.append("#EXTM3U\n");
     vodPlaylist.append("#EXT-X-VERSION:3\n");
-    vodPlaylist.append("#EXT-X-TARGETDURATION:").append(5).append("\n");
+    vodPlaylist.append("#EXT-X-TARGETDURATION:").append(4).append("\n");
     vodPlaylist.append("#EXT-X-MEDIA-SEQUENCE:0\n");
     vodPlaylist.append("#EXT-X-PLAYLIST-TYPE:VOD\n");
     for (int i = 0; i < segments.size(); i++) {
@@ -58,9 +60,29 @@ public class PlaylistManager {
     return vodPlaylist.toString();
   }
 
+  public List<Double> getSegmentsExact(KeyframeData keyframeData) {
+    double duration = keyframeData.getDuration();
+    List<Double> segments = new ArrayList<>();
+    double current = 0.0;
+    double segmentLength = this.transcodingService.getSegmentLength();
+
+    while (current + segmentLength < duration) {
+      segments.add(segmentLength);
+      current += segmentLength;
+    }
+
+    // Last segment: remaining duration
+    if (current < duration) {
+      segments.add(duration - current);
+    }
+
+    return segments;
+  }
+
   public List<Double> getSegments(KeyframeData keyframeData) {
     List<Double> keyframes = keyframeData.getPositions();
     List<Double> segments = new ArrayList<>();
+    double segmentLength = this.transcodingService.getSegmentLength();
 
     if (keyframes.isEmpty()) {
       throw new IllegalArgumentException("Invalid KeyframeData passed to getSegments()");
