@@ -66,8 +66,6 @@ public class TranscodingService {
   private final String x264Args = "-x264opts:0 \"no-scenecut=1:subme=0:me_range=16:rc_lookahead=0:me=hex:open_gop=0\" ";
   private final String gopArgs = "-force_key_frames \"expr:gte(t,n_forced*" +
       String.valueOf(this.segmentLength) + ")\" -g:v:0 %s -keyint_min:v:0 %s ";
-  // 8 segments at a time
-  private final String transcodeCeilingArgs = "-t " + String.valueOf(this.segmentLength * this.segmentCountLimit) + " ";
   private final String startNumberArg = "-start_number %s -ss %s ";
 
   @Autowired
@@ -100,7 +98,6 @@ public class TranscodingService {
     }
 
     argsBuilder.append(hlsArgs);
-    argsBuilder.append(transcodeCeilingArgs);
     long fromSegmentNumber = this.extractSegmentNumber(transcodeJob.getFromSegmentName());
     double fromTimestampSeconds = fromSegmentNumber * this.segmentLength;
 

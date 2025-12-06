@@ -81,20 +81,21 @@ public class HlsVideoController {
         .type(JobType.HLS)
         .build();
 
-    CompletableFuture<Void> segmentReadyFuture;
+    Path segmentPath = this.fileSystemService.getSegmentPath(transcodeJob);
 
-    // Ensures endSegmentName is calculated
-    this.transcodingManager.ensureEndSegmentName(transcodeJob);
-    segmentReadyFuture = this.transcodingManager.startOrRetrieveWorker(transcodeJob);
+    CompletableFuture<Void> segmentReadyFuture = new CompletableFuture<>();
 
-    segmentReadyFuture.whenComplete((response, exception) -> {
-      Path segmentPath = this.fileSystemService.getSegmentPath(transcodeJob);
+    if (!Files.exists(segmentPath)) {
+      this.transcodingManager.ensureWorker(transcodeJob);
+      segmentReadyFuture = this.transcodingManager.waitForSegment(transcodeJob, 5000L);
+    } else {
+      segmentReadyFuture.complete(null);
+    }
+
+    segmentReadyFuture.whenComplete((result, exception) -> {
+      System.out.println("found " + segmentName);
       if (exception != null) {
-        deferredResult.setResult(ResponseEntity.status(500).build());
-      }
-
-      if (!this.transcodingManager.isSegmentComplete(transcodeJob)) {
-        this.transcodingManager.waitForSegment(transcodeJob, 5000);
+        deferredResult.setResult(ResponseEntity.internalServerError().build());
       }
 
       try {

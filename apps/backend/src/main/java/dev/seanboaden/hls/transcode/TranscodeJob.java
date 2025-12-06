@@ -31,24 +31,8 @@ public class TranscodeJob {
   @Builder.Default
   @NonNull
   private JobType type = JobType.HLS;
-
-  /**
-   * optional - provide one of either fromSegmentName or fromTimestampSeconds
-   */
-  @Nullable
+  @NonNull
   private String fromSegmentName;
-  /**
-   * optional - provide one of either fromSegmentName or fromTimestampSeconds
-   */
-  @Nullable
-  private Double fromTimestampSeconds;
-
-  /**
-   * optional - omitting this parameter will make ffmpeg run until the default
-   * upper segment length
-   */
-  @Nullable
-  private String endSegmentName;
 
   public enum JobType {
     HLS,
