@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, CardFooter } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { formatDuration } from '@/lib/utils'
+import { formatDuration, getImage } from '@/lib/utils'
 import { useMediaStore } from '@/stores/media'
 import moment from 'moment'
 import { storeToRefs } from 'pinia'
@@ -33,7 +33,7 @@ const progress = computed(() => {
         v-if="thumbnail"
         class="bg-cover bg-center w-full h-full transition-all duration-150 rounded-lg group-hover:rounded-xl"
         :style="{
-          backgroundImage: `url('https://image.tmdb.org/t/p/w1280${thumbnail}')`,
+          backgroundImage: `url('${getImage(thumbnail)}')`,
         }"
       ></div>
       <div v-else class="w-full h-full flex items-center justify-center">
@@ -52,7 +52,7 @@ const progress = computed(() => {
       >
         <Tooltip>
           <TooltipTrigger as="div" class="w-full truncate">
-            <span class="w-full truncate text-sm opacity-70 group-hover:opacity-100">
+            <span class="w-full truncate text-sm opacity-70 font-bold group-hover:opacity-100">
               {{ name }}
             </span>
           </TooltipTrigger>

@@ -37,3 +37,7 @@ export function formatSeconds(seconds: number | undefined, pad = false): string 
 
   return parts.map((p) => (!pad ? p : padStart(p, 2, '0'))).join(':')
 }
+
+export function getImage(path: string) {
+  return `https://image.tmdb.org/t/p/w1280${path}`
+}
