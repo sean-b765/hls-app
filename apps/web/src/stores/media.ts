@@ -39,7 +39,6 @@ export const useMediaStore = defineStore('media', () => {
 
   async function progressUpdate(mediaId: string, progress: Progress) {
     scanProgress.value[mediaId] = progress
-    console.log('PROGRESS UPDATE', progress)
     if (progress !== 'READY') return
     await getMedia(mediaId)
   }
@@ -63,10 +62,9 @@ export const useMediaStore = defineStore('media', () => {
   }
 
   async function startScanProgress() {
-    const events = new EventSource('http://localhost:8080/api/media/scan-progress')
+    const events = new EventSource(`${import.meta.env.VITE_BASE_URL}/api/media/scan-progress`)
     events.addEventListener('progress', (e: MessageEvent) => {
       const data: ScanProgress = JSON.parse(e.data)
-      console.log('INCOMING', data)
       handleScanProgressEvent(data)
     })
   }
