@@ -23,19 +23,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="w-full h-full flex flex-col gap-4 max-h-[calc(100vh-96px)] overflow-y-auto rounded-lg"
-  >
-    <div>
+  <div class="w-full h-full gap-4 max-h-[calc(100vh-96px)] overflow-y-auto rounded-lg">
+    <div class="w-full flex flex-col gap-4">
       <VideoPlayer v-if="selectedMedia" :media="selectedMedia" />
 
       <!-- Overview -->
       <div
-        class="w-full relative flex items-center gap-3 h-80 rounded-lg overflow-hidden bg-muted/50 group"
+        class="w-full relative flex items-center gap-3 h-80 overflow-hidden rounded-lg bg-muted/70 group"
       >
         <div class="w-full h-full absolute p-2 z-0 duration-200 group-hover:p-0">
           <div
-            class="w-full h-full bg-cover opacity-50 rounded"
+            class="w-full h-full absolute bg-cover bg-center opacity-50 rounded"
             v-if="selectedMedia?.info?.banner"
             :style="{ backgroundImage: `url('${getImage(selectedMedia?.info?.banner)}')` }"
           ></div>
@@ -50,7 +48,9 @@ onMounted(async () => {
         <div
           class="w-full flex flex-col flex-1 py-2 px-8 truncate z-10 duration-200 group-hover:pl-10 group-hover:py-4"
         >
-          <span class="font-bold text-2xl mb-10">{{ selectedMedia?.info?.name }}</span>
+          <span class="w-full text-wrap font-bold text-2xl mb-10">
+            {{ selectedMedia?.info?.name }}
+          </span>
           <span class="w-full text-wrap text-sm">{{ selectedMedia?.info?.description }}</span>
         </div>
       </div>

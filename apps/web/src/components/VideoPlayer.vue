@@ -191,7 +191,7 @@ onBeforeUnmount(() => {
       ref="player"
       id="video-player"
       :autoplay="false"
-      class="w-full h-full shadow-2xl rounded-lg bg-black"
+      class="w-full h-full rounded-lg bg-black"
       @click="playPauseToggle"
       @dblclick="fullscreen"
     ></video>
@@ -234,11 +234,11 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="flex items-center justify-end">
-            <span class="truncate text-xs text-white">
+            <span class="truncate text-xs">
               {{ formatSeconds(currentTime, true) }}
             </span>
-            <span class="text-xs mx-1 text-white/40">/</span>
-            <span class="truncate text-xs text-white/60">
+            <span class="text-xs mx-1 opacity-40">/</span>
+            <span class="truncate text-xs opacity-70">
               {{ formatSeconds(duration, true) }}
             </span>
           </div>
@@ -266,7 +266,7 @@ onBeforeUnmount(() => {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button size="icon-sm" variant="ghost">
-                <SlidersVertical :size="16" class="text-white" />
+                <SlidersVertical :size="16" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent class="flex flex-col" side="left">

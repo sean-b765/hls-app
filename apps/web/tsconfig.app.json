@@ -5,7 +5,7 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
-    "noEmit": true,
+    "noEmit": false,
     "composite": true,
     "baseUrl": ".",
     "lib": ["DOM", "ESNext"],
