@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { type BaseEvent } from '@/types/event'
+import { type BaseMessage } from '@/types/messages'
 import { useEventStore } from '@/stores/event'
 
 export class SocketClient {
@@ -52,6 +52,7 @@ export class SocketClient {
           break
         case 'object':
           if (message.data instanceof Blob) this.processBlob(message.data)
+          break
       }
     } catch (e) {
       console.error('[WS ERROR] Failed to parse message', message.data, e)
@@ -59,27 +60,32 @@ export class SocketClient {
   }
 
   private processString(data: string) {
-    const event = JSON.parse(data) as BaseEvent
-    const { addReceived } = useEventStore()
+    const event = JSON.parse(data) as BaseMessage
+    const { incoming } = useEventStore()
 
-    addReceived(event)
-    console.log('[WS EVENT]', event)
+    incoming(event)
+    console.log('%c[INCOMING WS EVENT]\n', 'background-color: green; color: black;', event)
   }
 
   private processBlob(data: Blob) {
     console.log('we got some shit', data.size)
   }
 
-  public sendJson(data: BaseEvent) {
+  public sendJson(data: BaseMessage) {
     // Maybe push messages to a DLQ in the event the server is unreachable...
-    if (!this.client || this.client.readyState !== WebSocket.OPEN) return
+    if (!this.client || !this.isConnected) return
     this.client.send(JSON.stringify(data))
-    const { addSent } = useEventStore()
-    addSent(data)
+    const { outgoing } = useEventStore()
+    outgoing(data)
+    console.log('%c[OUTGOING WS EVENT]\n', 'background-color: blue; color: white;', data)
   }
 
   get state() {
     return this._state.value
+  }
+  get isConnected() {
+    if (!this.client) return false
+    return this.client?.readyState === WebSocket.OPEN
   }
 }
 
