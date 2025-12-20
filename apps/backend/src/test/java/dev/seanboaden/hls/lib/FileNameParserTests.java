@@ -2,6 +2,9 @@ package dev.seanboaden.hls.lib;
 
 import org.junit.jupiter.api.Test;
 
+import dev.seanboaden.hls.lib.model.FileNameMetadata;
+import dev.seanboaden.hls.lib.service.FileNameParser;
+
 public class FileNameParserTests {
   private FileNameParser fileNameParser = new FileNameParser();
 

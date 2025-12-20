@@ -1,0 +1,30 @@
+package dev.seanboaden.hls.lib.service;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import dev.seanboaden.hls.transcode.model.TranscodeJob;
+
+@Service
+public class FileSystemService {
+  @Value("${transcode.directory}")
+  private String transcodeDirectory;
+
+  public String getSegmentDirectory(TranscodeJob transcodeJob) {
+    return StringUtils.joinWith(
+        "/",
+        this.transcodeDirectory,
+        transcodeJob.getType().name(),
+        transcodeJob.getMedia().getId(),
+        transcodeJob.getQuality().getName());
+  }
+
+  public Path getSegmentPath(TranscodeJob transcodeJob) {
+    String segmentPath = this.getSegmentDirectory(transcodeJob);
+    return Paths.get(segmentPath, transcodeJob.getFromSegmentName());
+  }
+}
