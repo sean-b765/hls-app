@@ -78,7 +78,7 @@ function onSeek(event: MouseEvent) {
   if (!player.value || !duration.value) return
   const percent = getSeekPercent(event)
   const seekTime = (percent / 100) * duration.value
-  console.log('SEEK', seekTime)
+  playerStore.seek(seekTime)
 }
 
 function onHover(event: MouseEvent) {

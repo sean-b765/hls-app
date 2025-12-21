@@ -38,6 +38,12 @@ public abstract class AbstractWebSocketMessage {
 
   public abstract BaseMessageType getType();
 
+  public String getUserId() {
+    if (this.session == null)
+      return null;
+    return this.session.getUserId();
+  }
+
   @JsonIgnore
   public TextMessage convertToTextMessage() {
     try {

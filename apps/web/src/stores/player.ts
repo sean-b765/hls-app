@@ -6,11 +6,14 @@ import {
   EventType,
   PlayerCommand,
   type PlayerSeekedEvent,
+  type PlayerChooseMediaCommand,
+  type PlayerChoseMediaEvent,
 } from '@/types/messages'
 import type { PlayerState } from '@/types/room'
 
 export const usePlayerStore = defineStore('player', () => {
   const handlers: unknown = {}
+  const mediaId = ref<string | undefined>(undefined)
   const state = ref<PlayerState>({
     buffering: false,
     loaded: false,
@@ -32,9 +35,23 @@ export const usePlayerStore = defineStore('player', () => {
     client.sendJson(payload)
   }
 
+  function choseMedia(evt: PlayerChoseMediaEvent) {
+    mediaId.value = evt.mediaId
+  }
+
+  function chooseMedia(mediaId: string) {
+    const payload: PlayerChooseMediaCommand = {
+      type: EventType.PLAYER,
+      kind: PlayerCommand.ChooseMedia,
+      mediaId,
+    }
+    client.sendJson(payload)
+  }
+
   return {
     state,
     handleIncomingWebSocketEvent,
     seek,
+    chooseMedia,
   }
 })

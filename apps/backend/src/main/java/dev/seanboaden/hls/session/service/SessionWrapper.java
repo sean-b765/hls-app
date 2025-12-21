@@ -33,6 +33,8 @@ public class SessionWrapper {
   }
 
   public void sendEvent(AbstractWebSocketMessage event) {
+    if (event.getSession() == null)
+      event.setSession(this);
     this.sendMessageSafe(event.convertToTextMessage());
   }
 
@@ -61,6 +63,7 @@ public class SessionWrapper {
 
   private void sendMessageSafe(TextMessage message) {
     try {
+      System.out.println(message.toString());
       session.sendMessage(message);
     } catch (IOException e) {
       Logging.error("Unable to send message");
