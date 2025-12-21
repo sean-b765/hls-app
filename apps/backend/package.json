@@ -2,6 +2,7 @@
   "name": "@hls-app/backend",
   "private": true,
   "scripts": {
-    "dev": "mvnw spring-boot:run"
+    "dev": "mvnw spring-boot:run",
+    "test": "mvnw run test"
   }
 }

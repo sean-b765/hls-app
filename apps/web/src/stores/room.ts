@@ -1,35 +1,85 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { client } from '@/lib/SocketClient'
-import type { ChatEvent, ChooseTrackEvent, JoinRoomEvent, RoomCreateEvent } from '@/types/event'
+import {
+  type RoomJoinCommand,
+  type RoomCreateCommand,
+  type RoomJoinedEvent,
+  type PlayerSeekCommand,
+  type RoomEventHandlers,
+  type RoomCreatedEvent,
+  type AnyRoomEvent,
+  type RoomLeftEvent,
+  EventType,
+  PlayerCommand,
+  RoomCommand,
+  RoomEvent,
+} from '@/types/messages'
+import type { Room } from '@/types/room'
 
 export const useRoomStore = defineStore('room', () => {
-  const room = ref({
-    code: null,
+  const handlers: RoomEventHandlers = {
+    [RoomEvent.Created]: roomCreated,
+    [RoomEvent.Joined]: roomJoined,
+    [RoomEvent.Left]: roomLeft,
+  }
+
+  const room = ref<Partial<Room>>({
+    code: undefined,
+    name: undefined,
   })
 
-  const isConnected = computed(() => room.value.code !== null)
+  const isConnected = computed(() => !!room.value.code)
+
+  function handleIncomingWebSocketEvent(event: AnyRoomEvent) {
+    const handlerForEvent = handlers[event.kind]
+    if (!handlerForEvent) return
+
+    handlerForEvent(event as never)
+  }
+
+  function roomCreated(evt: RoomCreatedEvent) {
+    console.log(evt)
+  }
+
+  function roomJoined(evt: RoomJoinedEvent) {
+    console.log(evt)
+    room.value = evt.room
+  }
+
+  function roomLeft(evt: RoomLeftEvent) {
+    console.log(evt)
+  }
 
   function createRoom(name: string) {
-    const payload: RoomCreateEvent = { type: 'ROOM', eventType: 'ROOM_CREATE', roomName: name }
+    const payload: RoomCreateCommand = {
+      type: EventType.ROOM,
+      kind: RoomCommand.Create,
+      name,
+    }
     client.sendJson(payload)
   }
 
-  function joinRoom(roomCode: string) {
-    const payload: JoinRoomEvent = { type: 'ROOM', eventType: 'ROOM_JOIN', roomCode }
+  function joinRoom(code: string) {
+    const payload: RoomJoinCommand = { type: EventType.ROOM, kind: RoomCommand.Join, code }
     client.sendJson(payload)
   }
 
-  function chat(message: string) {
-    const payload: ChatEvent = { type: 'CHAT', chat: { message: message, userId: '123123' } }
+  function seek(timestampSeconds: number) {
+    const payload: PlayerSeekCommand = {
+      type: EventType.PLAYER,
+      kind: PlayerCommand.Seek,
+      timestampSeconds,
+    }
     client.sendJson(payload)
   }
 
-  function chooseMedia(trackId: string) {
-    const payload: ChooseTrackEvent = { eventType: 'CHOOSE_TRACK', type: 'PLAYER', trackId }
-    console.log(payload)
-    client.sendJson(payload)
+  return {
+    room,
+    isConnected,
+    handleIncomingWebSocketEvent,
+    createRoom,
+    joinRoom,
+    seek,
   }
-
-  return { room, isConnected, createRoom, joinRoom, chat, chooseMedia }
 })

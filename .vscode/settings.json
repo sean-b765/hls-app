@@ -5,5 +5,20 @@
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
   },
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.compile.nullAnalysis.nonnull": [
+    "javax.annotation.Nonnull",
+    "org.eclipse.jdt.annotation.NonNull",
+    "org.springframework.lang.NonNull",
+    "org.jspecify.annotations.NonNull",
+    "org.jetbrains.annotations.NotNull"
+  ],
+  "java.compile.nullAnalysis.nullable": [
+    "javax.annotation.Nullable",
+    "org.eclipse.jdt.annotation.Nullable",
+    "org.springframework.lang.Nullable",
+    "org.jspecify.annotations.Nullable",
+    "org.jetbrains.annotations.Nullable"
+  ]
 }

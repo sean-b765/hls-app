@@ -1,22 +1,35 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { BaseEvent } from '@/types/event'
+import type { BaseMessage, RoomEvent, WsMessage } from '@/types/messages'
+import { EventType } from '@/types/messages'
+import { useRoomStore } from './room'
 
 export const useEventStore = defineStore('events', () => {
+  const { handleIncomingWebSocketEvent } = useRoomStore()
+
   const events = ref({
-    sent: [] as BaseEvent[],
-    received: [] as BaseEvent[],
+    sent: [] as BaseMessage[],
+    received: [] as WsMessage[],
   })
 
   const sent = computed(() => events.value.sent)
   const received = computed(() => events.value.received)
 
-  function addSent(event: BaseEvent) {
+  function handleEvent(event: BaseMessage) {
+    switch (event.type) {
+      case EventType.ROOM:
+        handleIncomingWebSocketEvent(event as RoomEvent)
+        break
+    }
+  }
+
+  function outgoing(event: BaseMessage) {
     events.value.sent.push(event)
   }
 
-  function addReceived(event: BaseEvent) {
+  function incoming(event: WsMessage) {
     events.value.received.push(event)
+    handleEvent(event)
   }
 
   function clearSent() {
@@ -26,5 +39,5 @@ export const useEventStore = defineStore('events', () => {
     events.value.received = []
   }
 
-  return { sent, received, addSent, addReceived, clearReceived, clearSent }
+  return { sent, received, outgoing, incoming, clearReceived, clearSent }
 })

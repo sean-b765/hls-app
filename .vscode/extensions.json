@@ -1,3 +1,13 @@
 {
-  "recommendations": ["nrwl.angular-console", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "redhat.java",
+    "vscjava.vscode-lombok",
+    "vscjava.vscode-maven",
+    "alexcvzz.vscode-sqlite",
+    "qwtel.sqlite-viewer",
+    "bradlc.vscode-tailwindcss",
+    "vscjava.vscode-java-test",
+    "vue.volar"
+  ]
 }

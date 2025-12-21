@@ -1,11 +1,22 @@
 {
+  "extends": "../../tsconfig.base.json",
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.node.json"
+      "path": "./tsconfig.app.json"
     },
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.node.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "lib": ["DOM"],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "strict": true
+  },
+  "include": ["src"]
 }
