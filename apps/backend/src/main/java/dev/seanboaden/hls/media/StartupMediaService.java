@@ -21,21 +21,21 @@ public class StartupMediaService {
 
   @EventListener(ApplicationReadyEvent.class)
   public void startup() {
-    // mediaScanService.doScan(media -> {
-    // mediaScanProgressRegistry.updateProgress(media.getId(),
-    // MediaProgressEnum.METADATA);
-    // // Retrieve framerate and duration
-    // mediaMetadataService.getMetadata(media);
-    // mediaScanProgressRegistry.updateProgress(media.getId(),
-    // MediaProgressEnum.INFO);
-    // // Retrieve info about the media
-    // mediaInfoService.retrieveInfoAndEstablishTvSeriesSeason(media);
-    // mediaScanProgressRegistry.updateProgress(media.getId(),
-    // MediaProgressEnum.READY);
-    // });
+    mediaScanService.doScan(media -> {
+      mediaScanProgressRegistry.updateProgress(media.getId(),
+          MediaProgressEnum.METADATA);
+      // Retrieve framerate and duration
+      mediaMetadataService.getMetadata(media);
+      mediaScanProgressRegistry.updateProgress(media.getId(),
+          MediaProgressEnum.INFO);
+      // Retrieve info about the media
+      mediaInfoService.retrieveInfoAndEstablishTvSeriesSeason(media);
+      mediaScanProgressRegistry.updateProgress(media.getId(),
+          MediaProgressEnum.READY);
+    });
 
-    // // Wait 3 seconds before clear
-    // Executors.newSingleThreadScheduledExecutor()
-    // .schedule(() -> mediaScanProgressRegistry.clear(), 3, TimeUnit.SECONDS);
+    // Wait 3 seconds before clear
+    Executors.newSingleThreadScheduledExecutor()
+        .schedule(() -> mediaScanProgressRegistry.clear(), 3, TimeUnit.SECONDS);
   }
 }
