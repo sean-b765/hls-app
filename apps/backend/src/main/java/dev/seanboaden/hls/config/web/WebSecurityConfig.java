@@ -3,6 +3,7 @@ package dev.seanboaden.hls.config.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +21,8 @@ import dev.seanboaden.hls.user.model.Role;
 public class WebSecurityConfig {
   @Autowired
   private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Autowired
+  private AuthenticationProvider authenticationProvider;
 
   @Bean
   public GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -29,14 +32,17 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
+        .cors(cors -> {
+        })
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/user/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers("/ws").hasAnyRole(Role.allRoles())
-            .requestMatchers("/api/admin/**").hasAnyRole(Role.ADMIN)
-            .requestMatchers("/api/**").hasAnyRole(Role.allRoles())
+            .requestMatchers("/ws").hasAnyAuthority(Role.allRoles())
+            .requestMatchers("/api/admin/**").hasAnyAuthority(Role.ADMIN)
+            .requestMatchers("/api/**").hasAnyAuthority(Role.allRoles())
             .anyRequest().authenticated());
 
     httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

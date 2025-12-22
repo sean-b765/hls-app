@@ -14,11 +14,8 @@
 
 
 
-export * from './api/hls-playlist-controller-api';
-export * from './api/hls-video-controller-api';
-export * from './api/media-api';
-export * from './api/media-metadata-controller-api';
-export * from './api/movies-api';
-export * from './api/tvseries-api';
-export * from './api/user-api';
+export interface AuthRequest {
+    'username'?: string;
+    'password'?: string;
+}
 

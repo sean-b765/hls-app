@@ -56,7 +56,9 @@ export const useMediaStore = defineStore('media', () => {
   }
 
   async function getAll() {
-    const request = await mediaApi.getAll()
+    const request = await mediaApi.getAll({
+      headers: { Authorization: localStorage.getItem('access_token') },
+    })
     const response = await request()
     media.value = response.data
   }

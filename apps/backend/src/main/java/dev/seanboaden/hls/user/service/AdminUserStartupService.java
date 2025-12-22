@@ -17,7 +17,7 @@ import dev.seanboaden.hls.user.model.User;
 public class AdminUserStartupService {
   @Value("${admin.username}")
   private String adminUsername;
-  @Value("${admin.password")
+  @Value("${admin.password}")
   private String adminPassword;
 
   @Autowired

@@ -18,6 +18,7 @@
   "dependencies": {
     "@hls-app/sdk": "workspace:*",
     "@tailwindcss/vite": "^4.1.17",
+    "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.1.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
@@ -31,10 +32,12 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "unique-names-generator": "^4.7.1",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.22",
     "vue-json-pretty": "^2.6.0",
     "vue-router": "^4.6.3",
-    "ws": "^8.18.3"
+    "ws": "^8.18.3",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",

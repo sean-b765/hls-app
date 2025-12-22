@@ -31,6 +31,10 @@ public class AuthService {
     return this.userService.save(userSignupRequest);
   }
 
+  /**
+   * @param user the raw user with a RAW password
+   * @return the inserted user
+   */
   public User signup(User user) {
     user.setPassword(this.passwordEncoder.encode(user.getPassword()));
     return this.userService.save(user);

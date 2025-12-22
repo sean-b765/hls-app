@@ -13,27 +13,10 @@ public class CorsConfig {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/static/**")
+        registry.addMapping("/**")
             .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/user/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
-        registry.addMapping("/api/playlist/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/video/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/media/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
-        registry.addMapping("/api/movies/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
-        registry.addMapping("/api/series/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
+            .allowedMethods("*")
+            .exposedHeaders("Authorization");
       }
     };
   }
