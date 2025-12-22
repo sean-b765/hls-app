@@ -16,6 +16,9 @@ public class CorsConfig {
         registry.addMapping("/static/**")
             .allowedOrigins("*")
             .allowedMethods("GET");
+        registry.addMapping("/api/user/**")
+            .allowedOrigins("*")
+            .allowedMethods("*");
         registry.addMapping("/api/playlist/**")
             .allowedOrigins("*")
             .allowedMethods("GET");
