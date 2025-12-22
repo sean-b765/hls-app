@@ -10,9 +10,11 @@ import dev.seanboaden.hls.configuration.model.Configuration;
 
 @Service
 public class ConfigurationStartupService {
-  @Value("${media.root}")
+  @Value("${configuration.tmdb.apikey}")
+  private String tmdbApiKey;
+  @Value("${configuration.media.directory}")
   private String mediaDirectory;
-  @Value("${transcode.directory}")
+  @Value("${configuration.transcode.directory}")
   private String transcodeDirectory;
 
   @Autowired
@@ -24,8 +26,10 @@ public class ConfigurationStartupService {
     boolean isMediaDirBlank = configuration.getMediaDirectory() == null || configuration.getMediaDirectory().isEmpty();
     boolean isTranscodeDirBlank = configuration.getTranscodeDirectory() == null
         || configuration.getTranscodeDirectory().isEmpty();
+    boolean isTmdbApiKeyBlank = configuration.getTmdbApiKey() == null
+        || configuration.getTmdbApiKey().isEmpty();
 
-    if (!isMediaDirBlank && !isTranscodeDirBlank)
+    if (!isMediaDirBlank && !isTranscodeDirBlank && !isTmdbApiKeyBlank)
       return;
 
     if (isMediaDirBlank) {
@@ -34,6 +38,10 @@ public class ConfigurationStartupService {
 
     if (isTranscodeDirBlank) {
       configuration.setTranscodeDirectory(transcodeDirectory);
+    }
+
+    if (isTmdbApiKeyBlank) {
+      configuration.setTmdbApiKey(tmdbApiKey);
     }
 
     configurationService.save(configuration);

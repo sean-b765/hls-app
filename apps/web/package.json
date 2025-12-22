@@ -25,6 +25,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-vue": "^8.6.0",
     "hls.js": "^1.6.14",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "lucide-vue-next": "^0.555.0",
     "moment": "^2.30.1",

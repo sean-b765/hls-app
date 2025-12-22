@@ -11,20 +11,17 @@ export const useMediaStore = defineStore('media', () => {
   const scanProgress = ref<ScanProgress>({})
 
   async function getMovies() {
-    const req = await moviesApi.findMovies()
-    const res = await req()
+    const res = await moviesApi.findMovies()
     movies.value = res.data
   }
 
   async function getSeries() {
-    const req = await seriesApi.findTvSeries()
-    const res = await req()
+    const res = await seriesApi.findTvSeries()
     series.value = res.data
   }
 
   async function getMedia(mediaId: string) {
-    const req = await mediaApi.getById(mediaId)
-    const res = await req()
+    const res = await mediaApi.getById(mediaId)
     if (res.status !== 200) return
 
     const found = res.data
@@ -56,10 +53,7 @@ export const useMediaStore = defineStore('media', () => {
   }
 
   async function getAll() {
-    const request = await mediaApi.getAll({
-      headers: { Authorization: localStorage.getItem('access_token') },
-    })
-    const response = await request()
+    const response = await mediaApi.getAll()
     media.value = response.data
   }
 

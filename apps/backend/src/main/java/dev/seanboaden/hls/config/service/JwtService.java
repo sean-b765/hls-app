@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.user.model.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -36,6 +37,11 @@ public class JwtService {
     return this.buildToken(claims, user, jwtExpirationMs);
   }
 
+  public String extractUsername(String token) {
+    Claims claims = this.extractAllClaims(token);
+    return claims.get("username").toString();
+  }
+
   public String extractSubject(String token) {
     return this.extractClaim(token, Claims::getSubject);
   }
@@ -45,7 +51,7 @@ public class JwtService {
   }
 
   public boolean isTokenValid(String token, UserDetails user) {
-    final String username = this.extractSubject(token);
+    final String username = this.extractUsername(token);
     return username.equals(user.getUsername()) && !this.isTokenExpired(token);
   }
 
@@ -59,12 +65,16 @@ public class JwtService {
   }
 
   private String buildToken(Map<String, Object> claims, User user, long expirationMs) {
+    // Ensure roles attached to claims
+    claims.putIfAbsent("roles", user.getAuthorities());
+    claims.putIfAbsent("username", user.getUsername());
+
     return Jwts
         .builder()
         .claims(claims)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationMs))
-        .subject(user.getUsername())
+        .subject(user.getId())
         .issuer(issuer)
         .audience().add(audience).and()
         .signWith(getSigningKey())
@@ -72,14 +82,18 @@ public class JwtService {
   }
 
   private Claims extractAllClaims(String token) {
-    return Jwts
-        .parser()
-        .verifyWith(getSigningKey())
-        .requireIssuer(issuer)
-        .requireAudience(audience)
-        .build()
-        .parseSignedClaims(token)
-        .getPayload();
+    try {
+      return Jwts
+          .parser()
+          .verifyWith(getSigningKey())
+          .requireIssuer(issuer)
+          .requireAudience(audience)
+          .build()
+          .parseSignedClaims(token)
+          .getPayload();
+    } catch (ExpiredJwtException ex) {
+      return ex.getClaims();
+    }
   }
 
   private SecretKey getSigningKey() {

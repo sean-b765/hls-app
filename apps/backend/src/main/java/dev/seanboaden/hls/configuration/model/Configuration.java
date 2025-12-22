@@ -22,4 +22,5 @@ public class Configuration {
   private boolean adminUserCreated = false;
   private String mediaDirectory;
   private String transcodeDirectory;
+  private String tmdbApiKey;
 }

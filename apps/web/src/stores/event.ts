@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { BaseMessage, RoomEvent, WsMessage } from '@/types/messages'
+import type { AnyRoomEvent, BaseMessage, WsMessage } from '@/types/messages'
 import { EventType } from '@/types/messages'
 import { useRoomStore } from './room'
 
@@ -18,7 +18,7 @@ export const useEventStore = defineStore('events', () => {
   function handleEvent(event: BaseMessage) {
     switch (event.type) {
       case EventType.ROOM:
-        handleIncomingWebSocketEvent(event as RoomEvent)
+        handleIncomingWebSocketEvent(event as AnyRoomEvent)
         break
     }
   }

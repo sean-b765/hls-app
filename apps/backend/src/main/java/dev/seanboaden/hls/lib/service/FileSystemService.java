@@ -4,20 +4,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.configuration.service.ConfigurationService;
 import dev.seanboaden.hls.transcode.model.TranscodeJob;
 
 @Service
 public class FileSystemService {
-  @Value("${transcode.directory}")
-  private String transcodeDirectory;
+  @Autowired
+  private ConfigurationService configurationService;
 
   public String getSegmentDirectory(TranscodeJob transcodeJob) {
     return StringUtils.joinWith(
         "/",
-        this.transcodeDirectory,
+        this.configurationService.getConfiguration().getTranscodeDirectory(),
         transcodeJob.getType().name(),
         transcodeJob.getMedia().getId(),
         transcodeJob.getQuality().getName());

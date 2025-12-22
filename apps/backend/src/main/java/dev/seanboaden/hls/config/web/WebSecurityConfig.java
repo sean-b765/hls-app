@@ -12,13 +12,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import dev.seanboaden.hls.config.filters.JwtAuthenticationFilter;
+import dev.seanboaden.hls.config.filter.JwtAuthenticationFilter;
+import dev.seanboaden.hls.config.filter.AuthorizationFilter;
 import dev.seanboaden.hls.user.model.Role;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+  @Autowired
+  private AuthorizationFilter wsAuthorizationHeaderFilter;
   @Autowired
   private JwtAuthenticationFilter jwtAuthenticationFilter;
   @Autowired
@@ -45,6 +48,7 @@ public class WebSecurityConfig {
             .requestMatchers("/api/**").hasAnyAuthority(Role.allRoles())
             .anyRequest().authenticated());
 
+    httpSecurity.addFilterBefore(wsAuthorizationHeaderFilter, UsernamePasswordAuthenticationFilter.class);
     httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return httpSecurity.build();
   }

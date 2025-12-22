@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  Cog,
-  CreditCard,
-  LogOut,
-  Moon,
-  Sparkles,
-  Sun,
-} from 'lucide-vue-next'
+import { BadgeCheck, ChevronsUpDown, Cog, LogOut, Moon, Sun } from 'lucide-vue-next'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,17 +18,13 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useColorMode } from '@vueuse/core'
-
-const props = defineProps<{
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}>()
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
 const { isMobile } = useSidebar()
 const mode = useColorMode()
+const userStore = useUserStore()
+const { username, highestRole, usernameShort } = storeToRefs(userStore)
 </script>
 
 <template>
@@ -51,12 +37,14 @@ const mode = useColorMode()
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
-              <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+              <!-- <AvatarImage :src="user.avatar" :alt="user.name" /> -->
+              <AvatarFallback class="rounded-lg">
+                {{ usernameShort }}
+              </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <span class="truncate font-medium">{{ username }}</span>
+              <span class="truncate text-xs">{{ highestRole }}</span>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -70,12 +58,14 @@ const mode = useColorMode()
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+                <!-- <AvatarImage :src="user.avatar" :alt="user.name" /> -->
+                <AvatarFallback class="rounded-lg">
+                  {{ usernameShort }}
+                </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold">{{ user.name }}</span>
-                <span class="truncate text-xs">{{ user.email }}</span>
+                <span class="truncate font-semibold">{{ username }}</span>
+                <span class="truncate text-xs">{{ highestRole }}</span>
               </div>
             </div>
           </DropdownMenuLabel>
@@ -111,16 +101,12 @@ const mode = useColorMode()
               Account
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <CreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell />
-              Notifications
+              <Cog />
+              Settings
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="userStore.signout">
             <LogOut />
             Log out
           </DropdownMenuItem>
