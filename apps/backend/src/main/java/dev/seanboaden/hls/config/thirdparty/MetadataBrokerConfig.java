@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 import info.movito.themoviedbapi.TmdbApi;
 
 @Component
-public class TmdbConfig {
-  @Value("${tmdb.apikey}")
+public class MetadataBrokerConfig {
+  @Value("${metadata.tmdb.apikey}")
   private String tmdbApiKey;
+  @Value("${metadata.default-broker-url}")
+  private String brokerUrl;
 
   @Bean
   public TmdbApi tmdbApi() {
