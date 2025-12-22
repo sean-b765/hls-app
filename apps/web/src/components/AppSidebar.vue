@@ -18,6 +18,11 @@ import NavUser from '@/components/NavUser.vue'
 import { client } from '@/lib/SocketClient'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
+import { useRoomStore } from '@/stores/room'
+import { storeToRefs } from 'pinia'
+
+const roomStore = useRoomStore()
+const { room } = storeToRefs(roomStore)
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   variant: 'inset',
@@ -46,7 +51,10 @@ const data = {
               </div>
               <div class="grid flex-1 text-left text-sm leading-tight ml-2">
                 <span class="flex justify-between truncate font-medium">
-                  <span>Home</span>
+                  <div class="flex flex-col">
+                    <span>Home</span>
+                    <span class="text-xs opacity-50 truncate">{{ room.name }}</span>
+                  </div>
                   <Tooltip>
                     <TooltipTrigger>
                       <Button
@@ -69,7 +77,6 @@ const data = {
                     </TooltipContent>
                   </Tooltip>
                 </span>
-                <span class="truncate text-xs opacity-75"> </span>
               </div>
             </RouterLink>
           </SidebarMenuButton>

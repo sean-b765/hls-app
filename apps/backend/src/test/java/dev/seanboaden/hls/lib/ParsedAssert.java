@@ -2,6 +2,8 @@ package dev.seanboaden.hls.lib;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import dev.seanboaden.hls.lib.model.FileNameMetadata;
+
 public class ParsedAssert {
   private final FileNameMetadata actual;
 

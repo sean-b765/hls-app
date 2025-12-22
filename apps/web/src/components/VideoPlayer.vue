@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Slider } from '@/components/ui/slider'
 import { formatSeconds } from '@/lib/utils'
-import { useRoomStore } from '@/stores/room'
+import { usePlayerStore } from '@/stores/player'
 import { Media } from '@hls-app/sdk'
 import Hls, { Level } from 'hls.js'
 import {
@@ -26,8 +26,8 @@ import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from
 const player = useTemplateRef<HTMLVideoElement>('player')
 let hls: Hls
 
-const roomStore = useRoomStore()
-const { playerState } = storeToRefs(roomStore)
+const playerStore = usePlayerStore()
+const { state } = storeToRefs(playerStore)
 const { media } = defineProps<{ media: Media }>()
 const qualities = ref<Level[]>([])
 const volume = ref([1])
@@ -77,7 +77,8 @@ function getSeekPercent(event: MouseEvent) {
 function onSeek(event: MouseEvent) {
   if (!player.value || !duration.value) return
   const percent = getSeekPercent(event)
-  player.value.currentTime = (percent / 100) * duration.value
+  const seekTime = (percent / 100) * duration.value
+  playerStore.seek(seekTime)
 }
 
 function onHover(event: MouseEvent) {
@@ -87,7 +88,7 @@ function onHover(event: MouseEvent) {
 function playPauseToggle() {
   const vid = player.value
   if (vid === null) return
-  if (playerState.value.playing) {
+  if (state.value.playing) {
     vid.pause()
   } else {
     vid.play()
@@ -110,10 +111,10 @@ function registerPlayerStateListeners() {
   const vid = player.value
   if (vid === null) return
   vid.onplay = () => {
-    playerState.value.playing = true
+    state.value.playing = true
   }
   vid.onpause = () => {
-    playerState.value.playing = false
+    state.value.playing = false
   }
   vid.ondurationchange = () => {
     duration.value = vid.duration
@@ -201,7 +202,7 @@ onBeforeUnmount(() => {
       >
         <div class="controls-left flex">
           <Button variant="ghost" size="icon-sm" class="cursor-pointer" @click="playPauseToggle">
-            <PlayIcon v-if="!playerState.playing" :size="18" fill="currentColor" />
+            <PlayIcon v-if="!state.playing" :size="18" fill="currentColor" />
             <PauseIcon v-else :size="18" fill="currentColor" />
           </Button>
         </div>
