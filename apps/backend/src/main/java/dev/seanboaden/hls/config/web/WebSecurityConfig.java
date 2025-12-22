@@ -34,9 +34,9 @@ public class WebSecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/user/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers("/ws").hasAnyRole(Role.userAndAbove())
+            .requestMatchers("/ws").hasAnyRole(Role.allRoles())
             .requestMatchers("/api/admin/**").hasAnyRole(Role.ADMIN)
-            .requestMatchers("/api/**").hasAnyRole(Role.userAndAbove())
+            .requestMatchers("/api/**").hasAnyRole(Role.allRoles())
             .anyRequest().authenticated());
 
     httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -31,6 +31,11 @@ public class AuthService {
     return this.userService.save(userSignupRequest);
   }
 
+  public User signup(User user) {
+    user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+    return this.userService.save(user);
+  }
+
   public User authenticate(AuthRequest request) {
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
