@@ -80,7 +80,7 @@ class BaseAPI {
   }
 }
 
-class AuthAPI extends BaseAPI {
+export class AuthAPI extends BaseAPI {
   /**
    * Setup the auth tokens on initial construction
    */
@@ -141,5 +141,3 @@ export const mediaApi = new MediaAPI()
 export const seriesApi = new SeriesAPI()
 
 export const moviesApi = new MoviesAPI()
-
-export const authApi = new AuthAPI()
