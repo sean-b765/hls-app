@@ -63,7 +63,6 @@ public class SessionWrapper {
 
   private void sendMessageSafe(TextMessage message) {
     try {
-      System.out.println(message.toString());
       session.sendMessage(message);
     } catch (IOException e) {
       Logging.error("Unable to send message");

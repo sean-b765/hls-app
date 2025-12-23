@@ -21,6 +21,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import dev.seanboaden.hls.config.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,7 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     try {
       if (this.jwtService.isTokenExpired(accessToken)) {
-        return;
+        System.out.println("expired token");
+        throw new ExpiredJwtException(null, null, accessToken);
       }
 
       final String userId = this.jwtService.extractSubject(accessToken);
@@ -62,10 +64,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       UserDetails user = this.userDetailsService.loadUserByUsername(userId);
 
       if (user == null) {
+        System.out.println("No user");
         return;
       }
 
       if (!this.jwtService.isTokenValid(accessToken, user)) {
+        System.out.println("invalid token");
         return;
       }
 
