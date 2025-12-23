@@ -7,12 +7,12 @@ import dev.seanboaden.hls.logging.Logging;
 import dev.seanboaden.hls.messaging.dto.ErrorResponse;
 import dev.seanboaden.hls.messaging.dto.InfoResponse;
 import dev.seanboaden.hls.messaging.model.AbstractWebSocketMessage;
+import dev.seanboaden.hls.user.model.User;
 import lombok.Data;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Data
 public class SessionWrapper {
@@ -21,7 +21,6 @@ public class SessionWrapper {
 
   public SessionWrapper(WebSocketSession session) {
     this.session = session;
-    this.session.getAttributes().put("userId", UUID.randomUUID().toString());
   }
 
   public void sendError(String message) {
@@ -47,10 +46,17 @@ public class SessionWrapper {
   }
 
   public String getUserId() {
-    Object userId = this.session.getAttributes().get("userId");
-    if (userId == null)
+    User user = this.getUser();
+    if (user == null)
       return null;
-    return userId.toString();
+    return user.getId();
+  }
+
+  public User getUser() {
+    Object userAttribute = this.session.getAttributes().get("user");
+    if (userAttribute == null)
+      return null;
+    return (User) userAttribute;
   }
 
   private void sendMessageSafe(String message) {
