@@ -13,7 +13,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Data
 public class SessionWrapper {
@@ -22,7 +21,6 @@ public class SessionWrapper {
 
   public SessionWrapper(WebSocketSession session) {
     this.session = session;
-    this.session.getAttributes().put("userId", UUID.randomUUID().toString());
   }
 
   public void sendError(String message) {
