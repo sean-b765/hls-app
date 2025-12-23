@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { watch } from 'vue'
 import { client } from '@/lib/SocketClient'
 import { useRoomStore } from '@/stores/room'
 import { generateUID } from '@/lib/utils'
@@ -13,10 +13,6 @@ watch(
     createRoom(generateUID())
   },
 )
-
-onMounted(() => {
-  client.connect()
-})
 </script>
 
 <template>

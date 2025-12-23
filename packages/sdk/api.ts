@@ -20,4 +20,5 @@ export * from './api/media-api';
 export * from './api/media-metadata-controller-api';
 export * from './api/movies-api';
 export * from './api/tvseries-api';
+export * from './api/user-api';
 

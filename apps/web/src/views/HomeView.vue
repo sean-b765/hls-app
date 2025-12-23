@@ -31,11 +31,13 @@ const featuredMovie = computed(() =>
 )
 
 // testing carousel with movies, will eventually create backend functionality
-const recommendedMovies = computed(() => movies.value.slice(2, 12))
+const recommendedMovies = computed(() =>
+  Array.isArray(movies.value) ? movies.value.slice(2, 12) : [],
+)
 
-const topMovies = computed(() => movies.value.slice(0, 10))
+const topMovies = computed(() => (Array.isArray(movies.value) ? movies.value.slice(0, 10) : []))
 
-const topSeries = computed(() => series.value.slice(0, 10))
+const topSeries = computed(() => (Array.isArray(series.value) ? series.value.slice(0, 10) : []))
 </script>
 <template>
   <div class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto flex flex-col">

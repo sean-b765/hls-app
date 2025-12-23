@@ -15,7 +15,12 @@ export class SocketClient {
   }
 
   public connect() {
-    this.client = new WebSocket(this.url)
+    const token = encodeURIComponent(localStorage.getItem('access_token') ?? '')
+    if (token) {
+      this.client = new WebSocket(this.url, [token])
+    } else {
+      this.client = new WebSocket(this.url)
+    }
     this.client.onopen = () => this.open()
     this.client.onclose = () => this.close()
     this.client.onerror = () => this.onerror()

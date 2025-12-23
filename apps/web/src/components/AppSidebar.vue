@@ -27,14 +27,6 @@ const { room } = storeToRefs(roomStore)
 const props = withDefaults(defineProps<SidebarProps>(), {
   variant: 'inset',
 })
-
-const data = {
-  user: {
-    name: 'anonymous',
-    email: '',
-    avatar: 'test.png',
-  },
-}
 </script>
 
 <template>
@@ -88,7 +80,7 @@ const data = {
       <NavRecentlyWatched />
     </SidebarContent>
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <NavUser />
     </SidebarFooter>
   </Sidebar>
 </template>

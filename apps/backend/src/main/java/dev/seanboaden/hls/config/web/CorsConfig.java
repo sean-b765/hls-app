@@ -13,24 +13,14 @@ public class CorsConfig {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/static/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/playlist/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/video/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET");
-        registry.addMapping("/api/media/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
-        registry.addMapping("/api/movies/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
-        registry.addMapping("/api/series/**")
-            .allowedOrigins("*")
-            .allowedMethods("*");
+        String[] allowedOrigins = new String[] {
+            "http://localhost:5173"
+        };
+        registry.addMapping("/**")
+            .allowedOrigins(allowedOrigins)
+            .allowCredentials(true)
+            .allowedMethods("*")
+            .exposedHeaders("Authorization");
       }
     };
   }

@@ -6,9 +6,11 @@ api/media-api.ts
 api/media-metadata-controller-api.ts
 api/movies-api.ts
 api/tvseries-api.ts
+api/user-api.ts
 base.ts
 common.ts
 configuration.ts
+docs/AuthRequest.md
 docs/HlsPlaylistControllerApi.md
 docs/HlsVideoControllerApi.md
 docs/Media.md
@@ -20,7 +22,9 @@ docs/MoviesApi.md
 docs/TVSeriesApi.md
 docs/TvSeasonCollection.md
 docs/TvSeriesCollection.md
+docs/UserApi.md
 index.ts
+models/auth-request.ts
 models/index.ts
 models/media-info.ts
 models/media-metadata.ts

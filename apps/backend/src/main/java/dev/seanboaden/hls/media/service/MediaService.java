@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.configuration.service.ConfigurationService;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.repository.MediaRepository;
 
@@ -21,8 +22,8 @@ import java.util.stream.Stream;
 public class MediaService {
   @Autowired
   private MediaRepository mediaRepository;
-  @Value("${media.root}")
-  private String rootPath;
+  @Autowired
+  private ConfigurationService configurationService;
 
   public Media save(Media media) {
     if (media == null)
@@ -55,9 +56,9 @@ public class MediaService {
   }
 
   public Path getMediaRootPath() {
-    if (this.rootPath == null)
+    if (this.configurationService.getConfiguration().getMediaDirectory() == null)
       return null;
-    return Paths.get(this.rootPath);
+    return Paths.get(this.configurationService.getConfiguration().getMediaDirectory());
   }
 
   private List<Path> listFiles(Path path) {
