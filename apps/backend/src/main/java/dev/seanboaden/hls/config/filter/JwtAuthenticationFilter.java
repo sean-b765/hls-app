@@ -20,7 +20,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dev.seanboaden.hls.config.scope.UserRequestScope;
 import dev.seanboaden.hls.config.service.JwtService;
+import dev.seanboaden.hls.user.model.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,6 +33,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private AntPathMatcher pathMatcher = new AntPathMatcher();
 
+  @Autowired
+  private UserRequestScope userRequestScope;
   @Autowired
   private JwtService jwtService;
   @Autowired
@@ -84,6 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       // Set security context with authentication
       SecurityContext context = SecurityContextHolder.getContext();
       context.setAuthentication(authentication);
+      this.userRequestScope.setUser((User) user);
     } catch (Exception ex) {
       System.out.println("JWT Authentication Error: " + ex.getMessage());
       response.setStatus(403);
