@@ -6,12 +6,12 @@ import { type UserRole, type JwtPayload } from '@/types/user'
 import { client } from '@/lib/SocketClient'
 
 export const useUserStore = defineStore('user', () => {
-  function loadAccessToken() {
+  function authenticate() {
     const accessToken = localStorage.getItem('access_token')
     if (accessToken) {
       const payload = jwtDecode<JwtPayload>(accessToken)
-      console.log(payload)
       user.value = payload
+      client.connect()
     } else {
       user.value = null
     }
@@ -33,19 +33,18 @@ export const useUserStore = defineStore('user', () => {
     const res = await userApi.login({ username, password })
     const jwt = res.headers['authorization']
     localStorage.setItem('access_token', 'Bearer ' + jwt)
-    loadAccessToken()
-    // client.connect()
+    authenticate()
     return
   }
 
   async function signout() {
     userApi.logout()
-    loadAccessToken()
+    authenticate()
   }
 
   function handleIncomingWebSocketEvent(event: unknown) {}
 
-  loadAccessToken()
+  authenticate()
   return {
     user,
     isLoggedIn,

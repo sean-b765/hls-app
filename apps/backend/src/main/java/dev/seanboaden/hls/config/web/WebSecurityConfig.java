@@ -13,15 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import dev.seanboaden.hls.config.filter.JwtAuthenticationFilter;
-import dev.seanboaden.hls.config.filter.AuthorizationFilter;
 import dev.seanboaden.hls.user.model.Role;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
-  @Autowired
-  private AuthorizationFilter wsAuthorizationHeaderFilter;
   @Autowired
   private JwtAuthenticationFilter jwtAuthenticationFilter;
   @Autowired
@@ -41,14 +38,13 @@ public class WebSecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/user/**").permitAll()
+            .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers("/ws").hasAnyAuthority(Role.allRoles())
             .requestMatchers("/api/admin/**").hasAnyAuthority(Role.ADMIN)
-            .requestMatchers("/api/**").hasAnyAuthority(Role.allRoles())
+            .requestMatchers("/ws", "/ws/**").hasAnyAuthority(Role.ALL_ROLES)
+            .requestMatchers("/**").hasAnyAuthority(Role.ALL_ROLES)
             .anyRequest().authenticated());
 
-    httpSecurity.addFilterBefore(wsAuthorizationHeaderFilter, UsernamePasswordAuthenticationFilter.class);
     httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return httpSecurity.build();
   }

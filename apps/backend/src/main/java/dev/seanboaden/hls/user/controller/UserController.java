@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +33,22 @@ public class UserController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody AuthRequest request) {
-    User user = this.authService.authenticate(request);
+    User user = null;
+    Optional<User> existingUserByUsername = this.userService.findByUsername(request.getUsername());
+    if (existingUserByUsername.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
 
-    return ResponseEntity.ok()
-        .header(HttpHeaders.AUTHORIZATION, jwtService.generateToken(user))
-        .build();
+    String userId = existingUserByUsername.get().getId();
+    try {
+      user = this.authService.authenticate(userId, request.getPassword());
+      return ResponseEntity.ok()
+          .header(HttpHeaders.AUTHORIZATION, jwtService.generateToken(user))
+          .build();
+    } catch (BadCredentialsException ex) {
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
   @PostMapping("/signup")

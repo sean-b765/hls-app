@@ -32,7 +32,7 @@ public class AdminUserStartupService {
       return;
 
     User adminUser = User.builder()
-        .roles(List.of(Role.allRoles()))
+        .roles(List.of(Role.ALL_ROLES))
         .username(adminUsername)
         .password(adminPassword)
         .build();

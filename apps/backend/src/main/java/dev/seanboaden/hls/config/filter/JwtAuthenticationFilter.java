@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -43,6 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletRequest request,
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain) throws ServletException, IOException {
+    this.extractAccessTokenFromAuthorizationHeader(request);
+    this.extractAccessTokenFromWsHeader(request);
+
     final Object tokenAttribute = request.getAttribute("AccessToken");
 
     if (tokenAttribute == null) {
@@ -57,9 +57,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return;
       }
 
-      final String username = this.jwtService.extractUsername(accessToken);
+      final String userId = this.jwtService.extractSubject(accessToken);
 
-      UserDetails user = this.userDetailsService.loadUserByUsername(username);
+      UserDetails user = this.userDetailsService.loadUserByUsername(userId);
 
       if (user == null) {
         return;
@@ -77,7 +77,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           null,
           authorities);
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+      // Set security context with authentication
+      SecurityContext context = SecurityContextHolder.getContext();
+      context.setAuthentication(authentication);
     } catch (Exception ex) {
       System.out.println("JWT Authentication Error: " + ex.getMessage());
       response.setStatus(403);
@@ -95,5 +97,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
     };
     return pathsToSkip.stream().anyMatch(p -> this.pathMatcher.match(p, request.getServletPath()));
+  }
+
+  private void extractAccessTokenFromWsHeader(@NonNull HttpServletRequest request) {
+    final String header = request.getHeader("Sec-WebSocket-Protocol");
+    if (header == null || header.isEmpty())
+      return;
+
+    String accessToken = header.replace("Bearer%20", "");
+
+    // Extract the access token from header, place in our request scope
+    request.setAttribute("AccessToken", accessToken);
+  }
+
+  private void extractAccessTokenFromAuthorizationHeader(@NonNull HttpServletRequest request) {
+    final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+    if (header == null || header.isEmpty() || !header.startsWith("Bearer "))
+      return;
+
+    final String accessToken = header.split(" ")[1].trim();
+    if (accessToken.isEmpty())
+      return;
+
+    // place in request scope
+    request.setAttribute("AccessToken", accessToken);
   }
 }

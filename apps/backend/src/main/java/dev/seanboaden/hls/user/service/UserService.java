@@ -14,6 +14,10 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
+  public Optional<User> findById(@NonNull String id) {
+    return this.userRepository.findById(id);
+  }
+
   public Optional<User> findByUsername(String username) {
     return this.userRepository.findByUsername(username);
   }

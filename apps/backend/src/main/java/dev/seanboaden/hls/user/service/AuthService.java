@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,9 +41,9 @@ public class AuthService {
     return this.userService.save(user);
   }
 
-  public User authenticate(AuthRequest request) {
+  public User authenticate(String userId, String password) throws BadCredentialsException {
     Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        .authenticate(new UsernamePasswordAuthenticationToken(userId, password));
 
     return (User) authentication.getPrincipal();
   }

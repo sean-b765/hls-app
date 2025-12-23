@@ -21,7 +21,7 @@ public class AuthConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> this.userService.findByUsername(username)
+    return username -> this.userService.findById(username)
         .orElseThrow(() -> new UsernameNotFoundException("User not found " + username));
   }
 

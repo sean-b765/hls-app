@@ -17,7 +17,7 @@ export class SocketClient {
   public connect() {
     const token = encodeURIComponent(localStorage.getItem('access_token') ?? '')
     if (token) {
-      this.client = new WebSocket(this.url, ['Authorization', token])
+      this.client = new WebSocket(this.url, [token])
     } else {
       this.client = new WebSocket(this.url)
     }
@@ -39,6 +39,7 @@ export class SocketClient {
 
   private open() {
     this._state.value.connected = true
+    console.log('OPEN CONNECTION!')
   }
 
   private close() {
