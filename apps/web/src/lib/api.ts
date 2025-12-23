@@ -26,8 +26,12 @@ class BaseAPI {
 
   protected async consumeRefreshToken() {
     this.clearAuthorization()
-    const response = await this.axios.post('/auth/refresh')
-    if (response.status !== 200) {
+    try {
+      const response = await this.axios.post('/auth/refresh')
+      if (response.status !== 200) {
+        emitter.emit('auth', null)
+      }
+    } catch (e) {
       emitter.emit('auth', null)
     }
   }
@@ -48,6 +52,7 @@ class BaseAPI {
     }
     // Ensure jwt is cleared from localStorage if we were forbidden and refresh token was unsuccessfully refreshed
     this.clearAuthorization()
+    emitter.emit('auth', null)
   }
 
   constructor() {
@@ -110,8 +115,10 @@ export class AuthAPI extends BaseAPI {
   public login(body: AuthRequest) {
     return this.axios.post(`/auth/login`, body)
   }
-  public logout() {
+  public async logout() {
+    await this.axios.post(`/auth/logout`)
     this.clearAuthorization()
+    emitter.emit('auth', null)
   }
 }
 

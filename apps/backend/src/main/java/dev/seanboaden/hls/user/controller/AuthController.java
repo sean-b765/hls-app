@@ -67,6 +67,15 @@ public class AuthController {
     }
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletResponse response) {
+    Cookie cookie = new Cookie("refreshToken", null);
+    response.addCookie(cookie);
+    return ResponseEntity.ok()
+        .header(HttpHeaders.AUTHORIZATION, "")
+        .build();
+  }
+
   @PostMapping("/signup")
   public ResponseEntity<?> signup(@RequestBody AuthRequest request) {
     Optional<User> existingUser = this.userService.findByUsername(request.getUsername());
