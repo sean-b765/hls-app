@@ -96,8 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
     List<String> pathsToSkip = new ArrayList<>() {
       {
-        add("/api/users/login");
-        add("/api/users/signup");
+        add("/auth/**");
       }
     };
     return pathsToSkip.stream().anyMatch(p -> this.pathMatcher.match(p, request.getServletPath()));

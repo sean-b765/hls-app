@@ -4,10 +4,10 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { isLoggedIn } = storeToRefs(userStore)
+const { isReady, isLoggedIn } = storeToRefs(userStore)
 </script>
 
 <template>
-  <AuthDialog :open="!isLoggedIn" />
+  <AuthDialog :open="isReady && !isLoggedIn" />
   <slot />
 </template>

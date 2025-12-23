@@ -39,7 +39,6 @@ export class SocketClient {
 
   private open() {
     this._state.value.connected = true
-    console.log('OPEN CONNECTION!')
   }
 
   private close() {

@@ -27,9 +27,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/user")
-@Tag(name = "User", description = "Sign-up and authentication")
-public class UserController {
+@RequestMapping("/auth")
+@Tag(name = "Auth", description = "Authentication and signup")
+public class AuthController {
   @Value("${security.jwt.refresh-token.expiration-time}")
   private long refreshTokenExpirationMs;
   @Autowired
@@ -67,6 +67,17 @@ public class UserController {
     }
   }
 
+  @PostMapping("/signup")
+  public ResponseEntity<?> signup(@RequestBody AuthRequest request) {
+    Optional<User> existingUser = this.userService.findByUsername(request.getUsername());
+    if (existingUser.isPresent()) {
+      return ResponseEntity.badRequest().body("Username taken");
+    }
+
+    User user = this.authService.signup(request);
+    return ResponseEntity.ok(user);
+  }
+
   @PostMapping("/refresh")
   public ResponseEntity<?> refresh(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
     if (refreshToken == null || refreshToken.isEmpty()) {
@@ -97,22 +108,4 @@ public class UserController {
     }
   }
 
-  @PostMapping("/signup")
-  public ResponseEntity<?> signup(@RequestBody AuthRequest request) {
-    Optional<User> existingUser = this.userService.findByUsername(request.getUsername());
-    if (existingUser.isPresent()) {
-      return ResponseEntity.badRequest().body("Username taken");
-    }
-
-    User user = this.authService.signup(request);
-    return ResponseEntity.ok(user);
-  }
-
-  @DeleteMapping("/delete/{id}")
-  public ResponseEntity<?> deleteUser(@PathVariable String id) {
-    if (id == null)
-      return ResponseEntity.notFound().build();
-    this.userService.deleteById(id);
-    return ResponseEntity.ok().build();
-  }
 }

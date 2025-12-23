@@ -1,5 +1,8 @@
+import type { JwtPayload } from '@/types/user'
 import { type AuthRequest, type Media, type TvSeriesCollection } from '@hls-app/sdk'
 import axios, { type AxiosResponse } from 'axios'
+import { jwtDecode } from 'jwt-decode'
+import { emitter } from './event'
 
 class BaseAPI {
   protected axios = axios.create({
@@ -11,14 +14,45 @@ class BaseAPI {
     return this.axios.defaults.baseURL
   }
 
+  protected getAccessToken() {
+    return localStorage.getItem('access_token')
+  }
+
+  protected getJwt() {
+    const token = this.getAccessToken()
+    if (!token) return null
+    return jwtDecode<JwtPayload>(token)
+  }
+
+  protected async consumeRefreshToken() {
+    this.clearAuthorization()
+    const response = await this.axios.post('/auth/refresh')
+    if (response.status !== 200) {
+      emitter.emit('auth', null)
+    }
+  }
+
   protected clearAuthorization() {
     localStorage.removeItem('access_token')
     delete this.axios.defaults.headers.common.Authorization
   }
 
+  protected refreshOrLogoutIfNecessary(response: AxiosResponse) {
+    if (!response) return
+    if (response.status !== 403) return
+
+    if (response.config.url !== '/auth/refresh') {
+      // Try to use the refresh token
+      this.consumeRefreshToken()
+      return
+    }
+    // Ensure jwt is cleared from localStorage if we were forbidden and refresh token was unsuccessfully refreshed
+    this.clearAuthorization()
+  }
+
   constructor() {
     this.axios.interceptors.request.use((config) => {
-      const token = localStorage.getItem('access_token') || undefined
+      const token = this.getAccessToken()
       if (token) {
         config.headers.Authorization = token
       } else {
@@ -28,16 +62,56 @@ class BaseAPI {
     })
     this.axios.interceptors.response.use(
       (response) => {
-        // Ensure jwt is cleared from localStorage if we were forbidden
-        if (response.status === 403) this.clearAuthorization()
+        if (response.headers['authorization']) {
+          const jwt = response.headers['authorization']
+          localStorage.setItem('access_token', 'Bearer ' + jwt)
+          emitter.emit('auth', this.getJwt())
+        }
+
+        this.refreshOrLogoutIfNecessary(response)
         return response
       },
       (error) => {
         const response = error.response as AxiosResponse
-        if (response?.status === 403) this.clearAuthorization()
+        this.refreshOrLogoutIfNecessary(response)
         return Promise.reject(error)
       },
     )
+  }
+}
+
+class AuthAPI extends BaseAPI {
+  /**
+   * Setup the auth tokens on initial construction
+   */
+  protected async setup() {
+    const jwt = this.getJwt()
+    if (!jwt) return
+
+    const nowEpochSeconds = Date.now() / 1000
+    if (jwt.exp > nowEpochSeconds) {
+      emitter.emit('auth', jwt)
+      return
+    }
+
+    if (jwt.exp <= nowEpochSeconds) {
+      await this.consumeRefreshToken()
+    }
+  }
+
+  constructor() {
+    super()
+    this.setup()
+  }
+
+  public signup(body: AuthRequest) {
+    return this.axios.post(`/auth/signup`, body)
+  }
+  public login(body: AuthRequest) {
+    return this.axios.post(`/auth/login`, body)
+  }
+  public logout() {
+    this.clearAuthorization()
   }
 }
 
@@ -62,22 +136,10 @@ class MoviesAPI extends BaseAPI {
   }
 }
 
-class UserAPI extends BaseAPI {
-  public signup(body: AuthRequest) {
-    return this.axios.post(`/api/user/signup`, body)
-  }
-  public login(body: AuthRequest) {
-    return this.axios.post(`/api/user/login`, body)
-  }
-  public logout() {
-    this.clearAuthorization()
-  }
-}
-
 export const mediaApi = new MediaAPI()
 
 export const seriesApi = new SeriesAPI()
 
 export const moviesApi = new MoviesAPI()
 
-export const userApi = new UserAPI()
+export const authApi = new AuthAPI()

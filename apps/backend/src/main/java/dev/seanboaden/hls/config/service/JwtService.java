@@ -22,19 +22,32 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
   @Value("${security.jwt.secret-key}")
   private String secretKey;
+  @Value("${security.jwt.iss}")
+  private String issuer;
+  @Value("${security.jwt.aud}")
+  private String audience;
+  @Value("${security.jwt.access-token.expiration-time}")
+  private long accessTokenExpirationMs;
+  @Value("${security.jwt.refresh-token.expiration-time}")
+  private long refreshTokenExpirationMs;
 
-  @Value("${security.jwt.expiration-time}")
-  private long jwtExpirationMs;
-
-  private String audience = "media-client";
-  private String issuer = "media-server";
-
-  public String generateToken(User user) {
-    return this.generateToken(new HashMap<>(), user);
+  public String generateAccessToken(User user) {
+    return this.generateAccessToken(new HashMap<>(), user);
   }
 
-  public String generateToken(Map<String, Object> claims, User user) {
-    return this.buildToken(claims, user, jwtExpirationMs);
+  public String generateRefreshToken(User user) {
+    return this.generateRefreshToken(new HashMap<>(), user);
+  }
+
+  public String generateAccessToken(Map<String, Object> claims, User user) {
+    // Ensure roles attached to claims
+    claims.putIfAbsent("roles", user.getAuthorities());
+    claims.putIfAbsent("username", user.getUsername());
+    return this.buildToken(claims, user, accessTokenExpirationMs);
+  }
+
+  public String generateRefreshToken(Map<String, Object> claims, User user) {
+    return this.buildToken(claims, user, refreshTokenExpirationMs);
   }
 
   public String extractUsername(String token) {
@@ -65,10 +78,6 @@ public class JwtService {
   }
 
   private String buildToken(Map<String, Object> claims, User user, long expirationMs) {
-    // Ensure roles attached to claims
-    claims.putIfAbsent("roles", user.getAuthorities());
-    claims.putIfAbsent("username", user.getUsername());
-
     return Jwts
         .builder()
         .claims(claims)

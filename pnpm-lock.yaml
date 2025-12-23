@@ -77,6 +77,9 @@ importers:
       lucide-vue-next:
         specifier: ^0.555.0
         version: 0.555.0(vue@3.5.24(typescript@5.9.3))
+      mitt:
+        specifier: ^3.0.1
+        version: 3.0.1
       moment:
         specifier: ^2.30.1
         version: 2.30.1

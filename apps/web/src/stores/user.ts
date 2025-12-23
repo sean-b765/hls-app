@@ -1,24 +1,24 @@
-import { userApi } from '@/lib/api'
+import { authApi } from '@/lib/api'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { jwtDecode } from 'jwt-decode'
 import { type UserRole, type JwtPayload } from '@/types/user'
 import { client } from '@/lib/SocketClient'
+import { emitter } from '@/lib/event'
 
 export const useUserStore = defineStore('user', () => {
-  function authenticate() {
-    const accessToken = localStorage.getItem('access_token')
-    if (accessToken) {
-      const payload = jwtDecode<JwtPayload>(accessToken)
-      user.value = payload
-      client.connect()
-    } else {
+  emitter.on('auth', (jwt) => {
+    if (!jwt) {
       user.value = null
+      client.disconnect()
+      return
     }
-  }
+    user.value = jwt
+    client.connect()
+  })
 
-  const user = ref<JwtPayload | null>(null)
+  const user = ref<JwtPayload | null>()
 
+  const isReady = computed(() => user.value !== undefined)
   const isLoggedIn = computed(() => !!user.value?.sub)
   const roles = computed(() => user.value?.roles ?? [])
   const isAdmin = computed(() => roles.value.some((el) => el.authority === 'ADMIN'))
@@ -30,23 +30,18 @@ export const useUserStore = defineStore('user', () => {
   const usernameShort = computed(() => username.value.substring(0, 2).toUpperCase())
 
   async function signin(username: string, password: string) {
-    const res = await userApi.login({ username, password })
-    const jwt = res.headers['authorization']
-    localStorage.setItem('access_token', 'Bearer ' + jwt)
-    authenticate()
-    return
+    await authApi.login({ username, password })
   }
 
   async function signout() {
-    userApi.logout()
-    authenticate()
+    authApi.logout()
   }
 
   function handleIncomingWebSocketEvent(event: unknown) {}
 
-  authenticate()
   return {
     user,
+    isReady,
     isLoggedIn,
     isAdmin,
     username,
