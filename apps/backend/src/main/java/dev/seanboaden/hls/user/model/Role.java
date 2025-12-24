@@ -8,4 +8,8 @@ public class Role {
       USER,
       ADMIN
   };
+
+  public static class PreAuthorized {
+    public static final String ADMIN = "hasAuthority('" + Role.ADMIN + "')";
+  }
 }

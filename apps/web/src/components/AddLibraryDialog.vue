@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
+import FolderBrowser from '@/components/FolderBrowser.vue'
 import { LibraryType } from '@/types/libraries'
 
 const open = defineModel<boolean>('open')
@@ -30,6 +31,7 @@ const createLibrarySchema = toTypedSchema(
   z.object({
     name: z.string().min(2, { error: '2 characters minimum' }).max(50).default(''),
     type: z.string().default('MOVIES'),
+    path: z.string().default(''),
   }),
 )
 
@@ -72,9 +74,7 @@ function createLibrary() {}
                     size="sm"
                     variant="secondary"
                     class="shadow-none cursor-pointer"
-                    :class="
-                      componentField.modelValue === option ? 'bg-primary hover:bg-primary' : ''
-                    "
+                    :class="componentField.modelValue === option ? 'bg-ring hover:bg-ring' : ''"
                     @click="() => (componentField.modelValue = option)"
                   >
                     <Clapperboard v-if="option === 'MOVIES'" />
@@ -131,7 +131,28 @@ function createLibrary() {}
               </Field>
             </VeeField>
           </FieldGroup>
+
+          <FieldGroup>
+            <VeeField v-slot="{ componentField, errors }" name="path">
+              <Field :data-invalid="!!errors.length">
+                <FieldLabel for="path"> Path </FieldLabel>
+                <Input
+                  disabled
+                  id="path"
+                  type="text"
+                  placeholder="Library path"
+                  v-bind="componentField"
+                />
+                <FolderBrowser
+                  :selected="componentField.modelValue"
+                  @update:selected="componentField['onUpdate:modelValue']"
+                />
+                <FieldError v-if="errors.length" :errors="errors.map((message) => ({ message }))" />
+              </Field>
+            </VeeField>
+          </FieldGroup>
         </form>
+
         <DialogFooter>
           <Button class="mt-6" type="submit" size="sm" form="addLibraryForm">
             <Plus />

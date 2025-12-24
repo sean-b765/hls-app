@@ -3,6 +3,7 @@ import { type AuthRequest, type Media, type TvSeriesCollection } from '@hls-app/
 import axios, { type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
+import type { FolderNode } from '@/types/filesystem'
 
 class BaseAPI {
   protected axios = axios.create({
@@ -143,8 +144,16 @@ class MoviesAPI extends BaseAPI {
   }
 }
 
+class FileSystemAPI extends BaseAPI {
+  public findFolders(path: string) {
+    return this.axios.get<FolderNode[]>(`/api/filesystem/folders?path=${encodeURIComponent(path)}`)
+  }
+}
+
 export const mediaApi = new MediaAPI()
 
 export const seriesApi = new SeriesAPI()
 
 export const moviesApi = new MoviesAPI()
+
+export const fileSystemAPI = new FileSystemAPI()
