@@ -26,4 +26,8 @@ public class LibraryService {
   public List<Library> findAll() {
     return this.libraryRepository.findAll();
   }
+
+  public void delete(@NonNull String id) {
+    this.libraryRepository.deleteById(id);
+  }
 }

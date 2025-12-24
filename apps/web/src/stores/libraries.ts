@@ -21,10 +21,17 @@ export const useLibraryStore = defineStore('library', () => {
     libraries.value = response.data
   }
 
+  async function deleteById(id: string) {
+    const response = await libraryApi.deleteById(id)
+    if (response.status !== 200) return
+    libraries.value = libraries.value.filter((el) => el.id !== id)
+  }
+
   return {
     libraries,
     getAll,
     create,
+    deleteById,
     handleIncomingWebSocketEvent,
   }
 })

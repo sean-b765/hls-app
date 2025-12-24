@@ -158,6 +158,9 @@ class LibraryAPI extends BaseAPI {
   public getAll() {
     return this.axios.get<Library[]>('/api/library')
   }
+  public deleteById(id: string) {
+    return this.axios.delete(`/api/library/${id}`)
+  }
 }
 
 export const mediaApi = new MediaAPI()

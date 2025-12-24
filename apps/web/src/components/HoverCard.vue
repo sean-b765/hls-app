@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+defineProps<{ headerClass?: string }>()
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
       <CardHeader
         v-if="$slots.header"
         class="p-6 pb-0 flex flex-row gap-2 items-center transition-all duration-250 group-hover:px-5 group-hover:pt-5"
+        :class="headerClass"
       >
         <slot name="header" />
       </CardHeader>
