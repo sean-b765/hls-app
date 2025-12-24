@@ -1,11 +1,20 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Library } from '@/types/libraries'
 import { libraryApi } from '@/lib/api'
+import { useRoute } from 'vue-router'
 
 export const useLibraryStore = defineStore('library', () => {
   const handlers: unknown = {}
   const libraries = ref<Library[]>([])
+
+  const route = useRoute()
+
+  const selectedLibrary = computed<Library | undefined>(() => {
+    const id = route.params['libraryId'] as string
+    const m = libraries.value.find((el) => el.id === id)
+    return m
+  })
 
   function handleIncomingWebSocketEvent(event: unknown) {}
 
@@ -37,6 +46,7 @@ export const useLibraryStore = defineStore('library', () => {
 
   return {
     libraries,
+    selectedLibrary,
     getAll,
     create,
     update,

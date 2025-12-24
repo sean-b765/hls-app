@@ -1,14 +1,23 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { mediaApi, moviesApi, seriesApi } from '@/lib/api.js'
 import type { Media, TvSeriesCollection } from '@hls-app/sdk'
 import type { Progress, ScanProgress } from '@/types/media'
+import { useRoute } from 'vue-router'
 
 export const useMediaStore = defineStore('media', () => {
   const media = ref<Media[]>([])
   const movies = ref<Media[]>([])
   const series = ref<TvSeriesCollection[]>([])
   const scanProgress = ref<ScanProgress>({})
+
+  const route = useRoute()
+
+  const selectedMedia = computed<Media | undefined>(() => {
+    const id = route.params['mediaId'] as string
+    const m = media.value.find((el) => el.id === id)
+    return m
+  })
 
   async function getMovies() {
     const res = await moviesApi.findMovies()
@@ -67,6 +76,7 @@ export const useMediaStore = defineStore('media', () => {
 
   return {
     media,
+    selectedMedia,
     movies,
     series,
     getMovies,

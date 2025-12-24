@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import AuthDialog from '@/components/AuthDialog.vue'
 import { useLibraryStore } from '@/stores/libraries'
+import { useMediaStore } from '@/stores/media'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 
 const userStore = useUserStore()
 const libraryStore = useLibraryStore()
+const mediaStore = useMediaStore()
 const { isReady, isLoggedIn } = storeToRefs(userStore)
 
 watch(
@@ -17,6 +19,8 @@ watch(
 
     // User is ready and authenticated
     await libraryStore.getAll()
+    await mediaStore.getMovies()
+    await mediaStore.getSeries()
   },
   {
     immediate: true,

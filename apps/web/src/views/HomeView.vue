@@ -12,18 +12,11 @@ import HomeCard from '@/components/HomeCard.vue'
 // import HomeNavbar from '@/components/HomeNavbar.vue'
 
 import { useMediaStore } from '@/stores/media'
-import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
 const mediaStore = useMediaStore()
 const { movies, series } = storeToRefs(mediaStore)
-
-onMounted(async () => {
-  await mediaStore.getMovies()
-  await mediaStore.getSeries()
-  // await mediaStore.startScanProgress()
-})
 
 // Featured movie is a random media for now
 const featuredMovie = computed(() =>

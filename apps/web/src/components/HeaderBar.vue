@@ -13,22 +13,20 @@ import { useRoute, useRouter } from 'vue-router'
 import { uniq } from 'lodash'
 import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
-import { Media } from '@hls-app/sdk'
+import { useLibraryStore } from '@/stores/libraries'
 const route = useRoute()
 const router = useRouter()
 const mediaStore = useMediaStore()
-const { media } = storeToRefs(mediaStore)
-
-const selectedMedia = computed<Media | undefined>(() => {
-  const id = route.params['mediaId'] as string
-  const m = media.value.find((el) => el.id === id)
-  return m
-})
+const libraryStore = useLibraryStore()
+const { selectedMedia } = storeToRefs(mediaStore)
+const { selectedLibrary } = storeToRefs(libraryStore)
 
 function resolveName(name: string) {
   switch (name) {
     case 'WatchMedia':
       return selectedMedia.value?.info?.name
+    case 'Library':
+      return selectedLibrary.value?.name
     default:
       return name
   }
@@ -50,6 +48,7 @@ const breadcrumbs = computed(() => {
     .map((r) => router.resolve(r))
     .filter(Boolean)
     .filter((r) => r.name)
+    .filter((r) => r.name !== 'Home')
     .map((r) => ({
       name: resolveName(r.name as string),
       path: r.path,
@@ -73,7 +72,7 @@ const breadcrumbs = computed(() => {
           class="mr-2 data-[orientation=vertical]:h-4"
         />
       </transition>
-      <Breadcrumb>
+      <Breadcrumb class="-ml-1">
         <BreadcrumbList>
           <transition-group
             enter-from-class="opacity-0"
@@ -86,7 +85,6 @@ const breadcrumbs = computed(() => {
             <template v-for="(path, i) of breadcrumbs" :key="path">
               <BreadcrumbItem class="hidden md:block" :style="{ transitionDelay: `${i * 50}ms` }">
                 <RouterLink :to="path.path" class="flex gap-1 items-center">
-                  <component v-if="path.meta?.icon" :is="path.meta.icon" :size="12" />
                   <BreadcrumbLink tag="#"> {{ path.name }} </BreadcrumbLink>
                 </RouterLink>
               </BreadcrumbItem>

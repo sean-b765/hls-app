@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
 import MediaCard from '@/components/MediaCard.vue'
 import { useRouter } from 'vue-router'
 const mediaStore = useMediaStore()
 const { movies, series } = storeToRefs(mediaStore)
 const router = useRouter()
-
-onMounted(async () => {
-  await mediaStore.getMovies()
-  await mediaStore.getSeries()
-  // await mediaStore.startScanProgress()
-})
 
 function clickMedia(id: string | undefined) {
   if (id === undefined) return
