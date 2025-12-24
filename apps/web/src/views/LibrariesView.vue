@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import AddLibraryDialog from '@/components/AddLibraryDialog.vue'
-import Button from '@/components/ui/button/Button.vue'
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
+import HoverCard from '@/components/HoverCard.vue'
+import { getLibraryIcon } from '@/lib/utils'
 import { useLibraryStore } from '@/stores/libraries'
 import { useUserStore } from '@/stores/user'
 import { Plus } from 'lucide-vue-next'
@@ -21,28 +19,27 @@ const addLibraryDialog = ref(false)
   <div
     class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-3"
   >
-    <Card v-for="library in libraries" :key="library.id" class="h-80 flex flex-col">
-      <CardHeader class="pb-0">
-        <p class="text-sm">{{ library.name }}</p>
-      </CardHeader>
-      <CardContent class="flex grow items-center justify-center"> </CardContent>
-    </Card>
-    <Card class="h-80 flex flex-col">
-      <CardHeader class="pb-0">
-        <p v-if="libraries.length === 0" class="text-sm opacity-80">You have no libraries.</p>
-      </CardHeader>
-      <CardContent class="flex grow items-center justify-center">
-        <Button
-          v-if="isAdmin"
-          class="cursor-pointer"
-          size="sm"
-          variant="ghost"
-          @click="() => (addLibraryDialog = true)"
-        >
-          <Plus />
+    <HoverCard v-for="library in libraries" :key="library.id">
+      <template #prepend-header>
+        <component
+          :is="getLibraryIcon(library)"
+          :size="130"
+          class="absolute opacity-10 transition-all duration-250 group-hover:opacity-20"
+          style="left: 50%; top: 50%; transform: translate(-50%, -50%)"
+        />
+      </template>
+      <template #header>
+        <p class="text-lg font-bold">{{ library.name }}</p>
+      </template>
+    </HoverCard>
+
+    <HoverCard v-if="isAdmin" @click="() => (addLibraryDialog = true)">
+      <template #content>
+        <p class="text-md flex items-center gap-2">
+          <Plus :size="20" />
           Create
-        </Button>
-      </CardContent>
-    </Card>
+        </p>
+      </template>
+    </HoverCard>
   </div>
 </template>

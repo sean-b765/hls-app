@@ -22,10 +22,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
 import FolderBrowser from '@/components/FolderBrowser.vue'
-import { LibraryType } from '@/types/libraries'
+import { Library, LibraryType } from '@/types/libraries'
+import { useLibraryStore } from '@/stores/libraries'
+import { getLibraryIcon } from '@/lib/utils'
 
 const open = defineModel<boolean>('open')
 const typeOptions: LibraryType[] = ['MOVIES', 'TV', 'MUSIC', 'ANIME', 'OTHER']
+const libraryStore = useLibraryStore()
 
 const createLibrarySchema = toTypedSchema(
   z.object({
@@ -35,13 +38,16 @@ const createLibrarySchema = toTypedSchema(
   }),
 )
 
-function createLibrary() {}
+async function createLibrary(values: unknown) {
+  const library = values as Library
+  await libraryStore.create(library)
+}
 </script>
 
 <template>
   <Form v-slot="{ handleSubmit }" as="" keep-values :validation-schema="createLibrarySchema">
     <Dialog v-model:open="open">
-      <DialogContent class="sm:max-w-[600px] [&>button]:hidden">
+      <DialogContent class="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Add a library</DialogTitle>
         </DialogHeader>
@@ -75,13 +81,9 @@ function createLibrary() {}
                     variant="secondary"
                     class="shadow-none cursor-pointer"
                     :class="componentField.modelValue === option ? 'bg-ring hover:bg-ring' : ''"
-                    @click="() => (componentField.modelValue = option)"
+                    @click="() => componentField['onUpdate:modelValue']!(option)"
                   >
-                    <Clapperboard v-if="option === 'MOVIES'" />
-                    <TvMinimal v-else-if="option === 'TV'" />
-                    <Music v-else-if="option === 'MUSIC'" />
-                    <JapaneseYen v-else-if="option === 'ANIME'" />
-                    <Shapes v-else-if="option === 'OTHER'" />
+                    <component :is="getLibraryIcon(option)" />
                     {{ option }}
                   </Button>
                 </ButtonGroup>
@@ -96,11 +98,7 @@ function createLibrary() {}
                           variant="secondary"
                           class="shadow-none cursor-pointer"
                         >
-                          <Clapperboard v-if="componentField.modelValue === 'MOVIES'" />
-                          <TvMinimal v-else-if="componentField.modelValue === 'TV'" />
-                          <Music v-else-if="componentField.modelValue === 'MUSIC'" />
-                          <JapaneseYen v-else-if="componentField.modelValue === 'ANIME'" />
-                          <Shapes v-else-if="componentField.modelValue === 'OTHER'" />
+                          <component :is="getLibraryIcon(componentField.modelValue)" />
                           {{ componentField.modelValue }}
                         </Button>
                       </div>
@@ -112,10 +110,7 @@ function createLibrary() {}
                         size="sm"
                         variant="secondary"
                         class="shadow-none cursor-pointer"
-                        :class="
-                          componentField.modelValue === option ? 'bg-primary hover:bg-primary' : ''
-                        "
-                        @click="() => (componentField.modelValue = option)"
+                        @click="() => componentField['onUpdate:modelValue']!(option)"
                       >
                         <Clapperboard v-if="option === 'MOVIES'" />
                         <TvMinimal v-else-if="option === 'TV'" />
@@ -132,7 +127,7 @@ function createLibrary() {}
             </VeeField>
           </FieldGroup>
 
-          <FieldGroup>
+          <FieldGroup class="mt-4">
             <VeeField v-slot="{ componentField, errors }" name="path">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="path"> Path </FieldLabel>
@@ -154,7 +149,7 @@ function createLibrary() {}
         </form>
 
         <DialogFooter>
-          <Button class="mt-6" type="submit" size="sm" form="addLibraryForm">
+          <Button class="mt-6 cursor-pointer" type="submit" size="sm" form="addLibraryForm">
             <Plus />
             Create
           </Button>

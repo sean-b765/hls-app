@@ -4,6 +4,7 @@ import axios, { type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
 import type { FolderNode } from '@/types/filesystem'
+import type { Library } from '@/types/libraries'
 
 class BaseAPI {
   protected axios = axios.create({
@@ -150,10 +151,21 @@ class FileSystemAPI extends BaseAPI {
   }
 }
 
+class LibraryAPI extends BaseAPI {
+  public create(library: Library) {
+    return this.axios.post<Library>('/api/library', library)
+  }
+  public getAll() {
+    return this.axios.get<Library[]>('/api/library')
+  }
+}
+
 export const mediaApi = new MediaAPI()
 
 export const seriesApi = new SeriesAPI()
 
 export const moviesApi = new MoviesAPI()
 
-export const fileSystemAPI = new FileSystemAPI()
+export const fileSystemApi = new FileSystemAPI()
+
+export const libraryApi = new LibraryAPI()

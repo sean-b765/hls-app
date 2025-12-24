@@ -3,6 +3,8 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import moment from 'moment'
 import { padStart } from 'lodash'
+import type { Library } from '@/types/libraries'
+import { Clapperboard, JapaneseYen, Music, Shapes, TvMinimal } from 'lucide-vue-next'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -48,4 +50,23 @@ export function generateUID() {
   firstPart = ('000' + firstPart.toString(36)).slice(-3)
   secondPart = ('000' + secondPart.toString(36)).slice(-3)
   return firstPart + secondPart
+}
+
+export function getLibraryIcon(libraryOrIcon?: Library | string) {
+  if (!libraryOrIcon) return
+  const type = typeof libraryOrIcon === 'string' ? libraryOrIcon : libraryOrIcon.type
+  switch (type) {
+    case 'MOVIES':
+      return Clapperboard
+    case 'TV':
+      return TvMinimal
+    case 'MUSIC':
+      return Music
+    case 'ANIME':
+      return JapaneseYen
+    case 'OTHER':
+      return Shapes
+    default:
+      return Clapperboard
+  }
 }

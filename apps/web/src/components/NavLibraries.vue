@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar'
 import { useLibraryStore } from '@/stores/libraries'
 import { storeToRefs } from 'pinia'
+import { getLibraryIcon } from '@/lib/utils'
 
 const libraryStore = useLibraryStore()
 const { libraries } = storeToRefs(libraryStore)
@@ -51,6 +52,7 @@ const items = [
               <SidebarMenuSubItem v-for="library in libraries" :key="library.id">
                 <SidebarMenuSubButton as-child>
                   <RouterLink :to="`/libraries/${library.id}`">
+                    <component :is="getLibraryIcon(library)" />
                     <span>{{ library.name }}</span>
                   </RouterLink>
                 </SidebarMenuSubButton>
