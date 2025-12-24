@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,11 +35,34 @@ public class FileSystemService {
     return Paths.get(segmentPath, transcodeJob.getFromSegmentName());
   }
 
+  /**
+   * Validates that the relative path does in fact exist under the media root,
+   * and not escalated somehow
+   * 
+   * @param relativePath
+   * @return
+   */
+  public boolean isValidDirectory(Path relativePath) {
+    Path mediaRoot = Paths.get(configurationService.getConfiguration().getMediaDirectory())
+        .toAbsolutePath()
+        .normalize();
+    Path resolved = mediaRoot.resolve(relativePath).normalize();
+    if (!resolved.startsWith(mediaRoot))
+      return false;
+    if (!Files.exists(resolved))
+      return false;
+    if (!Files.isDirectory(resolved))
+      return false;
+    return true;
+  }
+
   public LinkedList<FolderNode> listFolders(Path relativePath) {
-    Path mediaRoot = Paths.get(this.configurationService.getConfiguration().getMediaDirectory());
+    Path mediaRoot = Paths.get(configurationService.getConfiguration().getMediaDirectory())
+        .toAbsolutePath()
+        .normalize();
     Path base = mediaRoot.resolve(relativePath).normalize();
 
-    if (!base.startsWith(mediaRoot))
+    if (!this.isValidDirectory(base))
       return new LinkedList<>();
 
     try (Stream<Path> paths = Files.list(base)) {
