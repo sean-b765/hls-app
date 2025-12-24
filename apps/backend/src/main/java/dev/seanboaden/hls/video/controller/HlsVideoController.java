@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import dev.seanboaden.hls.lib.service.FileSystemService;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.service.MediaService;
 import dev.seanboaden.hls.room.model.Room;
@@ -39,7 +38,7 @@ public class HlsVideoController {
   @Autowired
   private TranscodeManager transcodingManager;
   @Autowired
-  private FileSystemService fileSystemService;
+  private dev.seanboaden.hls.filesystem.service.FileSystemService fileSystemService;
   @Autowired
   private SessionRegistry sessionRegistry;
   @Autowired
