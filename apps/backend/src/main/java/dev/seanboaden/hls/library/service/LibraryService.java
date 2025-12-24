@@ -23,6 +23,10 @@ public class LibraryService {
     return this.libraryRepository.findByPath(path);
   }
 
+  public Optional<Library> findById(@NonNull String id) {
+    return this.libraryRepository.findById(id);
+  }
+
   public List<Library> findAll() {
     return this.libraryRepository.findAll();
   }

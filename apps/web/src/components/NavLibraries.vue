@@ -52,8 +52,12 @@ const items = [
               <SidebarMenuSubItem v-for="library in libraries" :key="library.id">
                 <SidebarMenuSubButton as-child>
                   <RouterLink :to="`/libraries/${library.id}`">
-                    <component :is="getLibraryIcon(library)" />
-                    <span>{{ library.name }}</span>
+                    <div>
+                      <component :is="getLibraryIcon(library)" :size="14" />
+                    </div>
+                    <span class="text-xs flex">
+                      {{ library.name }}
+                    </span>
                   </RouterLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>

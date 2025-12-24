@@ -15,6 +15,14 @@ export const useLibraryStore = defineStore('library', () => {
     libraries.value.push(response.data)
   }
 
+  async function update(library: Library) {
+    const response = await libraryApi.update(library)
+    if (response.status !== 200) return
+    const updated = response.data
+    const index = libraries.value.findIndex((lib) => lib.id === updated.id)
+    libraries.value.splice(index, 1, updated)
+  }
+
   async function getAll() {
     const response = await libraryApi.getAll()
     if (response.status !== 200) return
@@ -31,6 +39,7 @@ export const useLibraryStore = defineStore('library', () => {
     libraries,
     getAll,
     create,
+    update,
     deleteById,
     handleIncomingWebSocketEvent,
   }

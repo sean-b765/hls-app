@@ -1,27 +1,43 @@
 <script setup lang="ts">
 import AddLibraryDialog from '@/components/AddLibraryDialog.vue'
+import LilCircleButton from '@/components/button/LilCircleButton.vue'
+import CustomDropdown from '@/components/dropdown/CustomDropdown.vue'
+import EditLibraryDialog from '@/components/EditLibraryDialog.vue'
 import HoverCard from '@/components/HoverCard.vue'
-import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue'
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue'
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
 import { getLibraryIcon } from '@/lib/utils'
 import { useLibraryStore } from '@/stores/libraries'
 import { useUserStore } from '@/stores/user'
-import { Ellipsis, Plus, Trash } from 'lucide-vue-next'
+import { Library } from '@/types/libraries'
+import { Ellipsis, Navigation, Pencil, Plus, Trash } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 const libraryStore = useLibraryStore()
 const userStore = useUserStore()
 const { libraries } = storeToRefs(libraryStore)
 const { isAdmin } = storeToRefs(userStore)
 const addLibraryDialog = ref(false)
+const editLibraryDialog = ref(false)
+const editingLibrary = ref<Library | null>(null)
+
+const router = useRouter()
+
+function openEditDialog(library: Library) {
+  editingLibrary.value = library
+  editLibraryDialog.value = true
+}
 </script>
 
 <template>
   <AddLibraryDialog v-model:open="addLibraryDialog" />
+  <EditLibraryDialog
+    v-if="editingLibrary"
+    v-model:open="editLibraryDialog"
+    v-model:library="editingLibrary"
+  />
+
   <div
-    class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
   >
     <HoverCard v-for="library in libraries" :key="library.id" header-class="justify-between">
       <template #prepend-header>
@@ -33,31 +49,39 @@ const addLibraryDialog = ref(false)
         />
       </template>
       <template #header>
-        <p class="text-lg font-bold">{{ library.name }}</p>
+        <RouterLink :to="`/libraries/${library.id}`">
+          <p class="text-lg font-bold">{{ library.name }}</p>
+        </RouterLink>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <span
-              role="button"
-              class="cursor-pointer p-1 rounded-full border-2 border-muted shadow-xs"
-            >
+        <CustomDropdown
+          :items="[
+            {
+              text: 'View',
+              icon: Navigation,
+              onClick: () => router.push(`/libraries/${library.id}`),
+            },
+            {
+              text: 'Edit',
+              icon: Pencil,
+              onClick: () => openEditDialog(library),
+            },
+            {
+              text: 'Delete',
+              icon: Trash,
+              onClick: () => libraryStore.deleteById(library.id),
+            },
+          ]"
+        >
+          <template #trigger>
+            <LilCircleButton>
               <Ellipsis :size="14" />
-            </span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              class="h-6 flex items-center justify-between"
-              @click="() => libraryStore.deleteById(library.id)"
-            >
-              <div class="text-md">Delete</div>
-              <Trash :size="14" />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </LilCircleButton>
+          </template>
+        </CustomDropdown>
       </template>
     </HoverCard>
 
-    <HoverCard v-if="isAdmin" @click="() => (addLibraryDialog = true)">
+    <HoverCard v-if="isAdmin" class="cursor-pointer" @click="() => (addLibraryDialog = true)">
       <template #content>
         <p class="text-md flex items-center gap-2">
           <Plus :size="20" />

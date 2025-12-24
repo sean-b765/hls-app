@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input'
 import z from 'zod'
 import { Form } from 'vee-validate'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Plus } from 'lucide-vue-next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,31 +20,46 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
-import FolderBrowser from '@/components/FolderBrowser.vue'
 import { Library, LibraryType } from '@/types/libraries'
 import { useLibraryStore } from '@/stores/libraries'
 import { getLibraryIcon } from '@/lib/utils'
 import { ref } from 'vue'
+import { cloneDeep, isEqual } from 'lodash'
 import { Spinner } from '@/components/ui/spinner'
 
 const open = defineModel<boolean>('open')
+const library = defineModel<Library>('library')
 const loading = ref(false)
 const typeOptions: LibraryType[] = ['MOVIES', 'TV', 'MUSIC', 'ANIME', 'OTHER']
 const libraryStore = useLibraryStore()
 
 const createLibrarySchema = toTypedSchema(
   z.object({
-    name: z.string().min(2, { error: '2 characters minimum' }).max(50).default(''),
-    type: z.string().default('MOVIES'),
-    path: z.string().default(''),
+    name: z
+      .string()
+      .min(2, { error: '2 characters minimum' })
+      .max(50)
+      .default(library.value?.name ?? ''),
+    type: z.string().default(library.value?.type ?? ''),
   }),
 )
 
-async function createLibrary(values: unknown) {
-  const library = values as Library
+async function editLibrary(values: unknown) {
+  const edits = values as Partial<Library>
+  if (!library.value) return
+
+  const payload = cloneDeep(library.value)
+  Object.assign(payload, edits)
+
+  if (isEqual(payload, library.value)) {
+    open.value = false
+    return
+  }
+
   loading.value = true
-  await libraryStore.create(library)
+  await libraryStore.update(payload)
   loading.value = false
+
   open.value = false
 }
 </script>
@@ -55,20 +69,14 @@ async function createLibrary(values: unknown) {
     <Dialog v-model:open="open">
       <DialogContent class="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add a library</DialogTitle>
+          <DialogTitle>Edit library</DialogTitle>
         </DialogHeader>
-        <form id="addLibraryForm" @submit="handleSubmit($event, createLibrary)">
+        <form id="editLibraryForm" @submit="handleSubmit($event, editLibrary)">
           <FieldGroup>
             <VeeField v-slot="{ componentField, errors }" name="name">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="name"> Name </FieldLabel>
-                <Input
-                  :default-value="''"
-                  id="name"
-                  type="text"
-                  placeholder="Library name"
-                  v-bind="componentField"
-                />
+                <Input id="name" type="text" placeholder="Library name" v-bind="componentField" />
                 <FieldError v-if="errors.length" :errors="errors.map((message) => ({ message }))" />
               </Field>
             </VeeField>
@@ -83,8 +91,8 @@ async function createLibrary(values: unknown) {
                   <Button
                     v-for="option in typeOptions"
                     :key="option"
-                    type="button"
                     size="sm"
+                    type="button"
                     variant="secondary"
                     class="shadow-none cursor-pointer"
                     :class="componentField.modelValue === option ? 'bg-ring hover:bg-ring' : ''"
@@ -119,32 +127,12 @@ async function createLibrary(values: unknown) {
                         class="shadow-none cursor-pointer"
                         @click="() => componentField['onUpdate:modelValue']!(option)"
                       >
-                        <component :is="getLibraryIcon(option)" />
+                        {{ getLibraryIcon(option) }}
                         {{ option }}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <FieldError v-if="errors.length" :errors="errors.map((message) => ({ message }))" />
-              </Field>
-            </VeeField>
-          </FieldGroup>
-
-          <FieldGroup class="mt-4">
-            <VeeField v-slot="{ componentField, errors }" name="path">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="path"> Path </FieldLabel>
-                <Input
-                  disabled
-                  id="path"
-                  type="text"
-                  placeholder="Library path"
-                  v-bind="componentField"
-                />
-                <FolderBrowser
-                  :selected="componentField.modelValue"
-                  @update:selected="componentField['onUpdate:modelValue']"
-                />
                 <FieldError v-if="errors.length" :errors="errors.map((message) => ({ message }))" />
               </Field>
             </VeeField>
@@ -156,12 +144,11 @@ async function createLibrary(values: unknown) {
             class="mt-6 cursor-pointer"
             type="submit"
             size="sm"
-            form="addLibraryForm"
+            form="editLibraryForm"
             :disabled="loading"
           >
             <Spinner v-if="loading" />
-            <Plus v-else />
-            Create
+            Save
           </Button>
         </DialogFooter>
       </DialogContent>

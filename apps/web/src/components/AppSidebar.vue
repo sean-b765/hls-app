@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<SidebarProps>(), {
 </script>
 
 <template>
-  <Sidebar v-bind="props" class="shadow-md/50">
+  <Sidebar v-bind="props" class="shadow-sm/10">
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>

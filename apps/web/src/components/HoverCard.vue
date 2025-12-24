@@ -6,7 +6,7 @@ defineProps<{ headerClass?: string }>()
 <template>
   <Card class="h-80 bg-muted rounded-lg group transition-all duration-250 hover:p-1">
     <div
-      class="bg-card rounded-lg flex flex-col w-full h-full relative cursor-pointer transition-all duration-250 group-hover:rounded-md"
+      class="bg-card rounded-lg flex flex-col w-full h-full relative transition-all duration-250 group-hover:rounded-md"
     >
       <slot name="prepend-header" />
       <CardHeader

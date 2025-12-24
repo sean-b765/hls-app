@@ -155,6 +155,9 @@ class LibraryAPI extends BaseAPI {
   public create(library: Library) {
     return this.axios.post<Library>('/api/library', library)
   }
+  public update(library: Library) {
+    return this.axios.put<Library>('/api/library', library)
+  }
   public getAll() {
     return this.axios.get<Library[]>('/api/library')
   }
