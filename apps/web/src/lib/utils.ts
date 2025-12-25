@@ -41,7 +41,7 @@ export function formatSeconds(seconds: number | undefined, pad = false): string 
 }
 
 export function getImage(path: string) {
-  return `https://image.tmdb.org/t/p/w1280${path}`
+  return `https://image.tmdb.org/t/p/w1920${path}`
 }
 
 export function generateUID() {

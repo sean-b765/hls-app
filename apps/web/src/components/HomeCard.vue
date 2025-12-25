@@ -83,6 +83,8 @@ const mode = useColorMode()
   background-size: cover;
   background-position: top center;
   width: 100%;
+  will-change: transform;
+  animation: bg-breathe 40s ease-in-out infinite;
 
   /* Adjusts the grey scale overlay  */
   .overlay {
@@ -110,5 +112,17 @@ const mode = useColorMode()
 
 .button:active {
   transform: scale(0.98); /* Slight press effect on click */
+}
+
+@keyframes bg-breathe {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
