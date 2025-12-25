@@ -254,13 +254,25 @@ public class MediaInfoService {
   }
 
   /**
-   * This will create the TvSeriesCollection and TvSeasonCollection if they do not
-   * already exist
+   * <p>
+   * If the Media is a movie, creates the MediaInfo directly
+   * </p>
+   * <p>
+   * If the Media is a tv show (contains s01e01 in file name), create:
+   * </p>
+   * <ol>
+   * <li>TvSeriesCollection</li>
+   * <li>TvSeasonCollection</li>
+   * <li>MediaInfo</li>
+   * </ol>
+   * 
+   * This will create the TvSeriesCollection and TvSeasonCollection,
+   * ONLY if they do not already exist
    * 
    * @param media
    * @return
    */
-  public MediaInfo retrieveInfoAndEstablishTvSeriesSeason(Media media) {
+  public MediaInfo getMediaInfo(Media media) {
     // Already exists, meaning we've already performed the operations below
     Optional<MediaInfo> existingOptional = this.mediaInfoRepository.findByMediaId(media.getId());
     if (existingOptional.isPresent())

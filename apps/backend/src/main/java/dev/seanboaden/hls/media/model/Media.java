@@ -1,9 +1,12 @@
 package dev.seanboaden.hls.media.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +40,10 @@ public class Media {
    */
   @Column(nullable = false, unique = true)
   private String path;
+
+  @CreationTimestamp
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
   @JoinColumn(name = "metadataId", referencedColumnName = "id")

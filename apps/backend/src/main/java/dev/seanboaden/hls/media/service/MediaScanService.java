@@ -3,12 +3,11 @@ package dev.seanboaden.hls.media.service;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.filesystem.service.FileSystemService;
 import dev.seanboaden.hls.lib.service.MimeTypeService;
 import dev.seanboaden.hls.media.model.Media;
 
@@ -18,47 +17,25 @@ public class MediaScanService {
   private MediaService mediaService;
   @Autowired
   private MimeTypeService mimeTypeService;
-
-  public void doScan() {
-    List<Path> paths = mediaService.listFilesRoot();
-
-    paths.stream()
-        .map(path -> new File(path.toUri()))
-        .filter(File::canRead)
-        .filter(file -> mimeTypeService.isVideoType(file.getAbsolutePath())
-            || mimeTypeService.isMusicType(file.getAbsolutePath()))
-        .forEach(this::createMediaIfNotExisting);
-  }
+  @Autowired
+  private FileSystemService fileSystemService;
 
   /**
-   * @param endConsumer a consumer function to run after Media detection
+   * Generate a list of Media which do not exist in database for the path
+   * 
+   * @param path the path to create new media for
+   * @return
    */
-  public void doScan(Consumer<Media> endConsumer) {
-    List<Path> paths = mediaService.listFilesRoot();
+  public List<Media> listNewMediaInPath(Path path) {
+    List<Path> paths = this.fileSystemService.listFiles(path);
 
-    List<Media> createdMedia = paths.stream()
-        .map(path -> new File(path.toUri()))
+    return paths.stream()
+        .map(p -> new File(p.toUri()))
         .filter(File::canRead)
-        .filter(file -> mimeTypeService.isVideoType(file.getAbsolutePath())
-            || mimeTypeService.isMusicType(file.getAbsolutePath()))
-        .map(this::createMediaIfNotExisting)
+        .filter(file -> this.mimeTypeService.isVideoType(file.getAbsolutePath())
+            || this.mimeTypeService.isMusicType(file.getAbsolutePath()))
+        .filter(file -> !this.mediaService.existsByPath(file.getAbsolutePath()))
+        .map(this.mediaService::buildFromFile)
         .toList();
-
-    createdMedia = this.mediaService.saveAll(createdMedia);
-    createdMedia.forEach(endConsumer);
   }
-
-  public Media createMediaIfNotExisting(File file) {
-    Optional<Media> mediaOptional = mediaService.findByPath(file.getAbsolutePath());
-    if (mediaOptional.isPresent()) {
-      return mediaOptional.get();
-    }
-    // Save to DB
-    Media media = Media.builder()
-        .path(file.getAbsolutePath())
-        .build();
-    mediaService.save(media);
-    return media;
-  }
-
 }

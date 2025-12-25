@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.seanboaden.hls.filesystem.service.FileSystemService;
 import dev.seanboaden.hls.library.model.Library;
+import dev.seanboaden.hls.library.service.LibraryScanService;
 import dev.seanboaden.hls.library.service.LibraryService;
 import dev.seanboaden.hls.user.model.Role;
 
@@ -27,6 +28,8 @@ import dev.seanboaden.hls.user.model.Role;
 public class LibraryController {
   @Autowired
   private LibraryService libraryService;
+  @Autowired
+  private LibraryScanService libraryScanService;
   @Autowired
   private FileSystemService fileSystemService;
 
@@ -43,6 +46,22 @@ public class LibraryController {
     URI location = URI.create("/api/library/" + saved.getId());
 
     return ResponseEntity.created(Objects.requireNonNull(location)).body(saved);
+  }
+
+  @PreAuthorize(Role.PreAuthorized.ADMIN)
+  @PostMapping("/{id}/scan")
+  public ResponseEntity<?> scan(@PathVariable String id) {
+    if (id == null)
+      return ResponseEntity.badRequest().build();
+
+    Library saved = this.libraryService.findById(id).orElse(null);
+    if (saved == null)
+      return ResponseEntity.notFound().build();
+
+    // Perform scan
+    this.libraryScanService.createNewMediaInLibrary(saved);
+
+    return ResponseEntity.ok().build();
   }
 
   @PreAuthorize(Role.PreAuthorized.ADMIN)

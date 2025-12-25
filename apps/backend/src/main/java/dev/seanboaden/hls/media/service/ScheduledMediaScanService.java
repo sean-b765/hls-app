@@ -10,10 +10,10 @@ public class ScheduledMediaScanService {
   private MediaScanService mediaScanService;
 
   /**
-   * Every day, scan the media root for files
+   * Cron job to scan each library for new files
    */
   @Scheduled(cron = "0 0 0 * * *")
   public void doScan() {
-    mediaScanService.doScan();
+    // mediaScanService.doScan();
   }
 }

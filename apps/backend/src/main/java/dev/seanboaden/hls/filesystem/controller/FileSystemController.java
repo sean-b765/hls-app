@@ -30,6 +30,6 @@ public class FileSystemController {
       return ResponseEntity.ok(new LinkedList<FolderNode>());
 
     return ResponseEntity
-        .ok(this.fileSystemService.listFolders(Path.of(path)));
+        .ok(this.fileSystemService.listFoldersUnderMediaRoot(Path.of(path)));
   }
 }

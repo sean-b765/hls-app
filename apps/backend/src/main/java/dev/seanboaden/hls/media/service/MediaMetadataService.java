@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.lib.service.MetadataExtractor;
@@ -20,15 +21,13 @@ import dev.seanboaden.hls.media.repository.MediaMetadataRepository;
 @Service
 public class MediaMetadataService {
   @Autowired
-  private MediaService mediaService;
-  @Autowired
   private MediaMetadataRepository metadataRepository;
   @Autowired
   private MetadataExtractor metadataExtractor;
   @Autowired
   private MimeTypeService mimeTypeService;
 
-  public MediaMetadata save(MediaMetadata metadata) {
+  public MediaMetadata save(@NonNull MediaMetadata metadata) {
     return metadataRepository.save(metadata);
   }
 
@@ -88,11 +87,6 @@ public class MediaMetadataService {
         .framerate(framerate)
         .build();
     this.save(metadata);
-  }
-
-  public void getMetadata() {
-    List<Media> medias = this.mediaService.findAll();
-    medias.forEach(this::getMetadata);
   }
 
   public void getMetadata(Media media) {
