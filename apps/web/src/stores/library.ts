@@ -18,6 +18,12 @@ export const useLibraryStore = defineStore('library', () => {
 
   function handleIncomingWebSocketEvent(event: unknown) {}
 
+  function upsert(library: Library) {
+    const index = libraries.value.findIndex((lib) => lib.id === library.id)
+    if (index === -1) libraries.value.push(library)
+    else libraries.value.splice(index, 1, library)
+  }
+
   async function create(library: Library) {
     const response = await libraryApi.create(library)
     if (response.status !== 201) return
@@ -27,9 +33,7 @@ export const useLibraryStore = defineStore('library', () => {
   async function update(library: Library) {
     const response = await libraryApi.update(library)
     if (response.status !== 200) return
-    const updated = response.data
-    const index = libraries.value.findIndex((lib) => lib.id === updated.id)
-    libraries.value.splice(index, 1, updated)
+    upsert(response.data)
   }
 
   async function scan(id: string) {
@@ -42,6 +46,12 @@ export const useLibraryStore = defineStore('library', () => {
     libraries.value = response.data
   }
 
+  async function getLibrary(id: string) {
+    const response = await libraryApi.getById(id)
+    if (response.status !== 200) return
+    upsert(response.data)
+  }
+
   async function deleteById(id: string) {
     const response = await libraryApi.deleteById(id)
     if (response.status !== 200) return
@@ -52,6 +62,7 @@ export const useLibraryStore = defineStore('library', () => {
     libraries,
     selectedLibrary,
     getAll,
+    getLibrary,
     create,
     update,
     scan,

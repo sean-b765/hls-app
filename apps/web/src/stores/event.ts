@@ -1,11 +1,15 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { AnyRoomEvent, BaseMessage, WsMessage } from '@/types/messages'
+import type { AnyRoomEvent, BaseMessage, ResourceUpdatedEvent, WsMessage } from '@/types/messages'
 import { EventType } from '@/types/messages'
 import { useRoomStore } from './room'
+import { useMediaStore } from './media'
+import { useLibraryStore } from './library'
 
 export const useEventStore = defineStore('events', () => {
   const { handleIncomingWebSocketEvent } = useRoomStore()
+  const { getMedia } = useMediaStore()
+  const { getLibrary } = useLibraryStore()
 
   const events = ref({
     sent: [] as BaseMessage[],
@@ -15,8 +19,22 @@ export const useEventStore = defineStore('events', () => {
   const sent = computed(() => events.value.sent)
   const received = computed(() => events.value.received)
 
+  function fetchResource(event: ResourceUpdatedEvent) {
+    switch (event.uri) {
+      case '/api/media/':
+        getMedia(event.id)
+        break
+      case '/api/library/':
+        getLibrary(event.id)
+        break
+    }
+  }
+
   function handleEvent(event: BaseMessage) {
     switch (event.type) {
+      case EventType.RESOURCE_UPDATED:
+        fetchResource(event as ResourceUpdatedEvent)
+        break
       case EventType.ROOM:
         handleIncomingWebSocketEvent(event as AnyRoomEvent)
         break

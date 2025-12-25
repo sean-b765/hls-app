@@ -2,26 +2,15 @@
 import { Card, CardFooter } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatDuration, getImage } from '@/lib/utils'
-import { useMediaStore } from '@/stores/media'
 import moment from 'moment'
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
 
-const { thumbnail, id, durationSeconds, name, releaseDate } = defineProps<{
+const { thumbnail, durationSeconds, name, releaseDate } = defineProps<{
   thumbnail?: string
   id?: string
   releaseDate?: string
   name?: string
   durationSeconds?: number
 }>()
-const mediaStore = useMediaStore()
-const { scanProgress } = storeToRefs(mediaStore)
-
-const progress = computed(() => {
-  if (!id) return 'READY'
-  if (scanProgress.value[id]) return scanProgress.value[id]
-  return 'INFO'
-})
 </script>
 
 <template>

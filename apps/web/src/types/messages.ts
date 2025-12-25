@@ -6,6 +6,7 @@ export enum EventType {
   CHAT = 'CHAT',
   ERROR = 'ERROR',
   INFO = 'INFO',
+  RESOURCE_UPDATED = 'RESOURCE_UPDATED',
 }
 
 export type BaseMessage = {
@@ -16,6 +17,18 @@ export type BaseMessage = {
 export type WsMessage = BaseMessage & {
   timestamp?: string
   userId?: string
+}
+
+export type ResourceUpdatedEvent = WsMessage & {
+  type: EventType.RESOURCE_UPDATED
+  /**
+   * The uri to hit
+   */
+  uri: '/api/library/' | '/api/media/' | '/api/series/' | '/api/seasons/'
+  /**
+   * The id to fetch
+   */
+  id: string
 }
 
 export type RoomCommand = BaseMessage & {

@@ -6,7 +6,9 @@ import { useRoute } from 'vue-router'
 
 export const useMediaStore = defineStore('media', () => {
   const media = ref<Media[]>([])
-  const movies = ref<Media[]>([])
+  const movies = computed(() => {
+    return media.value.filter((m) => m.info && !m.info.season)
+  })
   const series = ref<TvSeriesCollection[]>([])
 
   const route = useRoute()
@@ -17,9 +19,20 @@ export const useMediaStore = defineStore('media', () => {
     return m
   })
 
+  function upsert(medias: Media[]) {
+    for (const m of medias) {
+      const index = media.value.findIndex((el) => el.id === m.id)
+      if (index === -1) {
+        media.value.push(m)
+      } else {
+        media.value.splice(index, 1, m)
+      }
+    }
+  }
+
   async function getMovies() {
     const res = await moviesApi.findMovies()
-    movies.value = res.data
+    upsert(res.data)
   }
 
   async function getSeries() {
@@ -31,14 +44,7 @@ export const useMediaStore = defineStore('media', () => {
     const res = await mediaApi.getById(mediaId)
     if (res.status !== 200) return
 
-    const found = res.data
-
-    const index = media.value.findIndex((el) => el.id === found.id)
-    if (index === -1) {
-      media.value.push(found)
-    } else {
-      media.value.splice(index, 1, found)
-    }
+    upsert([res.data])
   }
 
   async function getAll() {

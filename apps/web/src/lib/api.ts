@@ -1,63 +1,20 @@
 import type { JwtPayload } from '@/types/user'
 import { type AuthRequest, type Media, type TvSeriesCollection } from '@hls-app/sdk'
-import axios, { type AxiosResponse } from 'axios'
+import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
 import type { FolderNode } from '@/types/filesystem'
 import type { Library } from '@/types/libraries'
 
 class BaseAPI {
-  protected axios = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
-    withCredentials: true,
-  })
+  protected axios!: AxiosInstance
 
-  protected baseURL() {
-    return this.axios.defaults.baseURL
-  }
-
-  protected getAccessToken() {
-    return localStorage.getItem('access_token')
-  }
-
-  protected getJwt() {
-    const token = this.getAccessToken()
-    if (!token) return null
-    return jwtDecode<JwtPayload>(token)
-  }
-
-  protected async consumeRefreshToken() {
-    this.clearAuthorization()
-    try {
-      const response = await this.axios.post('/auth/refresh')
-      if (response.status !== 200) {
-        emitter.emit('auth', null)
-      }
-    } catch (e) {
-      emitter.emit('auth', null)
-    }
-  }
-
-  protected clearAuthorization() {
-    localStorage.removeItem('access_token')
-    delete this.axios.defaults.headers.common.Authorization
-  }
-
-  protected refreshOrLogoutIfNecessary(response: AxiosResponse) {
-    if (!response) return
-    if (response.status !== 403) return
-
-    if (response.config.url !== '/auth/refresh') {
-      // Try to use the refresh token
-      this.consumeRefreshToken()
-      return
-    }
-    // Ensure jwt is cleared from localStorage if we were forbidden and refresh token was unsuccessfully refreshed
-    this.clearAuthorization()
-    emitter.emit('auth', null)
-  }
-
-  constructor() {
+  protected registerAxios() {
+    if (this.axios !== undefined) return
+    this.axios = axios.create({
+      baseURL: import.meta.env.VITE_BASE_URL,
+      withCredentials: true,
+    })
     this.axios.interceptors.request.use((config) => {
       const token = this.getAccessToken()
       if (token) {
@@ -84,6 +41,51 @@ class BaseAPI {
         return Promise.reject(error)
       },
     )
+  }
+
+  protected getAccessToken() {
+    return localStorage.getItem('access_token')
+  }
+
+  protected getJwt() {
+    const token = this.getAccessToken()
+    if (!token) return null
+    return jwtDecode<JwtPayload>(token)
+  }
+
+  protected async consumeRefreshToken() {
+    this.clearAuthorization()
+    try {
+      const response = await this.axios.post('/auth/refresh')
+      if (response.status !== 200) {
+        emitter.emit('auth', null)
+      }
+    } catch {
+      emitter.emit('auth', null)
+    }
+  }
+
+  protected clearAuthorization() {
+    localStorage.removeItem('access_token')
+    delete this.axios.defaults.headers.common.Authorization
+  }
+
+  protected refreshOrLogoutIfNecessary(response: AxiosResponse) {
+    if (!response) return
+    if (response.status !== 403) return
+
+    if (response.config.url !== '/auth/refresh') {
+      // Try to use the refresh token
+      this.consumeRefreshToken()
+      return
+    }
+    // Ensure jwt is cleared from localStorage if we were forbidden and refresh token was unsuccessfully refreshed
+    this.clearAuthorization()
+    emitter.emit('auth', null)
+  }
+
+  constructor() {
+    this.registerAxios()
   }
 }
 
@@ -160,6 +162,9 @@ class LibraryAPI extends BaseAPI {
   }
   public getAll() {
     return this.axios.get<Library[]>('/api/library')
+  }
+  public getById(id: string) {
+    return this.axios.get<Library>(`/api/library/${id}`)
   }
   public scan(id: string) {
     return this.axios.post(`/api/library/${id}/scan`)
