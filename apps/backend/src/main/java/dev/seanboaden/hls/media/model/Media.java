@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.library.model.Library;
+import dev.seanboaden.hls.media.handler.MediaEventListener;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(value = { MediaEventListener.class })
 public class Media {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

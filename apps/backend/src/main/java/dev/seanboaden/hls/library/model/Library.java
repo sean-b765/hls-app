@@ -1,7 +1,9 @@
 package dev.seanboaden.hls.library.model;
 
+import dev.seanboaden.hls.library.handler.LibraryEventListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EntityListeners(value = { LibraryEventListener.class })
 public class Library {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

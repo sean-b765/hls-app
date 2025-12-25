@@ -11,10 +11,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import dev.seanboaden.hls.collection.handler.TvSeasonCollectionEventListener;
 import dev.seanboaden.hls.media.model.Media;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(value = { TvSeasonCollectionEventListener.class })
 public class TvSeasonCollection {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

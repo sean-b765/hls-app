@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dev.seanboaden.hls.media.handler.MediaMetadataEventListener;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +27,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(value = { MediaMetadataEventListener.class })
 public class MediaMetadata {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

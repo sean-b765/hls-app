@@ -5,5 +5,6 @@ public enum BaseMessageType {
   CHAT,
   PLAYER,
   ERROR,
-  INFO
+  INFO,
+  RESOURCE_UPDATED
 }

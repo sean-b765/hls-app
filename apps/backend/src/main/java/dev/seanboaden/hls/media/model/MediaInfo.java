@@ -7,7 +7,9 @@ import org.springframework.lang.Nullable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dev.seanboaden.hls.media.handler.MediaInfoEventListener;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +29,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(value = { MediaInfoEventListener.class })
 public class MediaInfo {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
