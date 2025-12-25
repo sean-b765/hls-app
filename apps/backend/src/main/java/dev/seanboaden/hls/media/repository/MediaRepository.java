@@ -11,4 +11,6 @@ public interface MediaRepository extends JpaRepository<Media, String> {
   Optional<Media> findByPath(String path);
 
   List<Media> findByTvSeasonIsNull();
+
+  List<Media> findByMetadataIsNullOrInfoIsNull();
 }

@@ -1,8 +1,8 @@
 package dev.seanboaden.hls.media.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.seanboaden.hls.config.service.SpringContextHolder;
 import dev.seanboaden.hls.media.model.MediaInfo;
 import dev.seanboaden.hls.session.service.SessionRegistry;
 import dev.seanboaden.hls.system.event.ResourceUpdatedEvent;
@@ -11,9 +11,6 @@ import jakarta.persistence.PostPersist;
 
 @Component
 public class MediaInfoEventListener {
-  @Autowired
-  private SessionRegistry sessionRegistry;
-
   @PostPersist
   public void created(MediaInfo mediaInfo) {
     ResourceUpdatedEvent event = ResourceUpdatedEvent.builder()
@@ -21,6 +18,7 @@ public class MediaInfoEventListener {
         .id(mediaInfo.getMedia().getId())
         .uri(Endpoints.MEDIA)
         .build();
+    SessionRegistry sessionRegistry = SpringContextHolder.getBean(SessionRegistry.class);
     sessionRegistry.broadcastResourceUpdatedEvent(event);
   }
 }

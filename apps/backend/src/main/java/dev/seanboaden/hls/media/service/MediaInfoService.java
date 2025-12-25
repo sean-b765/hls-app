@@ -5,12 +5,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import dev.seanboaden.hls.collection.service.TvSeasonCollectionService;
 import dev.seanboaden.hls.collection.service.TvSeriesCollectionService;
+import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.lib.model.FileNameMetadata;
 import dev.seanboaden.hls.lib.service.FileNameParser;
 import dev.seanboaden.hls.media.model.Media;
@@ -272,7 +274,7 @@ public class MediaInfoService {
    * @param media
    * @return
    */
-  public MediaInfo getMediaInfo(Media media) {
+  public MediaInfo createMediaInfo(Media media) {
     // Already exists, meaning we've already performed the operations below
     Optional<MediaInfo> existingOptional = this.mediaInfoRepository.findByMediaId(media.getId());
     if (existingOptional.isPresent())
@@ -297,5 +299,10 @@ public class MediaInfoService {
       this.handleMovie(mediaInfo);
     }
     return this.save(mediaInfo);
+  }
+
+  @Async(AsyncModifier.Modifier.SQLITE)
+  public void ensureMediaInfo(Media media) {
+    this.createMediaInfo(media);
   }
 }

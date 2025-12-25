@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.filesystem.service.FileSystemService;
 import dev.seanboaden.hls.library.model.Library;
-import dev.seanboaden.hls.media.event.MediaCreatedEvent;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.service.MediaScanService;
 import dev.seanboaden.hls.media.service.MediaService;
@@ -24,7 +24,14 @@ public class LibraryScanService {
   @Autowired
   private MediaService mediaService;
   @Autowired
-  private ApplicationEventPublisher eventPublisher;
+  private LibraryService libraryService;
+
+  @Async(AsyncModifier.Modifier.SQLITE)
+  public void ensureNewMedia() {
+    this.libraryService.findAll().forEach(library -> {
+      this.createNewMediaInLibrary(library);
+    });
+  }
 
   /**
    * Scan the library and creates Media for each new file
@@ -32,21 +39,17 @@ public class LibraryScanService {
   public List<Media> createNewMediaInLibrary(Library library) {
     Path path = this.fileSystemService.getLibraryPath(library);
 
-    List<Media> newMedia = this.mediaScanService.listNewMediaInPath(path).stream()
+    List<Media> newMedia = this.mediaScanService.findMissingMediaInPath(path).stream()
+        .filter(media -> {
+          // Ensure we only create Media if not existing
+          return !this.mediaService.existsByPath(media.getPath());
+        })
         .map(media -> {
           media.setLibrary(library);
           return media;
         })
         .collect(Collectors.toList());
     List<Media> savedMedia = this.mediaService.saveAll(newMedia);
-
-    /**
-     * Dispatch a CreatedMediaEvent
-     */
-    savedMedia.forEach(media -> {
-      MediaCreatedEvent event = MediaCreatedEvent.builder().media(media).build();
-      eventPublisher.publishEvent(event);
-    });
 
     return savedMedia;
   }

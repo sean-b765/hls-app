@@ -26,7 +26,7 @@ public class MediaScanService {
    * @param path the path to create new media for
    * @return
    */
-  public List<Media> listNewMediaInPath(Path path) {
+  public List<Media> findMissingMediaInPath(Path path) {
     List<Path> paths = this.fileSystemService.listFiles(path);
 
     return paths.stream()
