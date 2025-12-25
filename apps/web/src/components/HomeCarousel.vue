@@ -29,7 +29,7 @@ const maxWidth = computed(() => {
 // const MAX_CAROUSEL_ITEMS = 10 // Max amount of items the carousel contains, may need
 </script>
 <template>
-  <div class="title mt-10">{{ listType }}</div>
+  <div class="title mt-2">{{ listType }}</div>
   <div class="relative w-full">
     <!-- The max-width should be fixed and depends on the sidebar open state -->
     <Carousel
@@ -46,7 +46,7 @@ const maxWidth = computed(() => {
           :key="m.id"
           class="basis-1 md:basis-1/2 lg:basis-1/4 xl:basis-1/6"
         >
-          <div class="card">
+          <div class="card my-1">
             <Card>
               <CardContent
                 class="card-content"

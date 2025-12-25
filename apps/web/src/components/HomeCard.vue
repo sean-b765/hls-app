@@ -34,10 +34,10 @@ const mode = useColorMode()
   >
     <div
       v-if="banner"
-      class="banner w-full h-full z-0"
+      class="banner w-full h-full z-0 rounded-lg scale-105"
       :style="{ backgroundImage: `url('${getImage(banner)}')` }"
     >
-      <div v-if="mode === 'dark'" class="overlay"></div>
+      <div v-if="mode === 'dark'" class="overlay rounded-lg"></div>
     </div>
     <CardHeader class="z-10">
       <CardTitle class="text-4xl font-bold text-white">
@@ -76,6 +76,7 @@ const mode = useColorMode()
 
 /* Adjusts width and length of the banner */
 .banner {
+  overflow: hidden;
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
@@ -88,10 +89,9 @@ const mode = useColorMode()
     width: 100%;
     background: linear-gradient(
       to bottom,
-      var(--color-background) -8%,
-      rgba(36, 35, 35, 0.2) 20%,
-      rgba(14, 13, 13, 0.4) 60%,
-      var(--color-background) 100%
+      rgba(14, 13, 13, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      var(--color-background) 99%
     );
   }
 }
