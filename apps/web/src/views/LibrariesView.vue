@@ -29,16 +29,16 @@ function openEditDialog(library: Library) {
 </script>
 
 <template>
-  <AddLibraryDialog v-model:open="addLibraryDialog" />
-  <EditLibraryDialog
-    v-if="editingLibrary"
-    v-model:open="editLibraryDialog"
-    v-model:library="editingLibrary"
-  />
-
   <div
     class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
   >
+    <AddLibraryDialog v-model:open="addLibraryDialog" />
+    <EditLibraryDialog
+      v-if="editingLibrary"
+      v-model:open="editLibraryDialog"
+      v-model:library="editingLibrary"
+    />
+
     <HoverCard v-for="library in libraries" :key="library.id" header-class="justify-between">
       <template #prepend-header>
         <component

@@ -6,7 +6,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -48,7 +47,6 @@ const breadcrumbs = computed(() => {
     .map((r) => router.resolve(r))
     .filter(Boolean)
     .filter((r) => r.name)
-    .filter((r) => r.name !== 'Home')
     .map((r) => ({
       name: resolveName(r.name as string),
       path: r.path,
@@ -60,19 +58,8 @@ const breadcrumbs = computed(() => {
 <template>
   <header class="flex h-16 shrink-0 items-center gap-2">
     <div class="flex items-center gap-2 px-4">
-      <SidebarTrigger class="-ml-4 -mt-1" />
-      <transition
-        enter-from-class="opacity-0"
-        enter-active-class="transition-opacity duration-500"
-        emter-to-class="opacity-100"
-      >
-        <Separator
-          v-if="breadcrumbs.length"
-          orientation="vertical"
-          class="mr-2 data-[orientation=vertical]:h-4"
-        />
-      </transition>
-      <Breadcrumb class="-ml-1">
+      <SidebarTrigger class="-ml-4" />
+      <Breadcrumb class="ml-1">
         <BreadcrumbList>
           <transition-group
             enter-from-class="opacity-0"
@@ -88,7 +75,11 @@ const breadcrumbs = computed(() => {
                   <BreadcrumbLink tag="#"> {{ path.name }} </BreadcrumbLink>
                 </RouterLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator v-if="i !== breadcrumbs.length - 1" class="hidden md:block">
+              <BreadcrumbSeparator
+                v-if="i !== breadcrumbs.length - 1"
+                class="hidden md:block"
+                :style="{ transitionDelay: `${i * 50}ms` }"
+              >
                 <span class="text-xs">/</span>
               </BreadcrumbSeparator>
             </template>

@@ -14,8 +14,8 @@ const { isReady, isLoggedIn } = storeToRefs(userStore)
 watch(
   () => [isReady, isLoggedIn],
   async ([ready, authed]) => {
-    if (!ready.value) return
-    if (!authed.value) return
+    // if (!ready.value) return
+    // if (!authed.value) return
 
     // User is ready and authenticated
     await libraryStore.getAll()

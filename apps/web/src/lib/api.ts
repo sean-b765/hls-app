@@ -93,7 +93,7 @@ export class AuthAPI extends BaseAPI {
    */
   protected async setup() {
     const jwt = this.getJwt()
-    if (!jwt) return
+    if (!jwt) return emitter.emit('auth', null)
 
     const nowEpochSeconds = Date.now() / 1000
     if (jwt.exp > nowEpochSeconds) {
