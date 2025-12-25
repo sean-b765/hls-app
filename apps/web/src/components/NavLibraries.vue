@@ -12,7 +12,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { useLibraryStore } from '@/stores/libraries'
+import { useLibraryStore } from '@/stores/library'
 import { storeToRefs } from 'pinia'
 import { getLibraryIcon } from '@/lib/utils'
 

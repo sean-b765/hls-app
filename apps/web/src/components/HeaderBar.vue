@@ -12,7 +12,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { uniq } from 'lodash'
 import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
-import { useLibraryStore } from '@/stores/libraries'
+import { useLibraryStore } from '@/stores/library'
 const route = useRoute()
 const router = useRouter()
 const mediaStore = useMediaStore()

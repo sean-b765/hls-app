@@ -23,7 +23,7 @@ import {
 import { ButtonGroup } from '@/components/ui/button-group'
 import FolderBrowser from '@/components/FolderBrowser.vue'
 import { Library, LibraryType } from '@/types/libraries'
-import { useLibraryStore } from '@/stores/libraries'
+import { useLibraryStore } from '@/stores/library'
 import { getLibraryIcon } from '@/lib/utils'
 import { ref } from 'vue'
 import { Spinner } from '@/components/ui/spinner'

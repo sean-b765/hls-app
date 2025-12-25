@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AuthDialog from '@/components/AuthDialog.vue'
-import { useLibraryStore } from '@/stores/libraries'
+import { useLibraryStore } from '@/stores/library'
 import { useMediaStore } from '@/stores/media'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'

@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Library, LibraryType } from '@/types/libraries'
-import { useLibraryStore } from '@/stores/libraries'
+import { useLibraryStore } from '@/stores/library'
 import { getLibraryIcon } from '@/lib/utils'
 import { ref } from 'vue'
 import { cloneDeep, isEqual } from 'lodash'
