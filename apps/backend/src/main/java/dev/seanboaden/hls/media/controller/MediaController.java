@@ -52,6 +52,7 @@ public class MediaController {
     return ResponseEntity.ok(optionalMedia.get());
   }
 
+  // TODO: should change to use websocket updates rather than SSE
   @GetMapping(path = "/scan-progress")
   public Flux<ServerSentEvent<String>> streamProgress() {
     return Flux.interval(Duration.ofMillis(1000))

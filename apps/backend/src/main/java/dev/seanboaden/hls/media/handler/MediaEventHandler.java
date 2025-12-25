@@ -1,14 +1,11 @@
 package dev.seanboaden.hls.media.handler;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import dev.seanboaden.hls.config.web.AsyncExecutor;
 import dev.seanboaden.hls.media.enums.MediaProgressEnum;
 import dev.seanboaden.hls.media.event.MediaCreatedEvent;
 import dev.seanboaden.hls.media.service.MediaInfoService;
@@ -31,7 +28,7 @@ public class MediaEventHandler {
    * @param event
    */
   @EventListener
-  @Async("mediaEventExecutor")
+  @Async(AsyncExecutor.Names.SQLITE)
   public void onCreateEvent(MediaCreatedEvent event) {
     if (event == null || event.getMedia() == null)
       return;
@@ -45,10 +42,5 @@ public class MediaEventHandler {
     this.mediaInfoService.getMediaInfo(event.getMedia());
 
     mediaScanProgressRegistry.updateProgress(mediaId, MediaProgressEnum.READY);
-
-    // wait a few seconds, then clear progress from registry
-    CompletableFuture
-        .delayedExecutor(3, TimeUnit.SECONDS)
-        .execute(() -> mediaScanProgressRegistry.clear(mediaId));
   }
 }

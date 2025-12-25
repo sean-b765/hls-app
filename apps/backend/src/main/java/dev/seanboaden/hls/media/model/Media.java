@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
+import dev.seanboaden.hls.library.model.Library;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +45,11 @@ public class Media {
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
+
+  @ManyToOne
+  @JoinColumn(name = "libraryId", referencedColumnName = "id")
+  @JsonManagedReference
+  private Library library;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
   @JoinColumn(name = "metadataId", referencedColumnName = "id")

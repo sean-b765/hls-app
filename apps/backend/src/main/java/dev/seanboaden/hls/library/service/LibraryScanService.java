@@ -2,6 +2,7 @@ package dev.seanboaden.hls.library.service;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,7 +32,12 @@ public class LibraryScanService {
   public List<Media> createNewMediaInLibrary(Library library) {
     Path path = this.fileSystemService.getLibraryPath(library);
 
-    List<Media> newMedia = this.mediaScanService.listNewMediaInPath(path);
+    List<Media> newMedia = this.mediaScanService.listNewMediaInPath(path).stream()
+        .map(media -> {
+          media.setLibrary(library);
+          return media;
+        })
+        .collect(Collectors.toList());
     List<Media> savedMedia = this.mediaService.saveAll(newMedia);
 
     /**

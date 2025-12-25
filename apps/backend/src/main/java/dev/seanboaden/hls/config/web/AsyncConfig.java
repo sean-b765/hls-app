@@ -25,18 +25,22 @@ public class AsyncConfig implements WebMvcConfigurer {
     executor.setCorePoolSize(10);
     executor.setMaxPoolSize(100);
     executor.setQueueCapacity(500);
-    executor.setThreadNamePrefix("mvc-async-");
+    executor.setThreadNamePrefix(AsyncExecutor.Prefixes.MVC);
     executor.initialize();
     return executor;
   }
 
-  @Bean
-  public Executor mediaEventExecutor() {
+  /**
+   * Used for writing to SQLite concurrently
+   * Pool size must be set to one as SQLite doesn't handle concurrent write well
+   */
+  @Bean(name = AsyncExecutor.Names.SQLITE)
+  public Executor sqliteExecutor() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(4);
-    executor.setMaxPoolSize(8);
+    executor.setCorePoolSize(1);
+    executor.setMaxPoolSize(1);
     executor.setQueueCapacity(100);
-    executor.setThreadNamePrefix("media-event-");
+    executor.setThreadNamePrefix(AsyncExecutor.Prefixes.SQLITE);
     executor.initialize();
     return executor;
   }
