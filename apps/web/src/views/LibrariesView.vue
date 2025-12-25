@@ -8,7 +8,7 @@ import { getLibraryIcon } from '@/lib/utils'
 import { useLibraryStore } from '@/stores/libraries'
 import { useUserStore } from '@/stores/user'
 import { Library } from '@/types/libraries'
-import { Ellipsis, Navigation, Pencil, Plus, Trash } from 'lucide-vue-next'
+import { Ellipsis, Navigation, Pencil, Plus, ScanSearch, Trash } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -64,6 +64,11 @@ function openEditDialog(library: Library) {
               text: 'Edit',
               icon: Pencil,
               onClick: () => openEditDialog(library),
+            },
+            {
+              text: 'Scan',
+              icon: ScanSearch,
+              onClick: () => libraryStore.scan(library.id),
             },
             {
               text: 'Delete',
