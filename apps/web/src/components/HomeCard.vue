@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card'
 import { getImage } from '@/lib/utils'
 import { useColorMode } from '@vueuse/core'
+import { truncate } from 'lodash'
 import moment from 'moment'
 
 const { name, releaseDate, description, banner } = defineProps<{
@@ -52,7 +53,7 @@ const mode = useColorMode()
         class="description text-white text-shadow-md text-shadow-black opacity-85"
         style="max-width: clamp(200px, 50%, 600px)"
       >
-        {{ description }}
+        {{ truncate(description, { length: 200 }) }}
       </p>
     </CardContent>
     <CardFooter class="mt-5 gap-5 z-10">
@@ -80,6 +81,7 @@ const mode = useColorMode()
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: top center;
   width: 100%;
 
   /* Adjusts the grey scale overlay  */

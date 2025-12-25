@@ -44,7 +44,7 @@ const maxWidth = computed(() => {
         <CarouselItem
           v-for="m in mediaList"
           :key="m.id"
-          class="basis-1 md:basis-1/2 lg:basis-1/4 xl:basis-1/6"
+          class="xs:basis-1/2 sm:basis-1/3 lg:basis-1/4 xl:basis-1/6"
         >
           <div class="card my-1">
             <Card>
@@ -73,15 +73,15 @@ const maxWidth = computed(() => {
 .card {
   overflow: hidden;
   border-radius: 0.6rem;
-  filter: brightness(100%);
+  filter: brightness(87%);
   transition: filter 0.3s ease;
 }
 .card:hover {
   cursor: pointer;
   border-radius: 0.6rem; /* TODO: Fix issue where border corners are not rounded when hovered over. */
   transform: scale(0.98);
-  transition: transform 0.5s ease;
-  filter: brightness(90%);
+  transition: all 0.25s ease;
+  filter: brightness(100%);
 }
 .card-content {
   background-size: cover;
