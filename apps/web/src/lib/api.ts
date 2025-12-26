@@ -4,6 +4,7 @@ import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
 import type { FolderNode } from '@/types/filesystem'
+import type { Endpoints } from '@/types/common'
 import type { Library } from '@/types/libraries'
 
 class BaseAPI {
@@ -126,24 +127,55 @@ export class AuthAPI extends BaseAPI {
   }
 }
 
-class MediaAPI extends BaseAPI {
-  public getAll() {
-    return this.axios.get<Media[]>(`/api/media`)
+export class CrudAPI<T> extends BaseAPI {
+  public endpoint: Endpoints
+
+  constructor(endpoint: Endpoints) {
+    super()
+    this.endpoint = endpoint
   }
-  public getById(id: string) {
-    return this.axios.get<Media>(`/api/media/${id}`)
+
+  public create(library: T) {
+    return this.axios.post<T>(this.endpoint, library)
+  }
+  public upsert(library: T) {
+    return this.axios.put<T>(this.endpoint, library)
+  }
+  public findAll() {
+    return this.axios.get<T[]>(this.endpoint)
+  }
+  public findById(id: string) {
+    return this.axios.get<T>(`${this.endpoint}/${id}`)
+  }
+  public findByIds(ids: string[]) {
+    return this.axios.post<T>(`${this.endpoint}/fetch`, ids)
+  }
+  public deleteById(id: string) {
+    return this.axios.delete(`${this.endpoint}/${id}`)
+  }
+  public deleteByIds(id: string) {
+    return this.axios.delete(`${this.endpoint}/${id}`)
   }
 }
 
-class SeriesAPI extends BaseAPI {
-  public findTvSeries() {
-    return this.axios.get<TvSeriesCollection[]>(`/api/series`)
+class MediaAPI extends CrudAPI<Media> {
+  constructor() {
+    super('/api/media')
   }
 }
 
-class MoviesAPI extends BaseAPI {
-  public findMovies() {
-    return this.axios.get<Media[]>(`/api/movies`)
+class SeriesAPI extends CrudAPI<TvSeriesCollection> {
+  constructor() {
+    super('/api/series')
+  }
+}
+
+class LibraryAPI extends CrudAPI<Library> {
+  constructor() {
+    super('/api/library')
+  }
+  public scan(id: string) {
+    return this.axios.post(`${this.endpoint}/${id}/scan`)
   }
 }
 
@@ -153,33 +185,8 @@ class FileSystemAPI extends BaseAPI {
   }
 }
 
-class LibraryAPI extends BaseAPI {
-  public create(library: Library) {
-    return this.axios.post<Library>('/api/library', library)
-  }
-  public update(library: Library) {
-    return this.axios.put<Library>('/api/library', library)
-  }
-  public getAll() {
-    return this.axios.get<Library[]>('/api/library')
-  }
-  public getById(id: string) {
-    return this.axios.get<Library>(`/api/library/${id}`)
-  }
-  public scan(id: string) {
-    return this.axios.post(`/api/library/${id}/scan`)
-  }
-  public deleteById(id: string) {
-    return this.axios.delete(`/api/library/${id}`)
-  }
-}
-
+export const authApi = new AuthAPI()
 export const mediaApi = new MediaAPI()
-
 export const seriesApi = new SeriesAPI()
-
-export const moviesApi = new MoviesAPI()
-
 export const fileSystemApi = new FileSystemAPI()
-
 export const libraryApi = new LibraryAPI()

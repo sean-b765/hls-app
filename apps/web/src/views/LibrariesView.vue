@@ -14,7 +14,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const libraryStore = useLibraryStore()
 const userStore = useUserStore()
-const { libraries } = storeToRefs(libraryStore)
+const { items: libraries } = storeToRefs(libraryStore)
 const { isAdmin } = storeToRefs(userStore)
 const addLibraryDialog = ref(false)
 const editLibraryDialog = ref(false)

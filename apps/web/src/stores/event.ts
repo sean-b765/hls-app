@@ -8,8 +8,8 @@ import { useLibraryStore } from './library'
 
 export const useEventStore = defineStore('events', () => {
   const { handleIncomingWebSocketEvent } = useRoomStore()
-  const { getMedia } = useMediaStore()
-  const { getLibrary } = useLibraryStore()
+  const { getById: getMedia } = useMediaStore()
+  const { getById: getLibrary } = useLibraryStore()
 
   const events = ref({
     sent: [] as BaseMessage[],
@@ -21,10 +21,10 @@ export const useEventStore = defineStore('events', () => {
 
   function fetchResource(event: ResourceUpdatedEvent) {
     switch (event.uri) {
-      case '/api/media/':
+      case '/api/media':
         getMedia(event.id)
         break
-      case '/api/library/':
+      case '/api/library':
         getLibrary(event.id)
         break
     }

@@ -244,6 +244,7 @@ public class MediaInfoService extends AbstractCrudService<MediaInfo, String, Med
     if (movie == null)
       return;
 
+    mediaInfo.setName(movie.getTitle());
     mediaInfo.setDescription(movie.getOverview());
     mediaInfo.setBanner(movie.getBackdropPath());
     mediaInfo.setThumbnail(movie.getPosterPath());

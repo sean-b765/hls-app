@@ -57,7 +57,7 @@ async function editLibrary(values: unknown) {
   }
 
   loading.value = true
-  await libraryStore.update(payload)
+  await libraryStore.upsert(payload)
   loading.value = false
 
   open.value = false

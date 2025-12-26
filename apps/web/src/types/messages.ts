@@ -1,3 +1,4 @@
+import type { Endpoints } from './common'
 import type { PlayerStateType, Room } from './room'
 
 export enum EventType {
@@ -24,7 +25,7 @@ export type ResourceUpdatedEvent = WsMessage & {
   /**
    * The uri to hit
    */
-  uri: '/api/library/' | '/api/media/' | '/api/series/' | '/api/seasons/'
+  uri: Endpoints
   /**
    * The id to fetch
    */

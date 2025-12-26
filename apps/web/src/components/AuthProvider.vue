@@ -18,9 +18,8 @@ watch(
     // if (!authed.value) return
 
     // User is ready and authenticated
-    await libraryStore.getAll()
-    await mediaStore.getMovies()
-    await mediaStore.getSeries()
+    await libraryStore.findAll()
+    await mediaStore.findAll()
   },
   {
     immediate: true,

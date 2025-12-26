@@ -1,4 +1,4 @@
-import { AuthAPI } from '@/lib/api'
+import { authApi } from '@/lib/api'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { type UserRole, type JwtPayload } from '@/types/user'
@@ -29,7 +29,6 @@ export const useUserStore = defineStore('user', () => {
   const username = computed(() => user.value?.username ?? 'anonymous')
   const usernameShort = computed(() => username.value.substring(0, 2).toUpperCase())
 
-  const authApi = new AuthAPI()
   async function signin(username: string, password: string) {
     await authApi.login({ username, password })
   }

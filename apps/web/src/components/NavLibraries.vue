@@ -17,7 +17,7 @@ import { storeToRefs } from 'pinia'
 import { getLibraryIcon } from '@/lib/utils'
 
 const libraryStore = useLibraryStore()
-const { libraries } = storeToRefs(libraryStore)
+const { items: libraries } = storeToRefs(libraryStore)
 
 const items = [
   {
