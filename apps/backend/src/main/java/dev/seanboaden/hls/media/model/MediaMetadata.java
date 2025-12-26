@@ -33,9 +33,7 @@ public class MediaMetadata extends AbstractBaseEntity {
   private long sizeBytes;
   private double durationSeconds;
   private double framerate;
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime lastScanDateTime;
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime lastModified;
 
   @OneToOne

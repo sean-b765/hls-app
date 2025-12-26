@@ -31,7 +31,6 @@ import lombok.experimental.SuperBuilder;
 public class MediaInfo extends AbstractBaseEntity {
   private String name;
   private String description;
-  @JsonFormat(pattern = "yyyy-MM-dd")
   @Nullable
   private LocalDate releaseDate;
   private String thumbnail;
