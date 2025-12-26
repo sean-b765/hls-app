@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<JwtPayload | null>()
   // Register the auth listener before constructing the auth api
   emitter.on('auth', (jwt) => {
+    console.log('AUTHED?', jwt)
     if (!jwt) {
       user.value = null
       client.disconnect()
@@ -38,6 +39,9 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function handleIncomingWebSocketEvent(event: unknown) {}
+
+  // setup auth
+  authApi.setup()
 
   return {
     user,

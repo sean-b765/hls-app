@@ -92,9 +92,9 @@ class BaseAPI {
 
 export class AuthAPI extends BaseAPI {
   /**
-   * Setup the auth tokens on initial construction
+   * Setup the auth tokens
    */
-  protected async setup() {
+  public async setup() {
     const jwt = this.getJwt()
     if (!jwt) return emitter.emit('auth', null)
 
@@ -107,11 +107,6 @@ export class AuthAPI extends BaseAPI {
     if (jwt.exp <= nowEpochSeconds) {
       await this.consumeRefreshToken()
     }
-  }
-
-  constructor() {
-    super()
-    this.setup()
   }
 
   public signup(body: AuthRequest) {
