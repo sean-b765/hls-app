@@ -34,6 +34,7 @@ export function useCrudStore<T extends Identifiable>({ api }: CrudStoreOptions<T
     try {
       const res = await api.findById(id)
       if (res.status !== 200) return
+      upsertMutation(res.data)
     } catch {}
   }
 

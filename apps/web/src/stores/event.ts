@@ -5,11 +5,13 @@ import { EventType } from '@/types/messages'
 import { useRoomStore } from './room'
 import { useMediaStore } from './media'
 import { useLibraryStore } from './library'
+import { useTvSeriesStore } from './tvSeries'
 
 export const useEventStore = defineStore('events', () => {
   const { handleIncomingWebSocketEvent } = useRoomStore()
-  const { getById: getMedia } = useMediaStore()
-  const { getById: getLibrary } = useLibraryStore()
+  const { findById: getMedia } = useMediaStore()
+  const { findById: getLibrary } = useLibraryStore()
+  const { findById: getTvSeries } = useTvSeriesStore()
 
   const events = ref({
     sent: [] as BaseMessage[],
@@ -26,6 +28,9 @@ export const useEventStore = defineStore('events', () => {
         break
       case '/api/library':
         getLibrary(event.id)
+        break
+      case '/api/series':
+        getTvSeries(event.id)
         break
     }
   }

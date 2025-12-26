@@ -31,6 +31,6 @@ public abstract class AbstractBaseEntity {
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
   @UpdateTimestamp
-  @Column(nullable = true, updatable = false)
+  @Column(nullable = true, updatable = true)
   private LocalDateTime updatedAt;
 }
