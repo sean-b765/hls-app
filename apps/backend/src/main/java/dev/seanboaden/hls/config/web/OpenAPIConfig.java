@@ -17,7 +17,7 @@ public class OpenAPIConfig {
         .components(new Components()
             .addSecuritySchemes("Authorization", securityScheme("Authorization")))
         .addSecurityItem(new SecurityRequirement().addList("Authorization"))
-        .info(new Info().title("HLS App"));
+        .info(new Info().title("HLS App").version("1.0.0"));
   }
 
   private SecurityScheme securityScheme(String name) {

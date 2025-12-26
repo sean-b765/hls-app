@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dev.seanboaden.hls.collection.handler.TvSeasonCollectionEventListener;
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
@@ -41,6 +41,7 @@ public class TvSeasonCollection extends AbstractBaseEntity {
 
   private Integer season;
   @Column(unique = false, nullable = false)
+  @NonNull
   private String name;
   private String description;
   @Nullable

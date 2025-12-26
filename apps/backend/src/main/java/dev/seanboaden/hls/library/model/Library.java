@@ -1,5 +1,7 @@
 package dev.seanboaden.hls.library.model;
 
+import org.springframework.lang.NonNull;
+
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.library.handler.LibraryEventListener;
 import jakarta.persistence.Column;
@@ -22,10 +24,13 @@ import lombok.experimental.SuperBuilder;
 @EntityListeners(value = { LibraryEventListener.class })
 public class Library extends AbstractBaseEntity {
   @Column(nullable = false)
+  @NonNull
   private String name;
   @Column(unique = true, nullable = false)
+  @NonNull
   private String path;
   @Column(nullable = false)
+  @NonNull
   private LibraryType type;
   private Integer orderIndex;
 }

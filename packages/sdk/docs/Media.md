@@ -5,8 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
+**id** | **string** |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
+**updatedAt** | **string** |  | [optional] [default to undefined]
 **path** | **string** |  | [optional] [default to undefined]
+**library** | [**Library**](Library.md) |  | [optional] [default to undefined]
 **metadata** | [**MediaMetadata**](MediaMetadata.md) |  | [optional] [default to undefined]
 **info** | [**MediaInfo**](MediaInfo.md) |  | [optional] [default to undefined]
 **tvSeason** | [**TvSeasonCollection**](TvSeasonCollection.md) |  | [optional] [default to undefined]
@@ -18,7 +21,10 @@ import { Media } from './api';
 
 const instance: Media = {
     id,
+    createdAt,
+    updatedAt,
     path,
+    library,
     metadata,
     info,
     tvSeason,

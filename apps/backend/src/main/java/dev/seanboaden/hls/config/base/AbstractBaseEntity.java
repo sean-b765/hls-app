@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -25,10 +26,12 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractBaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @NonNull
   private String id;
 
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
+  @NonNull
   private LocalDateTime createdAt;
   @UpdateTimestamp
   @Column(nullable = true, updatable = true)

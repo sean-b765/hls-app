@@ -5,7 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
+**id** | **string** |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
+**updatedAt** | **string** |  | [optional] [default to undefined]
 **fileExtension** | **string** |  | [optional] [default to undefined]
 **videoCodec** | **string** |  | [optional] [default to undefined]
 **audioCodec** | **string** |  | [optional] [default to undefined]
@@ -23,6 +25,8 @@ import { MediaMetadata } from './api';
 
 const instance: MediaMetadata = {
     id,
+    createdAt,
+    updatedAt,
     fileExtension,
     videoCodec,
     audioCodec,

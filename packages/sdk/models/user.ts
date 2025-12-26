@@ -15,23 +15,19 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Media } from './media';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { TvSeriesCollection } from './tv-series-collection';
+import type { GrantedAuthority } from './granted-authority';
 
-export interface TvSeasonCollection {
+export interface User {
     'id': string;
     'createdAt': string;
     'updatedAt'?: string;
-    'externalId'?: string;
-    'season'?: number;
-    'name': string;
-    'description'?: string;
-    'releaseDate'?: string;
-    'thumbnail'?: string;
-    'banner'?: string;
-    'tvSeries'?: TvSeriesCollection;
-    'mediaItems'?: Array<Media>;
+    'roles': Array<string>;
+    'username': string;
+    'password': string;
+    'authorities': Array<GrantedAuthority>;
+    'enabled'?: boolean;
+    'accountNonLocked'?: boolean;
+    'accountNonExpired'?: boolean;
+    'credentialsNonExpired'?: boolean;
 }
 

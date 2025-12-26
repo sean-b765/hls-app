@@ -2,13 +2,14 @@ package dev.seanboaden.hls.media.model;
 
 import java.time.LocalDate;
 
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.media.handler.MediaInfoEventListener;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
@@ -29,6 +30,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EntityListeners(value = { MediaInfoEventListener.class })
 public class MediaInfo extends AbstractBaseEntity {
+  @NonNull
+  @Column(nullable = false)
   private String name;
   private String description;
   @Nullable

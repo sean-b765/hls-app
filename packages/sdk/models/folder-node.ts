@@ -14,8 +14,9 @@
 
 
 
-export interface AuthRequest {
-    'username'?: string;
-    'password'?: string;
+export interface FolderNode {
+    'name': string;
+    'path': string;
+    'hasChildren'?: boolean;
 }
 

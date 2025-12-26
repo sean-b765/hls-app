@@ -5,10 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
+**id** | **string** |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
+**updatedAt** | **string** |  | [optional] [default to undefined]
 **externalId** | **string** |  | [optional] [default to undefined]
 **season** | **number** |  | [optional] [default to undefined]
-**name** | **string** |  | [optional] [default to undefined]
+**name** | **string** |  | [default to undefined]
 **description** | **string** |  | [optional] [default to undefined]
 **releaseDate** | **string** |  | [optional] [default to undefined]
 **thumbnail** | **string** |  | [optional] [default to undefined]
@@ -23,6 +25,8 @@ import { TvSeasonCollection } from './api';
 
 const instance: TvSeasonCollection = {
     id,
+    createdAt,
+    updatedAt,
     externalId,
     season,
     name,

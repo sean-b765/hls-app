@@ -13,21 +13,25 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { Media } from './media';
 
-export interface MediaInfo {
+export interface Library {
     'id': string;
     'createdAt': string;
     'updatedAt'?: string;
     'name': string;
-    'description'?: string;
-    'releaseDate'?: string;
-    'thumbnail'?: string;
-    'banner'?: string;
-    'season'?: number;
-    'episode'?: number;
-    'media'?: Media;
+    'path': string;
+    'type': LibraryTypeEnum;
+    'orderIndex'?: number;
 }
+
+export const LibraryTypeEnum = {
+    Movies: 'MOVIES',
+    Tv: 'TV',
+    Music: 'MUSIC',
+    Anime: 'ANIME',
+    Other: 'OTHER'
+} as const;
+
+export type LibraryTypeEnum = typeof LibraryTypeEnum[keyof typeof LibraryTypeEnum];
+
 
