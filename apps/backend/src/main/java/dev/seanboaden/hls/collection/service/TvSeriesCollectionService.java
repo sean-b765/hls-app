@@ -1,6 +1,5 @@
 package dev.seanboaden.hls.collection.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,27 +8,21 @@ import org.springframework.stereotype.Service;
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import dev.seanboaden.hls.collection.repository.TvSeriesCollectionRepository;
+import dev.seanboaden.hls.config.base.AbstractCrudService;
 import jakarta.transaction.Transactional;
 
 @Service
-public class TvSeriesCollectionService {
-  @Autowired
-  private TvSeriesCollectionRepository tvSeriesCollectionRepository;
+public class TvSeriesCollectionService
+    extends AbstractCrudService<TvSeriesCollection, String, TvSeriesCollectionRepository> {
   @Autowired
   private TvSeasonCollectionService tvSeasonCollectionService;
 
-  public TvSeriesCollection save(TvSeriesCollection tvSeries) {
-    if (tvSeries == null)
-      return null;
-    return this.tvSeriesCollectionRepository.save(tvSeries);
-  }
-
-  public List<TvSeriesCollection> findAll() {
-    return this.tvSeriesCollectionRepository.findAll();
+  protected TvSeriesCollectionService(TvSeriesCollectionRepository repository) {
+    super(repository);
   }
 
   public Optional<TvSeriesCollection> findByName(String name) {
-    return this.tvSeriesCollectionRepository.findByName(name);
+    return this.repository.findByName(name);
   }
 
   @Transactional
@@ -37,7 +30,7 @@ public class TvSeriesCollectionService {
     if (tvSeriesId == null || tvSeasonId == null)
       return;
 
-    TvSeriesCollection tvSeries = this.tvSeriesCollectionRepository
+    TvSeriesCollection tvSeries = this.repository
         .findById(tvSeriesId)
         .orElseThrow();
 

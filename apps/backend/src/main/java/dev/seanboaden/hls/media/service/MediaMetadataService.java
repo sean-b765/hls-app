@@ -4,14 +4,13 @@ import java.io.File;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.lib.service.MetadataExtractor;
 import dev.seanboaden.hls.lib.service.MimeTypeService;
@@ -21,24 +20,18 @@ import dev.seanboaden.hls.media.model.MediaMetadata;
 import dev.seanboaden.hls.media.repository.MediaMetadataRepository;
 
 @Service
-public class MediaMetadataService {
-  @Autowired
-  private MediaMetadataRepository metadataRepository;
+public class MediaMetadataService extends AbstractCrudService<MediaMetadata, String, MediaMetadataRepository> {
   @Autowired
   private MetadataExtractor metadataExtractor;
   @Autowired
   private MimeTypeService mimeTypeService;
 
-  public MediaMetadata save(@NonNull MediaMetadata metadata) {
-    return metadataRepository.save(metadata);
-  }
-
-  public List<MediaMetadata> findAll() {
-    return metadataRepository.findAll();
+  protected MediaMetadataService(MediaMetadataRepository repository) {
+    super(repository);
   }
 
   private MediaMetadata createMusicMetadata(Media media) {
-    Optional<MediaMetadata> optionalMetadata = this.metadataRepository.findByMedia_Id(media.getId());
+    Optional<MediaMetadata> optionalMetadata = this.repository.findByMedia_Id(media.getId());
     if (optionalMetadata.isPresent())
       return null;
 
@@ -56,7 +49,7 @@ public class MediaMetadataService {
   }
 
   private MediaMetadata createVideoMetadata(Media media) {
-    Optional<MediaMetadata> optionalMetadata = this.metadataRepository.findByMedia_Id(media.getId());
+    Optional<MediaMetadata> optionalMetadata = this.repository.findByMedia_Id(media.getId());
     if (optionalMetadata.isPresent())
       return null;
 

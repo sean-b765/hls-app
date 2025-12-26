@@ -8,41 +8,31 @@ import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.collection.repository.TvSeasonCollectionRepository;
+import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.service.MediaService;
 import jakarta.transaction.Transactional;
 
 @Service
-public class TvSeasonCollectionService {
-  @Autowired
-  private TvSeasonCollectionRepository tvSeasonCollectionRepository;
+public class TvSeasonCollectionService
+    extends AbstractCrudService<TvSeasonCollection, String, TvSeasonCollectionRepository> {
   @Autowired
   private MediaService mediaService;
 
-  public TvSeasonCollection save(TvSeasonCollection tvSeason) {
-    if (tvSeason == null)
-      return null;
-    return this.tvSeasonCollectionRepository.save(tvSeason);
-  }
-
-  public List<TvSeasonCollection> findAll() {
-    return this.tvSeasonCollectionRepository.findAll();
-  }
-
-  public Optional<TvSeasonCollection> findById(String id) {
-    return this.tvSeasonCollectionRepository.findById(id);
+  protected TvSeasonCollectionService(TvSeasonCollectionRepository repository) {
+    super(repository);
   }
 
   public Optional<TvSeasonCollection> findExternalById(String externalId) {
-    return this.tvSeasonCollectionRepository.findByExternalId(externalId);
+    return this.repository.findByExternalId(externalId);
   }
 
   public Optional<TvSeasonCollection> findByName(String name) {
-    return this.tvSeasonCollectionRepository.findByName(name);
+    return this.repository.findByName(name);
   }
 
   public Optional<TvSeasonCollection> findByTvSeriesAndSeason(String seriesId, Integer season) {
-    return this.tvSeasonCollectionRepository.findByTvSeriesIdAndSeason(seriesId, season);
+    return this.repository.findByTvSeriesIdAndSeason(seriesId, season);
   }
 
   @Transactional
@@ -50,7 +40,7 @@ public class TvSeasonCollectionService {
     if (tvSeasonId == null || mediaId == null)
       return;
 
-    TvSeasonCollection tvSeason = this.tvSeasonCollectionRepository.findById(tvSeasonId)
+    TvSeasonCollection tvSeason = this.repository.findById(tvSeasonId)
         .orElseThrow();
     Media media = this.mediaService.findById(mediaId)
         .orElseThrow();

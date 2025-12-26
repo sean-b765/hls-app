@@ -1,51 +1,56 @@
 package dev.seanboaden.hls.library.controller;
 
-import java.net.URI;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.seanboaden.hls.config.base.AbstractCrudController;
 import dev.seanboaden.hls.filesystem.service.FileSystemService;
 import dev.seanboaden.hls.library.model.Library;
+import dev.seanboaden.hls.library.repository.LibraryRepository;
 import dev.seanboaden.hls.library.service.LibraryScanService;
 import dev.seanboaden.hls.library.service.LibraryService;
 import dev.seanboaden.hls.user.model.Role;
 
 @RestController
 @RequestMapping("/api/library")
-public class LibraryController {
-  @Autowired
-  private LibraryService libraryService;
+public class LibraryController extends AbstractCrudController<Library, String, LibraryRepository, LibraryService> {
   @Autowired
   private LibraryScanService libraryScanService;
   @Autowired
   private FileSystemService fileSystemService;
 
-  @PreAuthorize(Role.PreAuthorized.ADMIN)
-  @PostMapping()
-  public ResponseEntity<Library> create(@RequestBody Library library) {
-    if (library == null)
-      return ResponseEntity.badRequest().build();
+  protected LibraryController(LibraryService service) {
+    super(service);
+  }
 
-    if (!this.fileSystemService.isValidDirectory(Path.of(library.getPath())))
-      return ResponseEntity.badRequest().build();
+  @Override
+  protected void canCreate(Library body) {
+    if (!this.fileSystemService.isValidDirectory(Path.of(body.getPath())))
+      throw new IllegalAccessError();
+    if (!this.hasAuthority(Role.ADMIN))
+      throw new AccessDeniedException(Role.Messages.ADMIN);
+  }
 
-    Library saved = this.libraryService.save(library);
-    URI location = URI.create("/api/library/" + saved.getId());
+  @Override
+  protected void canUpdate(Library body) {
+    if (!this.fileSystemService.isValidDirectory(Path.of(body.getPath())))
+      throw new IllegalAccessError(body.getPath());
+    if (!this.hasAuthority(Role.ADMIN))
+      throw new AccessDeniedException(Role.Messages.ADMIN);
+  }
 
-    return ResponseEntity.created(Objects.requireNonNull(location)).body(saved);
+  @Override
+  protected void canDelete(String id) {
+    if (!this.hasAuthority(Role.ADMIN))
+      throw new AccessDeniedException(Role.Messages.ADMIN);
   }
 
   @PreAuthorize(Role.PreAuthorized.ADMIN)
@@ -54,7 +59,7 @@ public class LibraryController {
     if (id == null)
       return ResponseEntity.badRequest().build();
 
-    Library saved = this.libraryService.findById(id).orElse(null);
+    Library saved = this.service.findById(id).orElse(null);
     if (saved == null)
       return ResponseEntity.notFound().build();
 
@@ -62,37 +67,5 @@ public class LibraryController {
     this.libraryScanService.createNewMediaInLibrary(saved);
 
     return ResponseEntity.ok().build();
-  }
-
-  @PreAuthorize(Role.PreAuthorized.ADMIN)
-  @PutMapping()
-  public ResponseEntity<Library> update(@RequestBody Library library) {
-    if (library == null || library.getId() == null)
-      return ResponseEntity.badRequest().build();
-
-    if (!this.fileSystemService.isValidDirectory(Path.of(library.getPath())))
-      return ResponseEntity.badRequest().build();
-
-    if (this.libraryService.findById(library.getId()).isEmpty())
-      return ResponseEntity.notFound().build();
-
-    Library saved = this.libraryService.save(library);
-
-    return ResponseEntity.ok(saved);
-  }
-
-  @PreAuthorize(Role.PreAuthorized.ADMIN)
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteById(@PathVariable String id) {
-    if (id == null)
-      return ResponseEntity.badRequest().build();
-
-    this.libraryService.delete(id);
-    return ResponseEntity.ok().build();
-  }
-
-  @GetMapping
-  public ResponseEntity<List<Library>> findAll() {
-    return ResponseEntity.ok(this.libraryService.findAll());
   }
 }

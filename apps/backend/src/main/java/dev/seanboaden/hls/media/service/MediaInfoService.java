@@ -12,6 +12,7 @@ import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import dev.seanboaden.hls.collection.service.TvSeasonCollectionService;
 import dev.seanboaden.hls.collection.service.TvSeriesCollectionService;
+import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.lib.model.FileNameMetadata;
 import dev.seanboaden.hls.lib.service.FileNameParser;
@@ -24,8 +25,6 @@ import info.movito.themoviedbapi.model.core.Movie;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.core.TvSeries;
 import info.movito.themoviedbapi.model.core.TvSeriesResultsPage;
-import info.movito.themoviedbapi.model.tv.core.TvEpisode;
-import info.movito.themoviedbapi.model.tv.core.TvSeason;
 import info.movito.themoviedbapi.model.tv.episode.TvEpisodeDb;
 import info.movito.themoviedbapi.model.tv.season.TvSeasonDb;
 import info.movito.themoviedbapi.tools.TmdbException;
@@ -33,9 +32,7 @@ import info.movito.themoviedbapi.tools.appendtoresponse.TvEpisodesAppendToRespon
 import info.movito.themoviedbapi.tools.appendtoresponse.TvSeasonsAppendToResponse;
 
 @Service
-public class MediaInfoService {
-  @Autowired
-  private MediaInfoRepository mediaInfoRepository;
+public class MediaInfoService extends AbstractCrudService<MediaInfo, String, MediaInfoRepository> {
   @Autowired
   private TvSeriesCollectionService tvSeriesService;
   @Autowired
@@ -45,10 +42,8 @@ public class MediaInfoService {
   @Autowired
   private TmdbApi tmdbApi;
 
-  public MediaInfo save(MediaInfo mediaInfo) {
-    if (mediaInfo == null)
-      return null;
-    return mediaInfoRepository.save(mediaInfo);
+  protected MediaInfoService(MediaInfoRepository repository) {
+    super(repository);
   }
 
   private Movie getTmdbMovie(MediaInfo mediaInfo) {
@@ -276,7 +271,7 @@ public class MediaInfoService {
    */
   public MediaInfo createMediaInfo(Media media) {
     // Already exists, meaning we've already performed the operations below
-    Optional<MediaInfo> existingOptional = this.mediaInfoRepository.findByMediaId(media.getId());
+    Optional<MediaInfo> existingOptional = this.repository.findByMediaId(media.getId());
     if (existingOptional.isPresent())
       return existingOptional.get();
 

@@ -4,22 +4,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.handler.TvSeasonCollectionEventListener;
+import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.media.model.Media;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -29,19 +25,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tv_season")
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(value = { TvSeasonCollectionEventListener.class })
-public class TvSeasonCollection {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+public class TvSeasonCollection extends AbstractBaseEntity {
   @Column(unique = true)
   private String externalId;
 

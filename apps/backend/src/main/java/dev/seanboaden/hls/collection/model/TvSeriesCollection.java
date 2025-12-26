@@ -11,13 +11,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dev.seanboaden.hls.collection.handler.TvSeriesCollectionEventListener;
+import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,19 +23,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tv_series")
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(value = { TvSeriesCollectionEventListener.class })
-public class TvSeriesCollection {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+public class TvSeriesCollection extends AbstractBaseEntity {
   @Column(unique = true)
   private String externalId;
 

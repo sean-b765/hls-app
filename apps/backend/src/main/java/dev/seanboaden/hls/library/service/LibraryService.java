@@ -1,37 +1,20 @@
 package dev.seanboaden.hls.library.service;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.library.model.Library;
 import dev.seanboaden.hls.library.repository.LibraryRepository;
 
 @Service
-public class LibraryService {
-  @Autowired
-  private LibraryRepository libraryRepository;
-
-  public Library save(@NonNull Library library) {
-    return this.libraryRepository.save(library);
+public class LibraryService extends AbstractCrudService<Library, String, LibraryRepository> {
+  protected LibraryService(LibraryRepository repository) {
+    super(repository);
   }
 
   public Optional<Library> findByPath(String path) {
-    return this.libraryRepository.findByPath(path);
-  }
-
-  public Optional<Library> findById(@NonNull String id) {
-    return this.libraryRepository.findById(id);
-  }
-
-  public List<Library> findAll() {
-    return this.libraryRepository.findAll();
-  }
-
-  public void delete(@NonNull String id) {
-    this.libraryRepository.deleteById(id);
+    return this.repository.findByPath(path);
   }
 }
