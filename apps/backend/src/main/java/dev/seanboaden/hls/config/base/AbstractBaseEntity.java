@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,12 +28,13 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractBaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  @NonNull
+  @Column(nullable = false, updatable = false, unique = true)
+  @Schema(requiredMode = RequiredMode.REQUIRED)
   private String id;
 
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
-  @NonNull
+  @Schema(requiredMode = RequiredMode.REQUIRED)
   private LocalDateTime createdAt;
   @UpdateTimestamp
   @Column(nullable = true, updatable = true)
