@@ -138,6 +138,10 @@ function start() {
       levelLoadingMaxRetry: 3,
       manifestLoadingMaxRetry: 3,
       maxBufferHole: 0.5,
+      xhrSetup(xhr) {
+        xhr.withCredentials = true
+        xhr.setRequestHeader('Authorization', localStorage.getItem('access_token') ?? '')
+      },
     })
 
     hls.attachMedia(player.value)

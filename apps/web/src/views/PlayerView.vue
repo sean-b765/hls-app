@@ -2,23 +2,16 @@
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import { getImage } from '@/lib/utils'
 import { useMediaStore } from '@/stores/media'
-import { Media } from '@hls-app/sdk'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const mediaStore = useMediaStore()
-const { media } = storeToRefs(mediaStore)
+const { selectedMedia } = storeToRefs(mediaStore)
 const { params } = useRoute()
 
-const selectedMedia = computed<Media | undefined>(() => {
-  const id = params['mediaId'] as string
-  const m = media.value.find((el) => el.id === id)
-  return m
-})
-
 onMounted(async () => {
-  await mediaStore.getMedia(params['mediaId'] as string)
+  await mediaStore.findById(params['mediaId'] as string)
 })
 </script>
 
