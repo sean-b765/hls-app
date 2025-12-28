@@ -11,7 +11,7 @@ export const useMediaStore = defineStore('media', () => {
   const movies = computed(() => {
     return crud.items.value.filter((m) => m.info && !m.info.season)
   })
-  const series = computed(() => {
+  const episodes = computed(() => {
     return crud.items.value.filter((m) => m.info && !!m.info.season)
   })
 
@@ -27,6 +27,6 @@ export const useMediaStore = defineStore('media', () => {
     ...crud,
     selectedMedia,
     movies,
-    series,
+    episodes,
   }
 })

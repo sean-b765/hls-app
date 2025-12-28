@@ -5,7 +5,7 @@
   "main": "index.ts",
   "types": "index.ts",
   "scripts": {
-    "generate": "openapi-generator-cli generate -i http://localhost:8080/v3/api-docs -g typescript-axios -o ./ --global-property=models --additional-properties=supportsES6=true,withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api"
+    "generate": "openapi-generator-cli generate -i http://localhost:8080/v3/api-docs -g typescript-axios -o ./ --additional-properties=supportsES6=true,withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.25.2"

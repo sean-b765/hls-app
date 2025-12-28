@@ -1,11 +1,10 @@
 import type { JwtPayload } from '@/types/user'
-import { type AuthRequest, type Media, type TvSeriesCollection } from '@hls-app/sdk'
+import { type AuthRequest, type Library, type Media, type TvSeriesCollection } from '@hls-app/sdk'
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
 import type { FolderNode } from '@/types/filesystem'
 import type { Endpoints } from '@/types/common'
-import type { Library } from '@/types/libraries'
 
 class BaseAPI {
   protected axios!: AxiosInstance

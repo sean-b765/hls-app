@@ -20,17 +20,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ButtonGroup } from '@/components/ui/button-group'
-import { Library, LibraryType } from '@/types/libraries'
 import { useLibraryStore } from '@/stores/library'
 import { getLibraryIcon } from '@/lib/utils'
 import { ref } from 'vue'
 import { cloneDeep, isEqual } from 'lodash'
 import { Spinner } from '@/components/ui/spinner'
+import { Library, LibraryTypeEnum } from '@hls-app/sdk'
 
 const open = defineModel<boolean>('open')
 const library = defineModel<Library>('library')
 const loading = ref(false)
-const typeOptions: LibraryType[] = ['MOVIES', 'TV', 'MUSIC', 'ANIME', 'OTHER']
+const typeOptions: LibraryTypeEnum[] = ['MOVIES', 'TV', 'MUSIC', 'ANIME', 'OTHER']
 const libraryStore = useLibraryStore()
 
 const createLibrarySchema = toTypedSchema(

@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** |  | [default to undefined]
 **path** | **string** |  | [default to undefined]
-**hasChildren** | **boolean** |  | [optional] [default to undefined]
+**hasChildren** | **boolean** |  | [default to undefined]
 
 ## Example
 

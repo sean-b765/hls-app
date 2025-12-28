@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
+import dev.seanboaden.hls.config.base.LibraryEntity;
 import dev.seanboaden.hls.library.model.Library;
 import dev.seanboaden.hls.media.handler.MediaEventListener;
 import jakarta.persistence.CascadeType;
@@ -28,17 +29,12 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(value = { MediaEventListener.class })
-public class Media extends AbstractBaseEntity {
+public class Media extends LibraryEntity {
   /**
    * The absolute path to the media file
    */
   @Column(nullable = false, unique = true)
   private String path;
-
-  @ManyToOne
-  @JoinColumn(name = "libraryId", referencedColumnName = "id")
-  @JsonManagedReference
-  private Library library;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
   @JoinColumn(name = "metadataId", referencedColumnName = "id")

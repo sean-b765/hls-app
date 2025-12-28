@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
 import MediaCard from '@/components/MediaCard.vue'
 import { useRouter } from 'vue-router'
-import { useTvSeriesStore } from '@/stores/tvSeries'
-const mediaStore = useMediaStore()
-const tvSeriesStore = useTvSeriesStore()
-const { movies } = storeToRefs(mediaStore)
-const { items: series } = storeToRefs(tvSeriesStore)
+import { useLibraryStore } from '@/stores/library'
+const libraryStore = useLibraryStore()
+const { movies, series } = storeToRefs(libraryStore)
 const router = useRouter()
 
 function clickMedia(id: string | undefined) {

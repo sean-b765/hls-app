@@ -3,8 +3,8 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import moment from 'moment'
 import { padStart } from 'lodash'
-import type { Library } from '@/types/libraries'
 import { Clapperboard, JapaneseYen, Music, Shapes, TvMinimal } from 'lucide-vue-next'
+import type { Library } from '@hls-app/sdk'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

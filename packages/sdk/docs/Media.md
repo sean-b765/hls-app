@@ -8,8 +8,8 @@ Name | Type | Description | Notes
 **id** | **string** |  | [default to undefined]
 **createdAt** | **string** |  | [default to undefined]
 **updatedAt** | **string** |  | [optional] [default to undefined]
-**path** | **string** |  | [optional] [default to undefined]
 **library** | [**Library**](Library.md) |  | [optional] [default to undefined]
+**path** | **string** |  | [optional] [default to undefined]
 **metadata** | [**MediaMetadata**](MediaMetadata.md) |  | [optional] [default to undefined]
 **info** | [**MediaInfo**](MediaInfo.md) |  | [optional] [default to undefined]
 **tvSeason** | [**TvSeasonCollection**](TvSeasonCollection.md) |  | [optional] [default to undefined]
@@ -23,8 +23,8 @@ const instance: Media = {
     id,
     createdAt,
     updatedAt,
-    path,
     library,
+    path,
     metadata,
     info,
     tvSeason,

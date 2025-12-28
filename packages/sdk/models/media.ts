@@ -30,8 +30,8 @@ export interface Media {
     'id': string;
     'createdAt': string;
     'updatedAt'?: string;
-    'path'?: string;
     'library'?: Library;
+    'path'?: string;
     'metadata'?: MediaMetadata;
     'info'?: MediaInfo;
     'tvSeason'?: TvSeasonCollection;

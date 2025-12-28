@@ -20,6 +20,12 @@ A full-stack monorepo containing the:
 
 An API dashboard is available when the backend is running: [Swagger](http://localhost:8080/swagger-ui/index.html#/)
 
+## SDK
+
+An SDK can be generated with the command `pnpm generate-sdk` which runs the `openapi-generator-cli` tool on a **running** backend to generate typescript schemas based on the backend models.
+
+This is helpful as it reduces the amount of typescript schemas we have to maintain.
+
 ## Authenticating
 
 The default admin credentials are `admin:Admin123!`

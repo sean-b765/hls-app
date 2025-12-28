@@ -14,9 +14,13 @@
 
 
 
-export interface FolderNode {
-    'name': string;
-    'path': string;
-    'hasChildren': boolean;
-}
+export * from './api/auth-api';
+export * from './api/file-system-api';
+export * from './api/hls-playlist-controller-api';
+export * from './api/hls-video-controller-api';
+export * from './api/library-controller-api';
+export * from './api/media-api';
+export * from './api/movies-api';
+export * from './api/tvseries-api';
+export * from './api/user-api';
 

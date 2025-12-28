@@ -2,7 +2,7 @@ import type { CrudAPI } from '@/lib/api'
 import { computed, ref, type Ref } from 'vue'
 
 export interface Identifiable {
-  id?: string
+  id: string
 }
 
 export interface CrudStoreOptions<T extends Identifiable> {
