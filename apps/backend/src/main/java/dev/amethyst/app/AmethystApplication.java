@@ -7,13 +7,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.io.IOException;
 
 @SpringBootApplication(scanBasePackages = {
-    "dev.seanboaden.hls"
+    "dev.amethyst.app"
 })
 @EnableScheduling
-public class HlsApplication {
+public class AmethystApplication {
 
   public static void main(String[] args) throws IOException {
-    SpringApplication.run(HlsApplication.class, args);
+    SpringApplication.run(AmethystApplication.class, args);
   }
 
 }
