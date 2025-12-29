@@ -168,7 +168,6 @@ function start() {
     hls.on(Hls.Events.ERROR, async function (event, data) {
       if (data.response?.code === 403) {
         // Access was denied. Try to generate a new token
-        console.log('ACCESS DENIED!!!!! GENERATE')
         await authApi.generateHlsToken(media.id)
       }
     })

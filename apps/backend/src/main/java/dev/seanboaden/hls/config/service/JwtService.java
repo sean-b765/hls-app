@@ -30,7 +30,8 @@ public class JwtService {
   private long accessTokenExpirationMs;
   @Value("${security.jwt.refresh-token.expiration-time}")
   private long refreshTokenExpirationMs;
-  private long signatureTokenExpirationMs = 1000 * 60;
+  // Short-lived token for accessing video segments - /api/video/...
+  private long hlsTokenExpirationMs = 1000 * 60;
 
   public String generateAccessToken(User user) {
     return this.generateAccessToken(new HashMap<>(), user);
@@ -53,7 +54,7 @@ public class JwtService {
         put("media", mediaId);
       }
     };
-    return this.buildToken(claims, user, this.signatureTokenExpirationMs);
+    return this.buildToken(claims, user, this.hlsTokenExpirationMs);
   }
 
   public String generateRefreshToken(Map<String, Object> claims, User user) {

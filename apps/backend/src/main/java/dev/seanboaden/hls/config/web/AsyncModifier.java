@@ -11,9 +11,5 @@ public class AsyncModifier {
      * SQLITE: single-threaded executor for use with asynchronous writing to DB
      */
     public static final String SQLITE = "sqlite-executor";
-    /**
-     * HLS: executor for use with HLS stream endpoints
-     */
-    public static final String HLS = "hls-executor";
   }
 }

@@ -129,8 +129,7 @@ export class AuthAPI extends BaseAPI {
   }
 
   public async generateHlsToken(mediaId: string) {
-    const response = await this.axios.post(`/api/playlist/${mediaId}`)
-    console.log(response.headers['x-hls-token'])
+    await this.axios.post(`/api/playlist/${mediaId}`)
   }
 }
 
