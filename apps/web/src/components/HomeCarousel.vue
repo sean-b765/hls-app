@@ -12,12 +12,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { useSidebar } from '@/components/ui/sidebar'
 import { getImage } from '@/lib/utils'
-import { Media } from '@hls-app/sdk'
 import { computed } from 'vue'
 
 const { listType, mediaList } = defineProps<{
   listType: string
-  mediaList: Media[]
+  mediaList: { id: string; thumbnail?: string }[]
 }>()
 const { open } = useSidebar()
 const maxWidth = computed(() => {
@@ -50,7 +49,7 @@ const maxWidth = computed(() => {
             <Card>
               <CardContent
                 class="card-content"
-                :style="{ backgroundImage: `url('${getImage(m.info?.thumbnail ?? '')}')` }"
+                :style="{ backgroundImage: `url('${getImage(m?.thumbnail ?? '')}')` }"
               >
               </CardContent>
             </Card>

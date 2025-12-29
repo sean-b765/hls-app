@@ -14,9 +14,12 @@ import HomeCard from '@/components/HomeCard.vue'
 import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import { useTvSeriesStore } from '@/stores/tvSeries'
 
 const mediaStore = useMediaStore()
-const { movies, series } = storeToRefs(mediaStore)
+const tvSeriesStore = useTvSeriesStore()
+const { movies } = storeToRefs(mediaStore)
+const { items: series } = storeToRefs(tvSeriesStore)
 
 // Featured movie is a random media for now
 const featuredMovie = computed(() =>
@@ -52,9 +55,18 @@ const topSeries = computed(() => (Array.isArray(series.value) ? series.value.sli
       <!-- <HomeNavbar /> -->
     </div>
     <div class="w-full">
-      <HomeCarousel :listType="'Recommended'" :mediaList="recommendedMovies" />
-      <HomeCarousel :listType="'Top 10 Movies'" :mediaList="topMovies" />
-      <HomeCarousel :listType="'Top 10 Series'" :mediaList="topSeries" />
+      <HomeCarousel
+        :listType="'Recommended'"
+        :mediaList="recommendedMovies.map((m) => ({ id: m.id, thumbnail: m.info?.thumbnail }))"
+      />
+      <HomeCarousel
+        :listType="'Top 10 Movies'"
+        :mediaList="topMovies.map((m) => ({ id: m.id, thumbnail: m.info?.thumbnail }))"
+      />
+      <HomeCarousel
+        :listType="'Top 10 Series'"
+        :mediaList="topSeries.map((s) => ({ id: s.id, thumbnail: s.thumbnail }))"
+      />
     </div>
   </div>
 </template>
