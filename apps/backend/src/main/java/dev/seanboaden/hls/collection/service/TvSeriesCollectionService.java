@@ -25,6 +25,10 @@ public class TvSeriesCollectionService
     return this.repository.findByName(name);
   }
 
+  public Optional<TvSeriesCollection> findByExternalId(String externalId) {
+    return this.repository.findByExternalId(externalId);
+  }
+
   @Transactional
   public void addTvSeasonToTvSeries(String tvSeasonId, String tvSeriesId) {
     if (tvSeriesId == null || tvSeasonId == null)

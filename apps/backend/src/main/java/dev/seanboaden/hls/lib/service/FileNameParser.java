@@ -6,9 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.lib.model.FileNameMetadata;
+import dev.seanboaden.hls.media.model.MediaType;
 
 @Service
 public class FileNameParser {
@@ -29,7 +31,10 @@ public class FileNameParser {
 
   private static final Pattern GROUP = Pattern.compile("-(?<group>[A-Za-z0-9.\\[\\]_-]+)$");
 
-  private static final Pattern CONTAINER = Pattern.compile("(?i)\\.(?<ext>mp4|mkv|avi)$");
+  private static final Pattern CONTAINER = Pattern.compile("(?i)\\.(?<ext>[a-zA-Z0-9]+)$");
+
+  @Autowired
+  private MimeTypeService mimeTypeService;
 
   public String getFileName(String path) {
     if (path == null)
@@ -39,7 +44,7 @@ public class FileNameParser {
 
   public FileNameMetadata parse(String filename) {
     FileNameMetadata md = new FileNameMetadata();
-    md.raw = filename;
+    md.setRaw(filename);
     String base = filename;
 
     // cursor which will help in extracting the title later
@@ -47,7 +52,8 @@ public class FileNameParser {
 
     Matcher ext = CONTAINER.matcher(base);
     if (ext.find()) {
-      md.container = ext.group("ext");
+      md.setContainer(ext.group("ext"));
+
       base = base.substring(0, ext.start());
       if (ext.start() < cursor)
         cursor = ext.start();
@@ -56,8 +62,8 @@ public class FileNameParser {
     // extract season/episode
     Matcher se = SEASON_EP.matcher(base);
     if (se.find()) {
-      md.season = Integer.parseInt(se.group("s"));
-      md.episode = Integer.parseInt(se.group("e"));
+      md.setSeason(Integer.parseInt(se.group("s")));
+      md.setEpisode(Integer.parseInt(se.group("e")));
       base = base.substring(0, se.start()) + base.substring(se.end());
       if (se.start() < cursor)
         cursor = se.start();
@@ -66,7 +72,7 @@ public class FileNameParser {
     // extract year
     Matcher my = YEAR.matcher(base);
     if (my.find()) {
-      md.year = Integer.parseInt(my.group("year"));
+      md.setYear(Integer.parseInt(my.group("year")));
       base = base.replace(my.group(), "");
       if (my.start() < cursor)
         cursor = my.start();
@@ -75,7 +81,7 @@ public class FileNameParser {
     // extract resolution
     Matcher mr = RES.matcher(base);
     if (mr.find()) {
-      md.resolution = mr.group();
+      md.setResolution(mr.group());
       base = base.replace(mr.group(), "");
       if (mr.start() < cursor)
         cursor = mr.start();
@@ -92,7 +98,7 @@ public class FileNameParser {
     // extract codec
     Matcher mc = CODEC.matcher(base);
     if (mc.find()) {
-      md.codec = mc.group();
+      md.setCodec(mc.group());
       base = base.replace(mc.group(), "");
       if (mc.start() < cursor)
         cursor = mc.start();
@@ -101,14 +107,23 @@ public class FileNameParser {
     // extract audio
     Matcher ma = AUDIO.matcher(base);
     if (ma.find()) {
-      md.audio = ma.group();
+      md.setAudio(ma.group());
       base = base.replace(ma.group(), "");
       if (ma.start() < cursor)
         cursor = ma.start();
     }
 
     // whatever remains is most likely the title
-    md.title = cleanTitle(base, cursor);
+    md.setTitle(cleanTitle(base, cursor));
+
+    // set mediaType
+    if (this.mimeTypeService.isMusicType(md.getContainer())) {
+      md.setMediaType(MediaType.MUSIC);
+    } else if (md.getSeason() != null || md.getEpisode() != null) {
+      md.setMediaType(MediaType.TV);
+    } else {
+      md.setMediaType(MediaType.MOVIE);
+    }
 
     return md;
   }

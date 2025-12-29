@@ -14,9 +14,13 @@ public abstract class AbstractCrudService<T extends AbstractBaseEntity, ID, R ex
     this.repository = repository;
   }
 
+  protected void beforeSave(T entity) {
+  }
+
   /* CREATE & UPDATE */
 
   public T save(@NonNull T entity) {
+    this.beforeSave(entity);
     return this.repository.save(entity);
   }
 

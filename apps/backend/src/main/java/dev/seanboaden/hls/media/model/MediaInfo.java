@@ -6,13 +6,13 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.media.handler.MediaInfoEventListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,6 +33,8 @@ public class MediaInfo extends AbstractBaseEntity {
   @NonNull
   @Column(nullable = false)
   private String name;
+  private MediaType type;
+  private String tagline;
   private String description;
   @Nullable
   private LocalDate releaseDate;
@@ -41,8 +43,7 @@ public class MediaInfo extends AbstractBaseEntity {
   private Integer season;
   private Integer episode;
 
-  @OneToOne
-  @JoinColumn(name = "mediaId", nullable = false, unique = true)
+  @OneToOne(mappedBy = "info")
   @JsonBackReference
   private Media media;
 }

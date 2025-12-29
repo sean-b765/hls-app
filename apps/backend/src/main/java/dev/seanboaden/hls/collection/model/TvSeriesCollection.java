@@ -36,16 +36,17 @@ public class TvSeriesCollection extends LibraryEntity {
   @Column(unique = true)
   private String externalId;
 
-  @Column(unique = true, nullable = false)
+  @Column(unique = false, nullable = false)
   @NonNull
   private String name;
+  private String tagline;
   private String description;
   @Nullable
   private LocalDate releaseDate;
   private String thumbnail;
   private String banner;
 
-  @OneToMany(mappedBy = "tvSeries", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "tvSeries")
   @JsonBackReference
   @Builder.Default
   private List<TvSeasonCollection> tvSeasons = new ArrayList<>();

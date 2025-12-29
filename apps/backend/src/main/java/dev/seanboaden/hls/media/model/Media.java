@@ -1,5 +1,6 @@
 package dev.seanboaden.hls.media.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.model.TvSeasonCollection;
@@ -36,18 +37,18 @@ public class Media extends LibraryEntity {
   @Column(nullable = false, unique = true)
   private String path;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
-  @JoinColumn(name = "metadataId", referencedColumnName = "id")
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "metadataId")
   @JsonManagedReference
   private MediaMetadata metadata;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
-  @JoinColumn(name = "mediaInfoId", referencedColumnName = "id")
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "mediaInfoId")
   @JsonManagedReference
   private MediaInfo info;
 
   @ManyToOne
   @JoinColumn(name = "tvSeasonId", referencedColumnName = "id")
-  @JsonManagedReference
+  @JsonBackReference
   private TvSeasonCollection tvSeason;
 }

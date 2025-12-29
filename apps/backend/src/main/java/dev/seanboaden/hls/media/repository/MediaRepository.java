@@ -13,4 +13,6 @@ public interface MediaRepository extends JpaRepository<Media, String> {
   List<Media> findByTvSeasonIsNull();
 
   List<Media> findByMetadataIsNullOrInfoIsNull();
+
+  void deleteAllByLibrary_Id(String libraryId);
 }

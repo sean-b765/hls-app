@@ -7,11 +7,9 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import dev.seanboaden.hls.config.base.AbstractCrudService;
-import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.lib.service.MetadataExtractor;
 import dev.seanboaden.hls.lib.service.MimeTypeService;
 import dev.seanboaden.hls.lib.service.MetadataExtractor.FrameRateAndDuration;
@@ -31,27 +29,26 @@ public class MediaMetadataService extends AbstractCrudService<MediaMetadata, Str
   }
 
   private MediaMetadata createMusicMetadata(Media media) {
-    Optional<MediaMetadata> optionalMetadata = this.repository.findByMedia_Id(media.getId());
-    if (optionalMetadata.isPresent())
-      return null;
+    Optional<MediaMetadata> existingMetadata = this.repository.findByMedia_Id(media.getId());
+    if (existingMetadata.isPresent())
+      return existingMetadata.get();
 
     File file = new File(media.getPath());
     long sizeBytes = file.length();
     LocalDateTime lastModified = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneOffset.UTC);
 
-    MediaMetadata metadata = MediaMetadata.builder()
+    return MediaMetadata.builder()
         .sizeBytes(sizeBytes)
         .media(media)
         .lastScanDateTime(LocalDateTime.now())
         .lastModified(lastModified)
         .build();
-    return this.save(metadata);
   }
 
   private MediaMetadata createVideoMetadata(Media media) {
-    Optional<MediaMetadata> optionalMetadata = this.repository.findByMedia_Id(media.getId());
-    if (optionalMetadata.isPresent())
-      return null;
+    Optional<MediaMetadata> existingMetadata = this.repository.findByMedia_Id(media.getId());
+    if (existingMetadata.isPresent())
+      return existingMetadata.get();
 
     File file = new File(media.getPath());
 
@@ -61,7 +58,7 @@ public class MediaMetadataService extends AbstractCrudService<MediaMetadata, Str
     double framerate = frameRateAndDuration.getFramerate();
     double durationSeconds = frameRateAndDuration.getDuration();
 
-    MediaMetadata metadata = MediaMetadata.builder()
+    return MediaMetadata.builder()
         .sizeBytes(sizeBytes)
         .media(media)
         .lastScanDateTime(LocalDateTime.now())
@@ -69,7 +66,6 @@ public class MediaMetadataService extends AbstractCrudService<MediaMetadata, Str
         .durationSeconds(durationSeconds)
         .framerate(framerate)
         .build();
-    return this.save(metadata);
   }
 
   public MediaMetadata createMetadata(Media media) {
@@ -79,10 +75,5 @@ public class MediaMetadataService extends AbstractCrudService<MediaMetadata, Str
       return this.createVideoMetadata(media);
     }
     return null;
-  }
-
-  @Async(AsyncModifier.Modifier.SQLITE)
-  public void ensureMetadata(Media media) {
-    this.createMetadata(media);
   }
 }

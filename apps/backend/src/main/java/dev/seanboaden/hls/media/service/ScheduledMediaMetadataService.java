@@ -13,18 +13,14 @@ import org.springframework.stereotype.Service;
 public class ScheduledMediaMetadataService {
   @Autowired
   private MediaService mediaService;
-  @Autowired
-  private MediaMetadataService mediaMetadataService;
-  @Autowired
-  private MediaInfoService mediaInfoService;
 
   @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
   public void ensureMetadataAndInfo() {
     this.mediaService.findAllWhereMetadataIsNullOrInfoIsNull().forEach(media -> {
       if (media.getMetadata() == null)
-        this.mediaMetadataService.ensureMetadata(media);
+        this.mediaService.ensureMetadata(media.getId());
       if (media.getInfo() == null)
-        this.mediaInfoService.ensureMediaInfo(media);
+        this.mediaService.ensureInfo(media.getId());
     });
   }
 }

@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dev.seanboaden.hls.collection.handler.TvSeasonCollectionEventListener;
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
@@ -49,12 +50,13 @@ public class TvSeasonCollection extends AbstractBaseEntity {
   private String thumbnail;
   private String banner;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "tvSeriesId", referencedColumnName = "id")
+  @JsonManagedReference
   private TvSeriesCollection tvSeries;
 
-  @OneToMany(mappedBy = "tvSeason", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonBackReference
+  @OneToMany(mappedBy = "tvSeason")
+  @JsonManagedReference
   @Builder.Default
   private List<Media> mediaItems = new ArrayList<>();
 }

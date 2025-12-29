@@ -3,13 +3,12 @@ package dev.seanboaden.hls.media.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.media.handler.MediaMetadataEventListener;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -36,8 +35,7 @@ public class MediaMetadata extends AbstractBaseEntity {
   private LocalDateTime lastScanDateTime;
   private LocalDateTime lastModified;
 
-  @OneToOne
-  @JoinColumn(name = "mediaId", nullable = false, unique = true)
+  @OneToOne(mappedBy = "metadata")
   @JsonBackReference
   private Media media;
 }
