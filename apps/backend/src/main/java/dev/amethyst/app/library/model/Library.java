@@ -7,6 +7,7 @@ import dev.amethyst.app.library.handler.LibraryEventListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,9 @@ public class Library extends AbstractBaseEntity {
   @Column(nullable = false)
   @NonNull
   private String name;
+  @Column(nullable = false, unique = true, updatable = false)
+  @NonNull
+  private String slug;
   @Column(unique = true, nullable = false)
   @NonNull
   private String path;
@@ -33,4 +37,16 @@ public class Library extends AbstractBaseEntity {
   @NonNull
   private LibraryType type;
   private Integer orderIndex;
+
+  @PrePersist
+  protected void beforePersist() {
+    this.slug = this.nameToSlug(this.name);
+  }
+
+  private String nameToSlug(String name) {
+    return name.toLowerCase()
+        .trim()
+        .replaceAll("[^a-z0-9]+", "-")
+        .replaceAll("(^-|-$)", "");
+  }
 }
