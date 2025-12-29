@@ -24,13 +24,11 @@ const apiInstance = new HlsVideoControllerApi(configuration);
 let mediaId: string; // (default to undefined)
 let qualityProfile: string; // (default to undefined)
 let segmentName: string; // (default to undefined)
-let userId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.getVideoSegment(
     mediaId,
     qualityProfile,
-    segmentName,
-    userId
+    segmentName
 );
 ```
 
@@ -41,7 +39,6 @@ const { status, data } = await apiInstance.getVideoSegment(
 | **mediaId** | [**string**] |  | defaults to undefined|
 | **qualityProfile** | [**string**] |  | defaults to undefined|
 | **segmentName** | [**string**] |  | defaults to undefined|
-| **userId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -50,7 +47,7 @@ const { status, data } = await apiInstance.getVideoSegment(
 
 ### Authorization
 
-No authorization required
+[Authorization](../README.md#Authorization)
 
 ### HTTP request headers
 

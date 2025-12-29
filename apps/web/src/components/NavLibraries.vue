@@ -12,11 +12,12 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { computed } from 'vue'
+import { useLibraryStore } from '@/stores/library'
+import { storeToRefs } from 'pinia'
+import { getLibraryIcon } from '@/lib/utils'
 
-const libraries = computed(() => {
-  return [{ name: 'Movies', id: '123' }]
-})
+const libraryStore = useLibraryStore()
+const { items: libraries } = storeToRefs(libraryStore)
 
 const items = [
   {
@@ -40,25 +41,28 @@ const items = [
               <span>{{ item.title }}</span>
             </RouterLink>
           </SidebarMenuButton>
-          <template v-if="libraries.length">
-            <CollapsibleTrigger as-child>
-              <SidebarMenuAction class="data-[state=open]:rotate-90">
-                <ChevronRight />
-                <span class="sr-only">Toggle</span>
-              </SidebarMenuAction>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <SidebarMenuSub>
-                <SidebarMenuSubItem v-for="library in libraries" :key="library.name">
-                  <SidebarMenuSubButton as-child>
-                    <RouterLink :to="'/libraries/' + library.id">
-                      <span>{{ library.name }}</span>
-                    </RouterLink>
-                  </SidebarMenuSubButton>
-                </SidebarMenuSubItem>
-              </SidebarMenuSub>
-            </CollapsibleContent>
-          </template>
+          <CollapsibleTrigger as-child v-if="libraries.length">
+            <SidebarMenuAction class="data-[state=open]:rotate-90">
+              <ChevronRight />
+              <span class="sr-only">Toggle</span>
+            </SidebarMenuAction>
+          </CollapsibleTrigger>
+          <CollapsibleContent class="mr-0">
+            <SidebarMenuSub>
+              <SidebarMenuSubItem v-for="library in libraries" :key="library.id">
+                <SidebarMenuSubButton as-child>
+                  <RouterLink :to="`/libraries/${library.id}`">
+                    <div>
+                      <component :is="getLibraryIcon(library)" :size="14" />
+                    </div>
+                    <span class="text-xs flex">
+                      {{ library.name }}
+                    </span>
+                  </RouterLink>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            </SidebarMenuSub>
+          </CollapsibleContent>
         </SidebarMenuItem>
       </Collapsible>
     </SidebarMenu>

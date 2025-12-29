@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card'
 import { getImage } from '@/lib/utils'
 import { useColorMode } from '@vueuse/core'
+import { truncate } from 'lodash'
 import moment from 'moment'
 
 const { name, releaseDate, description, banner } = defineProps<{
@@ -34,25 +35,25 @@ const mode = useColorMode()
   >
     <div
       v-if="banner"
-      class="banner w-full h-full z-0"
+      class="banner w-full h-full z-0 rounded-lg scale-105"
       :style="{ backgroundImage: `url('${getImage(banner)}')` }"
     >
-      <div v-if="mode === 'dark'" class="overlay"></div>
+      <div v-if="mode === 'dark'" class="overlay rounded-lg"></div>
     </div>
     <CardHeader class="z-10">
-      <CardTitle class="text-4xl font-bold text-white">
+      <CardTitle class="text-4xl font-bold text-white text-shadow-black text-shadow-sm">
         {{ name }}
       </CardTitle>
-      <CardDescription class="max-w-1/3 text-white">
+      <CardDescription class="max-w-1/3 text-white text-shadow-black text-shadow-sm">
         {{ moment(releaseDate).get('year') }}
       </CardDescription>
     </CardHeader>
     <CardContent class="z-10">
       <p
-        class="description text-white text-shadow-md text-shadow-black opacity-85"
+        class="description text-white text-shadow-sm text-shadow-black opacity-85"
         style="max-width: clamp(200px, 50%, 600px)"
       >
-        {{ description }}
+        {{ truncate(description, { length: 200 }) }}
       </p>
     </CardContent>
     <CardFooter class="mt-5 gap-5 z-10">
@@ -76,10 +77,14 @@ const mode = useColorMode()
 
 /* Adjusts width and length of the banner */
 .banner {
+  overflow: hidden;
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: top center;
   width: 100%;
+  will-change: transform;
+  animation: bg-breathe 40s ease-in-out infinite;
 
   /* Adjusts the grey scale overlay  */
   .overlay {
@@ -88,10 +93,9 @@ const mode = useColorMode()
     width: 100%;
     background: linear-gradient(
       to bottom,
-      var(--color-background) -8%,
-      rgba(36, 35, 35, 0.2) 20%,
-      rgba(14, 13, 13, 0.4) 60%,
-      var(--color-background) 100%
+      rgba(14, 13, 13, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      var(--color-background) 99%
     );
   }
 }
@@ -108,5 +112,17 @@ const mode = useColorMode()
 
 .button:active {
   transform: scale(0.98); /* Slight press effect on click */
+}
+
+@keyframes bg-breathe {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

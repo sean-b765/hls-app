@@ -12,7 +12,7 @@ public class ParsedAssert {
   }
 
   public ParsedAssert title(String expected) {
-    assertEquals(expected, actual.title, "title mismatch");
+    assertEquals(expected, actual.getTitle(), "title mismatch");
     return this;
   }
 

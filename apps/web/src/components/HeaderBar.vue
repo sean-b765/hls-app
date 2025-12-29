@@ -6,29 +6,26 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { uniq } from 'lodash'
 import { useMediaStore } from '@/stores/media'
 import { storeToRefs } from 'pinia'
-import { Media } from '@hls-app/sdk'
+import { useLibraryStore } from '@/stores/library'
 const route = useRoute()
 const router = useRouter()
 const mediaStore = useMediaStore()
-const { media } = storeToRefs(mediaStore)
-
-const selectedMedia = computed<Media | undefined>(() => {
-  const id = route.params['mediaId'] as string
-  const m = media.value.find((el) => el.id === id)
-  return m
-})
+const libraryStore = useLibraryStore()
+const { selectedMedia } = storeToRefs(mediaStore)
+const { selectedLibrary } = storeToRefs(libraryStore)
 
 function resolveName(name: string) {
   switch (name) {
     case 'WatchMedia':
       return selectedMedia.value?.info?.name
+    case 'Library':
+      return selectedLibrary.value?.name
     default:
       return name
   }
@@ -61,19 +58,8 @@ const breadcrumbs = computed(() => {
 <template>
   <header class="flex h-16 shrink-0 items-center gap-2">
     <div class="flex items-center gap-2 px-4">
-      <SidebarTrigger class="-ml-4 -mt-1" />
-      <transition
-        enter-from-class="opacity-0"
-        enter-active-class="transition-opacity duration-500"
-        emter-to-class="opacity-100"
-      >
-        <Separator
-          v-if="breadcrumbs.length"
-          orientation="vertical"
-          class="mr-2 data-[orientation=vertical]:h-4"
-        />
-      </transition>
-      <Breadcrumb>
+      <SidebarTrigger class="-ml-4" />
+      <Breadcrumb class="ml-1">
         <BreadcrumbList>
           <transition-group
             enter-from-class="opacity-0"
@@ -86,11 +72,14 @@ const breadcrumbs = computed(() => {
             <template v-for="(path, i) of breadcrumbs" :key="path">
               <BreadcrumbItem class="hidden md:block" :style="{ transitionDelay: `${i * 50}ms` }">
                 <RouterLink :to="path.path" class="flex gap-1 items-center">
-                  <component v-if="path.meta?.icon" :is="path.meta.icon" :size="12" />
                   <BreadcrumbLink tag="#"> {{ path.name }} </BreadcrumbLink>
                 </RouterLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator v-if="i !== breadcrumbs.length - 1" class="hidden md:block">
+              <BreadcrumbSeparator
+                v-if="i !== breadcrumbs.length - 1"
+                class="hidden md:block"
+                :style="{ transitionDelay: `${i * 50}ms` }"
+              >
                 <span class="text-xs">/</span>
               </BreadcrumbSeparator>
             </template>

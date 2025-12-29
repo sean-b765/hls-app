@@ -1,55 +1,54 @@
 package dev.seanboaden.hls.media.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.seanboaden.hls.collection.model.TvSeasonCollection;
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
+import dev.seanboaden.hls.config.base.AbstractBaseEntity;
+import dev.seanboaden.hls.config.base.LibraryEntity;
+import dev.seanboaden.hls.library.model.Library;
+import dev.seanboaden.hls.media.handler.MediaEventListener;
+import dev.seanboaden.hls.tv.model.TvSeason;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "media")
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Media {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
-
+@EntityListeners(value = { MediaEventListener.class })
+public class Media extends LibraryEntity {
   /**
    * The absolute path to the media file
    */
   @Column(nullable = false, unique = true)
   private String path;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
-  @JoinColumn(name = "metadataId", referencedColumnName = "id")
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "metadataId")
   @JsonManagedReference
   private MediaMetadata metadata;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "media")
-  @JoinColumn(name = "mediaInfoId", referencedColumnName = "id")
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "mediaInfoId")
   @JsonManagedReference
   private MediaInfo info;
 
   @ManyToOne
   @JoinColumn(name = "tvSeasonId", referencedColumnName = "id")
-  @JsonManagedReference
-  private TvSeasonCollection tvSeason;
+  @JsonBackReference
+  private TvSeason tvSeason;
 }

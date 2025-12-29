@@ -8,9 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +43,7 @@ public class AuthController {
     User user = null;
     Optional<User> existingUserByUsername = this.userService.findByUsername(request.getUsername());
     if (existingUserByUsername.isEmpty()) {
-      return ResponseEntity.notFound().build();
+      throw new UsernameNotFoundException("User " + request.getUsername() + " was not found.");
     }
 
     String userId = existingUserByUsername.get().getId();
@@ -63,7 +62,7 @@ public class AuthController {
           .header(HttpHeaders.AUTHORIZATION, accessToken)
           .build();
     } catch (BadCredentialsException ex) {
-      return ResponseEntity.badRequest().build();
+      throw ex;
     }
   }
 

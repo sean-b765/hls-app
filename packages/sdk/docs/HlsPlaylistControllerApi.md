@@ -42,7 +42,7 @@ const { status, data } = await apiInstance.generateMultiVariantPlaylist(
 
 ### Authorization
 
-No authorization required
+[Authorization](../README.md#Authorization)
 
 ### HTTP request headers
 
@@ -95,7 +95,7 @@ const { status, data } = await apiInstance.generateVodPlaylist(
 
 ### Authorization
 
-No authorization required
+[Authorization](../README.md#Authorization)
 
 ### HTTP request headers
 

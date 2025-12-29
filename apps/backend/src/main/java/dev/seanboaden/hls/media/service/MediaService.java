@@ -1,80 +1,124 @@
 package dev.seanboaden.hls.media.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import dev.seanboaden.hls.configuration.service.ConfigurationService;
+import dev.seanboaden.hls.config.base.AbstractCrudService;
+import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.media.model.Media;
+import dev.seanboaden.hls.media.model.MediaInfo;
+import dev.seanboaden.hls.media.model.MediaMetadata;
+import dev.seanboaden.hls.media.model.MediaType;
 import dev.seanboaden.hls.media.repository.MediaRepository;
+import dev.seanboaden.hls.media.service.MediaInfoPipelineService.MediaInfoPipelineResult;
+import dev.seanboaden.hls.tv.model.TvSeason;
+import dev.seanboaden.hls.tv.model.TvSeries;
+import dev.seanboaden.hls.tv.service.TvSeasonService;
+import dev.seanboaden.hls.tv.service.TvSeriesService;
+import jakarta.transaction.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
-public class MediaService {
+public class MediaService extends AbstractCrudService<Media, String, MediaRepository> {
   @Autowired
-  private MediaRepository mediaRepository;
+  private MediaMetadataService mediaMetadataService;
   @Autowired
-  private ConfigurationService configurationService;
+  private MediaInfoPipelineService mediaInfoPipelineService;
+  @Autowired
+  private TvSeriesService tvSeriesService;
+  @Autowired
+  private TvSeasonService tvSeasonService;
 
-  public Media save(Media media) {
-    if (media == null)
-      return media;
-    return this.mediaRepository.save(media);
-  }
-
-  public List<Media> saveAll(List<Media> media) {
-    if (media == null)
-      return new ArrayList<>();
-    return this.mediaRepository.saveAll(media);
+  protected MediaService(MediaRepository repository) {
+    super(repository);
   }
 
   public Optional<Media> findByPath(String absolutePath) {
-    return this.mediaRepository.findByPath(absolutePath);
-  }
-
-  public List<Media> findAll() {
-    return this.mediaRepository.findAll();
+    return this.repository.findByPath(absolutePath);
   }
 
   public List<Media> findAllWhereTvSeasonIsNull() {
-    return this.mediaRepository.findByTvSeasonIsNull();
+    return this.repository.findByTvSeasonIsNull();
   }
 
-  public Optional<Media> findById(String id) {
-    if (id == null)
-      return Optional.empty();
-    return this.mediaRepository.findById(id);
+  public List<Media> findAllWhereMetadataIsNullOrInfoIsNull() {
+    return this.repository.findByMetadataIsNullOrInfoIsNull();
   }
 
-  public Path getMediaRootPath() {
-    if (this.configurationService.getConfiguration().getMediaDirectory() == null)
-      return null;
-    return Paths.get(this.configurationService.getConfiguration().getMediaDirectory());
+  public boolean existsByPath(String path) {
+    return this.findByPath(path).isPresent();
   }
 
-  private List<Path> listFiles(Path path) {
-    try (Stream<Path> paths = Files.walk(path)) {
-      List<Path> foundPaths = paths.filter(Files::isRegularFile)
-          .collect(Collectors.toList());
-      return foundPaths;
-    } catch (IOException e) {
-      return new ArrayList<>();
+  public Media buildFromFile(File file) {
+    return Media.builder().path(file.getAbsolutePath()).build();
+  }
+
+  public void deleteAllByLibraryId(String libraryId) {
+    this.repository.deleteAllByLibrary_Id(libraryId);
+  }
+
+  @Async(AsyncModifier.Modifier.SQLITE)
+  public void ensureMetadata(String mediaId) {
+    if (mediaId == null)
+      return;
+
+    Media media = this.findById(mediaId).orElseThrow();
+
+    MediaMetadata mediaMetadata = this.mediaMetadataService.createMetadata(media);
+    mediaMetadata.setMedia(media);
+    media.setMetadata(mediaMetadata);
+    this.save(media);
+  }
+
+  @Async(AsyncModifier.Modifier.SQLITE)
+  public void ensureInfo(String mediaId) {
+    if (mediaId == null)
+      return;
+
+    Media media = this.findById(mediaId).orElseThrow();
+
+    MediaInfoPipelineResult result = this.mediaInfoPipelineService.startPipeline(media);
+    this.ensureInfo(media.getId(), result);
+  }
+
+  @Transactional
+  private void ensureInfo(String mediaId, MediaInfoPipelineResult result) {
+    if (mediaId == null)
+      throw new NoSuchElementException();
+
+    Media media = this.findById(mediaId).orElseThrow();
+
+    MediaInfo info = result.getMediaInfo();
+    TvSeries series = result.getSeries();
+    TvSeason season = result.getSeason();
+    if (info == null)
+      return;
+
+    info.setMedia(media);
+    media.setInfo(info);
+
+    if (!info.getType().equals(MediaType.TV)) {
+      this.save(media);
+      return;
     }
-  }
 
-  public List<Path> listFilesRoot() {
-    Path root = this.getMediaRootPath();
-    if (root == null)
-      return new ArrayList<>();
-    return this.listFiles(root);
+    if (series.getId() == null) {
+      series.setLibrary(media.getLibrary());
+      series = this.tvSeriesService.save(series);
+    }
+
+    if (season.getId() == null) {
+      season = this.tvSeasonService.save(season);
+    }
+
+    // Establish relationships
+    season.setTvSeries(series);
+    media.setTvSeason(season);
+    this.save(media);
   }
 }

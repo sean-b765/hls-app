@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import dev.seanboaden.hls.lib.service.FileSystemService;
+import dev.seanboaden.hls.config.scope.UserRequestScope;
+import dev.seanboaden.hls.filesystem.service.FileSystemService;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.service.MediaService;
 import dev.seanboaden.hls.room.model.Room;
@@ -23,11 +23,12 @@ import dev.seanboaden.hls.transcode.service.TranscodeManager;
 import dev.seanboaden.hls.video.model.QualityProfiles;
 import dev.seanboaden.hls.video.model.QualityProfiles.QualityProfile;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/video")
@@ -44,18 +45,30 @@ public class HlsVideoController {
   private SessionRegistry sessionRegistry;
   @Autowired
   private RoomManager roomManager;
+  @Autowired
+  private UserRequestScope userRequestScope;
+
+  private Map<String, Media> mediaCache = new ConcurrentHashMap<>();
 
   @GetMapping("/{mediaId}/{qualityProfile}/{segmentName}")
   public DeferredResult<ResponseEntity<byte[]>> getVideoSegment(
       @PathVariable String mediaId,
       @PathVariable String qualityProfile,
-      @PathVariable String segmentName,
-      @RequestParam(required = false) String userId) {
+      @PathVariable String segmentName) {
+    // TODO: this is too expensive and ends up with 403 errors in the front-end
+    // after implementing auth (and cors?)
+    // We should to configure a thread pool executor
     DeferredResult<ResponseEntity<byte[]>> deferredResult = new DeferredResult<>(5000L,
         ResponseEntity.status(503).build());
-    Optional<Media> media = this.mediaService.findById(mediaId);
-    if (media.isEmpty() || media.get().getInfo() == null)
-      deferredResult.setResult(ResponseEntity.notFound().build());
+    Media media = this.mediaCache.get(mediaId);
+    if (media == null) {
+      Optional<Media> mediaOptional = this.mediaService.findById(mediaId);
+      if (mediaOptional.isEmpty() || mediaOptional.get() == null)
+        deferredResult.setResult(ResponseEntity.notFound().build());
+      else
+        media = mediaOptional.get();
+    }
+    this.mediaCache.putIfAbsent(mediaId, media);
 
     QualityProfile quality = QualityProfiles.findByName(qualityProfile);
     if (quality == null)
@@ -64,6 +77,7 @@ public class HlsVideoController {
     // Attempt to retrieve roomId.
     // It's okay if this is unassigned,
     // we will share the media segments between rooms anyways
+    String userId = this.userRequestScope.getUser().getId();
     SessionWrapper sessionWrapper = sessionRegistry.getByUserId(userId);
     String roomCode = null;
     if (sessionWrapper != null) {
@@ -75,7 +89,7 @@ public class HlsVideoController {
         .fromSegmentName(segmentName)
         .roomCode(roomCode)
         .userId(userId)
-        .media(media.get())
+        .media(media)
         .quality(quality)
         .type(JobType.HLS)
         .build();
@@ -103,8 +117,8 @@ public class HlsVideoController {
             .header("Content-Type", "video/mp2t")
             .header("Cache-Control", "public, max-age=31536000")
             .body(data));
-      } catch (IOException e) {
-        System.out.println("\n!!!!!! NOT FOUND: " + transcodeJob.getFromSegmentName());
+      } catch (Exception e) {
+        System.out.println("\n!!!!!! NOT FOUND: " + transcodeJob.getFromSegmentName() + e.getMessage());
         deferredResult.setResult(ResponseEntity.internalServerError().build());
       }
     });

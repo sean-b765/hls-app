@@ -1,5 +1,7 @@
 package dev.seanboaden.hls.config.web;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -23,7 +25,22 @@ public class AsyncConfig implements WebMvcConfigurer {
     executor.setCorePoolSize(10);
     executor.setMaxPoolSize(100);
     executor.setQueueCapacity(500);
-    executor.setThreadNamePrefix("mvc-async-");
+    executor.setThreadNamePrefix(AsyncModifier.Prefixes.MVC);
+    executor.initialize();
+    return executor;
+  }
+
+  /**
+   * Used for writing to SQLite concurrently
+   * Pool size must be set to one as SQLite doesn't handle concurrent write well
+   */
+  @Bean(name = AsyncModifier.Modifier.SQLITE)
+  public Executor sqliteExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(1);
+    executor.setMaxPoolSize(1);
+    executor.setQueueCapacity(5000);
+    executor.setThreadNamePrefix(AsyncModifier.Prefixes.SQLITE);
     executor.initialize();
     return executor;
   }

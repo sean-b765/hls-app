@@ -1,4 +1,4 @@
-import { AuthAPI } from '@/lib/api'
+import { authApi } from '@/lib/api'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { type UserRole, type JwtPayload } from '@/types/user'
@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<JwtPayload | null>()
   // Register the auth listener before constructing the auth api
   emitter.on('auth', (jwt) => {
+    console.log('AUTHED?', jwt)
     if (!jwt) {
       user.value = null
       client.disconnect()
@@ -29,7 +30,6 @@ export const useUserStore = defineStore('user', () => {
   const username = computed(() => user.value?.username ?? 'anonymous')
   const usernameShort = computed(() => username.value.substring(0, 2).toUpperCase())
 
-  const authApi = new AuthAPI()
   async function signin(username: string, password: string) {
     await authApi.login({ username, password })
   }
@@ -39,6 +39,9 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function handleIncomingWebSocketEvent(event: unknown) {}
+
+  // setup auth
+  authApi.setup()
 
   return {
     user,

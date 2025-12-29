@@ -28,12 +28,12 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'libraries/:id',
+        path: 'libraries/:libraryId',
         component: LibraryDetailView,
         name: 'Library',
       },
       {
-        path: 'libraries/:id/watch/:mediaId',
+        path: 'libraries/:libraryId/watch/:mediaId',
         component: PlayerView,
         name: 'WatchMedia',
         meta: {

@@ -1,33 +1,36 @@
 package dev.seanboaden.hls.lib.model;
 
+import dev.seanboaden.hls.media.model.MediaType;
 import lombok.Data;
 
 @Data
 public class FileNameMetadata {
-  public String raw;
-  public String title;
+  private String raw;
+  private String title;
 
-  public Integer season;
-  public Integer episode;
-  public Integer year;
+  private Integer season;
+  private Integer episode;
+  private Integer year;
 
-  public String resolution;
-  public String quality;
-  public String codec;
-  public String audio;
-  public String extended;
-  public String hardcoded;
-  public String proper;
-  public String repack;
-  public String widescreen;
-  public String language;
-  public String sbs;
-  public String unrated;
-  public String size;
-  public String threed;
+  private String resolution;
+  private String quality;
+  private String codec;
+  private String audio;
+  private String extended;
+  private String hardcoded;
+  private String proper;
+  private String repack;
+  private String widescreen;
+  private String language;
+  private String sbs;
+  private String unrated;
+  private String size;
+  private String threed;
 
-  public String group;
-  public String container;
+  private String group;
+  private String container;
+
+  private MediaType mediaType;
 
   @Override
   public String toString() {

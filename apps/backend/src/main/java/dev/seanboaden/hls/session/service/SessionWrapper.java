@@ -60,15 +60,18 @@ public class SessionWrapper {
   }
 
   private void sendMessageSafe(String message) {
-    try {
-      session.sendMessage(new TextMessage(message));
-    } catch (IOException e) {
-      Logging.error("Unable to send message");
-    }
+    this.sendMessageSafe(new TextMessage(message));
   }
 
   private void sendMessageSafe(TextMessage message) {
+    if (message == null)
+      return;
     try {
+      // lock session when sending message to ensure our crazy updates don't get this
+      // error:
+      // java.lang.IllegalStateException: The remote endpoint was in state
+      // [TEXT_PARTIAL_WRITING] which is an invalid state for called method
+      // TODO: a faster way may be to queue messages? idfk
       session.sendMessage(message);
     } catch (IOException e) {
       Logging.error("Unable to send message");

@@ -2,6 +2,8 @@ package dev.seanboaden.hls.session.service;
 
 import org.springframework.stereotype.Component;
 
+import dev.seanboaden.hls.system.event.ResourceUpdatedEvent;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -37,5 +39,11 @@ public class SessionRegistry {
     if (sessionId == null)
       return null;
     return this.get(sessionId);
+  }
+
+  public void broadcastResourceUpdatedEvent(ResourceUpdatedEvent event) {
+    sessions.values().forEach(session -> {
+      session.sendEvent(event);
+    });
   }
 }

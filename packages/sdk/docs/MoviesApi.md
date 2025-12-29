@@ -4,10 +4,67 @@ All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**findMovies**](#findmovies) | **GET** /api/movies | |
+|[**create2**](#create2) | **POST** /api/movies | |
+|[**deleteById2**](#deletebyid2) | **DELETE** /api/movies/{id} | |
+|[**deleteByIds2**](#deletebyids2) | **DELETE** /api/movies | |
+|[**findAll2**](#findall2) | **GET** /api/movies | |
+|[**findById2**](#findbyid2) | **GET** /api/movies/{id} | |
+|[**findByIds2**](#findbyids2) | **POST** /api/movies/fetch | |
+|[**upsert2**](#upsert2) | **PUT** /api/movies | |
 
-# **findMovies**
-> Array<Media> findMovies()
+# **create2**
+> Media create2(media)
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration,
+    Media
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+let media: Media; //
+
+const { status, data } = await apiInstance.create2(
+    media
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **media** | **Media**|  | |
+
+
+### Return type
+
+**Media**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteById2**
+> object deleteById2()
 
 
 ### Example
@@ -21,7 +78,107 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MoviesApi(configuration);
 
-const { status, data } = await apiInstance.findMovies();
+let id: string; // (default to undefined)
+
+const { status, data } = await apiInstance.deleteById2(
+    id
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**object**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteByIds2**
+> object deleteByIds2(requestBody)
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+let requestBody: Array<string>; //
+
+const { status, data } = await apiInstance.deleteByIds2(
+    requestBody
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **requestBody** | **Array<string>**|  | |
+
+
+### Return type
+
+**object**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **findAll2**
+> Array<Media> findAll2()
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+const { status, data } = await apiInstance.findAll2();
 ```
 
 ### Parameters
@@ -34,11 +191,162 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-No authorization required
+[Authorization](../README.md#Authorization)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **findById2**
+> Media findById2()
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+let id: string; // (default to undefined)
+
+const { status, data } = await apiInstance.findById2(
+    id
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**Media**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **findByIds2**
+> Array<Media> findByIds2(requestBody)
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+let requestBody: Array<string>; //
+
+const { status, data } = await apiInstance.findByIds2(
+    requestBody
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **requestBody** | **Array<string>**|  | |
+
+
+### Return type
+
+**Array<Media>**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **upsert2**
+> Media upsert2(media)
+
+
+### Example
+
+```typescript
+import {
+    MoviesApi,
+    Configuration,
+    Media
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MoviesApi(configuration);
+
+let media: Media; //
+
+const { status, data } = await apiInstance.upsert2(
+    media
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **media** | **Media**|  | |
+
+
+### Return type
+
+**Media**
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: */*
 
 
