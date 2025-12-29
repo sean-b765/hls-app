@@ -30,6 +30,8 @@ public class JwtService {
   private long accessTokenExpirationMs;
   @Value("${security.jwt.refresh-token.expiration-time}")
   private long refreshTokenExpirationMs;
+  // Short-lived token for accessing video segments - /api/video/...
+  private long hlsTokenExpirationMs = 1000 * 60;
 
   public String generateAccessToken(User user) {
     return this.generateAccessToken(new HashMap<>(), user);
@@ -43,11 +45,20 @@ public class JwtService {
     // Ensure roles attached to claims
     claims.putIfAbsent("roles", user.getAuthorities());
     claims.putIfAbsent("username", user.getUsername());
-    return this.buildToken(claims, user, accessTokenExpirationMs);
+    return this.buildToken(claims, user, this.accessTokenExpirationMs);
+  }
+
+  public String generateHlsToken(String mediaId, User user) {
+    Map<String, Object> claims = new HashMap<>() {
+      {
+        put("media", mediaId);
+      }
+    };
+    return this.buildToken(claims, user, this.hlsTokenExpirationMs);
   }
 
   public String generateRefreshToken(Map<String, Object> claims, User user) {
-    return this.buildToken(claims, user, refreshTokenExpirationMs);
+    return this.buildToken(claims, user, this.refreshTokenExpirationMs);
   }
 
   public String extractUsername(String token) {

@@ -40,6 +40,10 @@ public class TranscodeManager {
   private ObjectMapper objectMapper;
 
   private final ExecutorService threadPool = Executors.newCachedThreadPool();
+  /**
+   * TODO this shouldn't be single threaded as it will greatly impact performance
+   * for multi clients
+   */
   private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   private final ConcurrentHashMap<String, TranscodeWorkerHandle> workerPool = new ConcurrentHashMap<>();
   private final Set<Process> ffmpegProcesses = ConcurrentHashMap.newKeySet();

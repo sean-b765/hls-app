@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Slider } from '@/components/ui/slider'
+import { authApi } from '@/lib/api'
 import { formatSeconds } from '@/lib/utils'
 import { usePlayerStore } from '@/stores/player'
 import { Media } from '@hls-app/sdk'
@@ -141,10 +142,18 @@ function start() {
       xhrSetup(xhr) {
         xhr.withCredentials = true
         xhr.setRequestHeader('Authorization', localStorage.getItem('access_token') ?? '')
+        const hlsToken = sessionStorage.getItem('hls_token') ?? ''
+        if (hlsToken) xhr.setRequestHeader('X-Hls-Token', hlsToken)
       },
     })
 
-    hls.attachMedia(player.value)
+    hls.on(Hls.Events.MANIFEST_LOADED, (event, data) => {
+      const details = data.networkDetails as XMLHttpRequest
+      const hlsToken = details.getResponseHeader('X-Hls-Token')
+      if (!hlsToken) return
+      sessionStorage.setItem('hls_token', hlsToken)
+    })
+
     hls.on(Hls.Events.MEDIA_ATTACHED, function () {
       hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
         hls.currentLevel = 0
@@ -156,18 +165,10 @@ function start() {
 
       hls.loadSource(url.value)
     })
-    hls.on(Hls.Events.ERROR, function (event, data) {
-      switch (data.details) {
-        case Hls.ErrorDetails.FRAG_LOAD_ERROR:
-          console.log('error: FRAG_LOAD_ERROR')
-          break
-        case Hls.ErrorDetails.ATTACH_MEDIA_ERROR:
-          console.log('error: ATTACH_MEDIA_ERROR')
-          break
-        default:
-          console.log('error: ' + data.details, data.error)
-          console.log(data)
-          break
+    hls.on(Hls.Events.ERROR, async function (event, data) {
+      if (data.response?.code === 403) {
+        // Access was denied. Try to generate a new token
+        await authApi.generateHlsToken(media.id)
       }
     })
   } else if (player.value.canPlayType('application/vnd.apple.mpegurl') !== '') {
@@ -175,6 +176,7 @@ function start() {
   } else {
     throw new Error('hls not supported')
   }
+  hls.attachMedia(player.value)
 }
 
 onMounted(() => {
