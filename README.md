@@ -1,11 +1,13 @@
-<center>
-  <h1 align="center">
-    Amethyst
-  </h1>
+<h1 align="center">
+  Amethyst
+</h1>
+<p align="center">
   <img src="./assets/logo.svg" width="48px" />
 </center>
 
-<h2 align="center">Free Home Media App</h2>
+<p align="center">
+  <strong>Home Media Application</strong>
+</p>
 
 ---
 
