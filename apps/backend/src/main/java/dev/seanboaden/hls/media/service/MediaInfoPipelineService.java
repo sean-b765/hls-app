@@ -6,18 +6,17 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.seanboaden.hls.collection.model.TvSeasonCollection;
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
-import dev.seanboaden.hls.collection.service.TvSeasonCollectionService;
-import dev.seanboaden.hls.collection.service.TvSeriesCollectionService;
 import dev.seanboaden.hls.lib.model.FileNameMetadata;
 import dev.seanboaden.hls.lib.service.FileNameParser;
 import dev.seanboaden.hls.media.broker.MediaMetadataBrokerService;
 import dev.seanboaden.hls.media.model.Media;
 import dev.seanboaden.hls.media.model.MediaInfo;
 import dev.seanboaden.hls.media.service.MediaInfoPipelineService.MediaInfoPipelineResult.MediaInfoPipelineResultBuilder;
+import dev.seanboaden.hls.tv.model.TvSeason;
+import dev.seanboaden.hls.tv.model.TvSeries;
+import dev.seanboaden.hls.tv.service.TvSeasonService;
+import dev.seanboaden.hls.tv.service.TvSeriesService;
 import info.movito.themoviedbapi.model.core.Movie;
-import info.movito.themoviedbapi.model.core.TvSeries;
 import info.movito.themoviedbapi.model.tv.episode.TvEpisodeDb;
 import info.movito.themoviedbapi.model.tv.season.TvSeasonDb;
 import lombok.Builder;
@@ -38,16 +37,16 @@ public class MediaInfoPipelineService {
   @Autowired
   private MediaMetadataBrokerService brokerService;
   @Autowired
-  private TvSeriesCollectionService tvSeriesService;
+  private TvSeriesService tvSeriesService;
   @Autowired
-  private TvSeasonCollectionService tvSeasonService;
+  private TvSeasonService tvSeasonService;
 
   @Data
   @Builder
   public static class MediaInfoPipelineResult {
     private MediaInfo mediaInfo;
-    private TvSeriesCollection series;
-    private TvSeasonCollection season;
+    private TvSeries series;
+    private TvSeason season;
   }
 
   /**
@@ -58,13 +57,13 @@ public class MediaInfoPipelineService {
    * If the Media is a tv show (contains s01e01 in file name), create or lookup:
    * </p>
    * <ol>
-   * <li>TvSeriesCollection</li>
-   * <li>TvSeasonCollection</li>
+   * <li>TvSeries</li>
+   * <li>TvSeason</li>
    * <li>MediaInfo</li>
    * </ol>
    * 
    * <p>
-   * This will create a new TvSeriesCollection and TvSeasonCollection,
+   * This will create a new TvSeries and TvSeason,
    * ONLY if they do not already exist. Otherwise the existing one is used
    * </p>
    * 
@@ -138,7 +137,7 @@ public class MediaInfoPipelineService {
    */
   private void handleTvSeries(MediaInfo mediaInfo, MediaInfoPipelineResultBuilder resultBuilder) {
     // Look for existing series
-    TvSeriesCollection series = this.tvSeriesService.findByName(mediaInfo.getName()).orElse(null);
+    TvSeries series = this.tvSeriesService.findByName(mediaInfo.getName()).orElse(null);
 
     if (series == null) {
       // Fetch TvSeries from broker
@@ -146,7 +145,7 @@ public class MediaInfoPipelineService {
           ? null
           : Objects.requireNonNull(mediaInfo.getReleaseDate()).getYear();
 
-      TvSeries brokerTvSeries = this.brokerService.getTmdbTvSeries(
+      info.movito.themoviedbapi.model.core.TvSeries brokerTvSeries = this.brokerService.getTmdbTvSeries(
           mediaInfo.getName(),
           year);
 
@@ -165,7 +164,7 @@ public class MediaInfoPipelineService {
 
       if (series == null) {
         // New tv series
-        series = TvSeriesCollection.builder()
+        series = TvSeries.builder()
             .name(brokerTvSeries.getName())
             .tagline(brokerTvSeries.getNewItems().getOrDefault("tagline", "").toString())
             .library(mediaInfo.getMedia().getLibrary())
@@ -189,7 +188,7 @@ public class MediaInfoPipelineService {
    * @param mediaInfo
    */
   private void handleTvSeason(MediaInfo mediaInfo, MediaInfoPipelineResultBuilder resultBuilder) {
-    TvSeriesCollection series = resultBuilder.series;
+    TvSeries series = resultBuilder.series;
 
     // Lookup TvSeason from broker
     TvSeasonDb brokerTvSeason = this.brokerService.getTmdbTvSeason(
@@ -198,7 +197,7 @@ public class MediaInfoPipelineService {
 
     String externalId = String.valueOf(brokerTvSeason.getId());
     // Then look if the externalId exists already before saving
-    TvSeasonCollection season = this.tvSeasonService.findExternalById(externalId).orElse(null);
+    TvSeason season = this.tvSeasonService.findExternalById(externalId).orElse(null);
 
     if (season == null) {
       String thumbnailPath = brokerTvSeason.getImages().getPosters().getFirst().getFilePath();
@@ -208,7 +207,7 @@ public class MediaInfoPipelineService {
       mediaInfo.setThumbnail(thumbnailPath);
       mediaInfo.setReleaseDate(releaseDate);
 
-      season = TvSeasonCollection.builder()
+      season = TvSeason.builder()
           .name(brokerTvSeason.getName())
           .description(brokerTvSeason.getOverview())
           .season(brokerTvSeason.getSeasonNumber())
@@ -230,7 +229,7 @@ public class MediaInfoPipelineService {
    * @param mediaInfo
    */
   private void handleTvEpisode(MediaInfo mediaInfo, MediaInfoPipelineResultBuilder resultBuilder) {
-    TvSeriesCollection series = resultBuilder.series;
+    TvSeries series = resultBuilder.series;
 
     TvEpisodeDb brokerTvEpisode = this.brokerService.getTmdbTvEpisode(
         series.getExternalId(),

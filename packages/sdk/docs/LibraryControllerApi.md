@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**create4**](#create4) | **POST** /api/library | |
-|[**deleteById4**](#deletebyid4) | **DELETE** /api/library/{id} | |
-|[**deleteByIds4**](#deletebyids4) | **DELETE** /api/library | |
-|[**findAll4**](#findall4) | **GET** /api/library | |
-|[**findById4**](#findbyid4) | **GET** /api/library/{id} | |
-|[**findByIds4**](#findbyids4) | **POST** /api/library/fetch | |
+|[**create3**](#create3) | **POST** /api/library | |
+|[**deleteById3**](#deletebyid3) | **DELETE** /api/library/{id} | |
+|[**deleteByIds3**](#deletebyids3) | **DELETE** /api/library | |
+|[**findAll3**](#findall3) | **GET** /api/library | |
+|[**findById3**](#findbyid3) | **GET** /api/library/{id} | |
+|[**findByIds3**](#findbyids3) | **POST** /api/library/fetch | |
 |[**scan**](#scan) | **POST** /api/library/{id}/scan | |
-|[**upsert4**](#upsert4) | **PUT** /api/library | |
+|[**upsert3**](#upsert3) | **PUT** /api/library | |
 
-# **create4**
-> Library create4(library)
+# **create3**
+> Library create3(library)
 
 
 ### Example
@@ -31,7 +31,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let library: Library; //
 
-const { status, data } = await apiInstance.create4(
+const { status, data } = await apiInstance.create3(
     library
 );
 ```
@@ -64,8 +64,8 @@ const { status, data } = await apiInstance.create4(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteById4**
-> object deleteById4()
+# **deleteById3**
+> object deleteById3()
 
 
 ### Example
@@ -81,7 +81,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.deleteById4(
+const { status, data } = await apiInstance.deleteById3(
     id
 );
 ```
@@ -114,8 +114,8 @@ const { status, data } = await apiInstance.deleteById4(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteByIds4**
-> object deleteByIds4(requestBody)
+# **deleteByIds3**
+> object deleteByIds3(requestBody)
 
 
 ### Example
@@ -131,7 +131,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let requestBody: Array<string>; //
 
-const { status, data } = await apiInstance.deleteByIds4(
+const { status, data } = await apiInstance.deleteByIds3(
     requestBody
 );
 ```
@@ -164,8 +164,8 @@ const { status, data } = await apiInstance.deleteByIds4(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findAll4**
-> Array<Library> findAll4()
+# **findAll3**
+> Array<Library> findAll3()
 
 
 ### Example
@@ -179,7 +179,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new LibraryControllerApi(configuration);
 
-const { status, data } = await apiInstance.findAll4();
+const { status, data } = await apiInstance.findAll3();
 ```
 
 ### Parameters
@@ -207,8 +207,8 @@ This endpoint does not have any parameters.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findById4**
-> Library findById4()
+# **findById3**
+> Library findById3()
 
 
 ### Example
@@ -224,7 +224,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.findById4(
+const { status, data } = await apiInstance.findById3(
     id
 );
 ```
@@ -257,8 +257,8 @@ const { status, data } = await apiInstance.findById4(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findByIds4**
-> Array<Library> findByIds4(requestBody)
+# **findByIds3**
+> Array<Library> findByIds3(requestBody)
 
 
 ### Example
@@ -274,7 +274,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let requestBody: Array<string>; //
 
-const { status, data } = await apiInstance.findByIds4(
+const { status, data } = await apiInstance.findByIds3(
     requestBody
 );
 ```
@@ -357,8 +357,8 @@ const { status, data } = await apiInstance.scan(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **upsert4**
-> Library upsert4(library)
+# **upsert3**
+> Library upsert3(library)
 
 
 ### Example
@@ -375,7 +375,7 @@ const apiInstance = new LibraryControllerApi(configuration);
 
 let library: Library; //
 
-const { status, data } = await apiInstance.upsert4(
+const { status, data } = await apiInstance.upsert3(
     library
 );
 ```

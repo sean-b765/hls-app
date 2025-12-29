@@ -1,5 +1,5 @@
 import type { JwtPayload } from '@/types/user'
-import { type AuthRequest, type Library, type Media, type TvSeriesCollection } from '@hls-app/sdk'
+import { type AuthRequest, type Library, type Media, type TvSeries } from '@hls-app/sdk'
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
@@ -158,7 +158,7 @@ class MediaAPI extends CrudAPI<Media> {
   }
 }
 
-class SeriesAPI extends CrudAPI<TvSeriesCollection> {
+class SeriesAPI extends CrudAPI<TvSeries> {
   constructor() {
     super('/api/series')
   }

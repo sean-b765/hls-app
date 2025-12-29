@@ -24,7 +24,7 @@ import type { MediaInfo } from './media-info';
 import type { MediaMetadata } from './media-metadata';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { TvSeasonCollection } from './tv-season-collection';
+import type { TvSeason } from './tv-season';
 
 export interface Media {
     'id': string;
@@ -34,6 +34,6 @@ export interface Media {
     'path'?: string;
     'metadata'?: MediaMetadata;
     'info'?: MediaInfo;
-    'tvSeason'?: TvSeasonCollection;
+    'tvSeason'?: TvSeason;
 }
 

@@ -13,7 +13,7 @@ All URIs are relative to *http://localhost:8080*
 |[**upsert1**](#upsert1) | **PUT** /api/series | |
 
 # **create1**
-> TvSeriesCollection create1(tvSeriesCollection)
+> TvSeries create1(tvSeries)
 
 
 ### Example
@@ -22,16 +22,16 @@ All URIs are relative to *http://localhost:8080*
 import {
     TVSeriesApi,
     Configuration,
-    TvSeriesCollection
+    TvSeries
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new TVSeriesApi(configuration);
 
-let tvSeriesCollection: TvSeriesCollection; //
+let tvSeries: TvSeries; //
 
 const { status, data } = await apiInstance.create1(
-    tvSeriesCollection
+    tvSeries
 );
 ```
 
@@ -39,12 +39,12 @@ const { status, data } = await apiInstance.create1(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **tvSeriesCollection** | **TvSeriesCollection**|  | |
+| **tvSeries** | **TvSeries**|  | |
 
 
 ### Return type
 
-**TvSeriesCollection**
+**TvSeries**
 
 ### Authorization
 
@@ -164,7 +164,7 @@ const { status, data } = await apiInstance.deleteByIds1(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **findAll1**
-> Array<TvSeriesCollection> findAll1()
+> Array<TvSeries> findAll1()
 
 
 ### Example
@@ -187,7 +187,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**Array<TvSeriesCollection>**
+**Array<TvSeries>**
 
 ### Authorization
 
@@ -207,7 +207,7 @@ This endpoint does not have any parameters.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **findById1**
-> TvSeriesCollection findById1()
+> TvSeries findById1()
 
 
 ### Example
@@ -237,7 +237,7 @@ const { status, data } = await apiInstance.findById1(
 
 ### Return type
 
-**TvSeriesCollection**
+**TvSeries**
 
 ### Authorization
 
@@ -257,7 +257,7 @@ const { status, data } = await apiInstance.findById1(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **findByIds1**
-> Array<TvSeriesCollection> findByIds1(requestBody)
+> Array<TvSeries> findByIds1(requestBody)
 
 
 ### Example
@@ -287,7 +287,7 @@ const { status, data } = await apiInstance.findByIds1(
 
 ### Return type
 
-**Array<TvSeriesCollection>**
+**Array<TvSeries>**
 
 ### Authorization
 
@@ -307,7 +307,7 @@ const { status, data } = await apiInstance.findByIds1(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **upsert1**
-> TvSeriesCollection upsert1(tvSeriesCollection)
+> TvSeries upsert1(tvSeries)
 
 
 ### Example
@@ -316,16 +316,16 @@ const { status, data } = await apiInstance.findByIds1(
 import {
     TVSeriesApi,
     Configuration,
-    TvSeriesCollection
+    TvSeries
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new TVSeriesApi(configuration);
 
-let tvSeriesCollection: TvSeriesCollection; //
+let tvSeries: TvSeries; //
 
 const { status, data } = await apiInstance.upsert1(
-    tvSeriesCollection
+    tvSeries
 );
 ```
 
@@ -333,12 +333,12 @@ const { status, data } = await apiInstance.upsert1(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **tvSeriesCollection** | **TvSeriesCollection**|  | |
+| **tvSeries** | **TvSeries**|  | |
 
 
 ### Return type
 
-**TvSeriesCollection**
+**TvSeries**
 
 ### Authorization
 

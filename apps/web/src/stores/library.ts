@@ -3,7 +3,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { libraryApi } from '@/lib/api'
 import { useRoute } from 'vue-router'
 import { useCrudStore } from './crudStore'
-import type { Library, Media, TvSeriesCollection } from '@hls-app/sdk'
+import type { Library, Media, TvSeries } from '@hls-app/sdk'
 import { useTvSeriesStore } from './tvSeries'
 import { useMediaStore } from './media'
 
@@ -26,7 +26,7 @@ export const useLibraryStore = defineStore('library', () => {
   const movies = computed<Media[]>(() =>
     allMovies.value.filter((movie) => movie.library?.id === selectedLibrary.value?.id),
   )
-  const series = computed<TvSeriesCollection[]>(() =>
+  const series = computed<TvSeries[]>(() =>
     tvSeries.value.filter((tv) => tv.library?.id === selectedLibrary.value?.id),
   )
 

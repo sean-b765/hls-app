@@ -15,23 +15,23 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { Media } from './media';
+import type { Library } from './library';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { TvSeriesCollection } from './tv-series-collection';
+import type { TvSeason } from './tv-season';
 
-export interface TvSeasonCollection {
+export interface TvSeries {
     'id': string;
     'createdAt': string;
     'updatedAt'?: string;
+    'library'?: Library;
     'externalId'?: string;
-    'season'?: number;
     'name': string;
+    'tagline'?: string;
     'description'?: string;
     'releaseDate'?: string;
     'thumbnail'?: string;
     'banner'?: string;
-    'tvSeries'?: TvSeriesCollection;
-    'mediaItems'?: Array<Media>;
+    'tvSeasons'?: Array<TvSeason>;
 }
 

@@ -2,13 +2,13 @@ package dev.seanboaden.hls.system.service;
 
 import org.springframework.stereotype.Service;
 
-import dev.seanboaden.hls.collection.model.TvSeasonCollection;
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.media.model.MediaInfo;
 import dev.seanboaden.hls.system.model.SystemEvent;
 import dev.seanboaden.hls.system.model.SystemEventType;
 import dev.seanboaden.hls.system.repository.SystemEventRepository;
+import dev.seanboaden.hls.tv.model.TvSeason;
+import dev.seanboaden.hls.tv.model.TvSeries;
 
 @Service
 public class SystemEventService extends AbstractCrudService<SystemEvent, String, SystemEventRepository> {
@@ -27,7 +27,7 @@ public class SystemEventService extends AbstractCrudService<SystemEvent, String,
     this.repository.save(event);
   }
 
-  public void record(TvSeriesCollection tvSeries) {
+  public void record(TvSeries tvSeries) {
     SystemEvent event = SystemEvent
         .builder()
         .resourceId(tvSeries.getId())
@@ -38,7 +38,7 @@ public class SystemEventService extends AbstractCrudService<SystemEvent, String,
     this.repository.save(event);
   }
 
-  public void record(TvSeasonCollection tvSeason) {
+  public void record(TvSeason tvSeason) {
     SystemEvent event = SystemEvent
         .builder()
         .resourceId(tvSeason.getId())

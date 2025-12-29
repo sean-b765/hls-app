@@ -9,6 +9,8 @@ Name | Type | Description | Notes
 **createdAt** | **string** |  | [default to undefined]
 **updatedAt** | **string** |  | [optional] [default to undefined]
 **name** | **string** |  | [default to undefined]
+**type** | **string** |  | [optional] [default to undefined]
+**tagline** | **string** |  | [optional] [default to undefined]
 **description** | **string** |  | [optional] [default to undefined]
 **releaseDate** | **string** |  | [optional] [default to undefined]
 **thumbnail** | **string** |  | [optional] [default to undefined]
@@ -27,6 +29,8 @@ const instance: MediaInfo = {
     createdAt,
     updatedAt,
     name,
+    type,
+    tagline,
     description,
     releaseDate,
     thumbnail,

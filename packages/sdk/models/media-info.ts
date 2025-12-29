@@ -22,6 +22,8 @@ export interface MediaInfo {
     'createdAt': string;
     'updatedAt'?: string;
     'name': string;
+    'type'?: MediaInfoTypeEnum;
+    'tagline'?: string;
     'description'?: string;
     'releaseDate'?: string;
     'thumbnail'?: string;
@@ -30,4 +32,13 @@ export interface MediaInfo {
     'episode'?: number;
     'media'?: Media;
 }
+
+export const MediaInfoTypeEnum = {
+    Movie: 'MOVIE',
+    Tv: 'TV',
+    Music: 'MUSIC'
+} as const;
+
+export type MediaInfoTypeEnum = typeof MediaInfoTypeEnum[keyof typeof MediaInfoTypeEnum];
+
 

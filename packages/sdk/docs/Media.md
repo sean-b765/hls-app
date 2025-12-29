@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **path** | **string** |  | [optional] [default to undefined]
 **metadata** | [**MediaMetadata**](MediaMetadata.md) |  | [optional] [default to undefined]
 **info** | [**MediaInfo**](MediaInfo.md) |  | [optional] [default to undefined]
-**tvSeason** | [**TvSeasonCollection**](TvSeasonCollection.md) |  | [optional] [default to undefined]
+**tvSeason** | [**TvSeason**](TvSeason.md) |  | [optional] [default to undefined]
 
 ## Example
 

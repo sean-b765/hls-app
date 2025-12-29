@@ -3,11 +3,11 @@ package dev.seanboaden.hls.media.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.seanboaden.hls.collection.model.TvSeasonCollection;
 import dev.seanboaden.hls.config.base.AbstractBaseEntity;
 import dev.seanboaden.hls.config.base.LibraryEntity;
 import dev.seanboaden.hls.library.model.Library;
 import dev.seanboaden.hls.media.handler.MediaEventListener;
+import dev.seanboaden.hls.tv.model.TvSeason;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,5 +50,5 @@ public class Media extends LibraryEntity {
   @ManyToOne
   @JoinColumn(name = "tvSeasonId", referencedColumnName = "id")
   @JsonBackReference
-  private TvSeasonCollection tvSeason;
+  private TvSeason tvSeason;
 }

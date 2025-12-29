@@ -1,23 +1,24 @@
-package dev.seanboaden.hls.collection.handler;
+package dev.seanboaden.hls.tv.handler;
 
 import org.springframework.stereotype.Component;
 
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
 import dev.seanboaden.hls.config.service.SpringContextHolder;
 import dev.seanboaden.hls.session.service.SessionRegistry;
 import dev.seanboaden.hls.system.event.ResourceUpdatedEvent;
 import dev.seanboaden.hls.system.lib.Endpoints;
+import dev.seanboaden.hls.tv.model.TvSeason;
 import jakarta.persistence.PostPersist;
 
 @Component
-public class TvSeriesCollectionEventListener {
+public class TvSeasonEventListener {
   @PostPersist
-  public void created(TvSeriesCollection tvSeries) {
+  public void created(TvSeason tvSeason) {
     ResourceUpdatedEvent event = ResourceUpdatedEvent.builder()
-        .kind(TvSeriesCollection.class.getSimpleName())
-        .id(tvSeries.getId())
-        .uri(Endpoints.TV_SERIES)
+        .kind(TvSeason.class.getSimpleName())
+        .id(tvSeason.getId())
+        .uri(Endpoints.TV_SEASONS)
         .build();
+
     SessionRegistry sessionRegistry = SpringContextHolder.getBean(SessionRegistry.class);
     sessionRegistry.broadcastResourceUpdatedEvent(event);
   }

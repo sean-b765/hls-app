@@ -4,10 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import dev.seanboaden.hls.collection.model.TvSeasonCollection;
-import dev.seanboaden.hls.collection.model.TvSeriesCollection;
-import dev.seanboaden.hls.collection.service.TvSeasonCollectionService;
-import dev.seanboaden.hls.collection.service.TvSeriesCollectionService;
 import dev.seanboaden.hls.config.base.AbstractCrudService;
 import dev.seanboaden.hls.config.web.AsyncModifier;
 import dev.seanboaden.hls.media.model.Media;
@@ -16,6 +12,10 @@ import dev.seanboaden.hls.media.model.MediaMetadata;
 import dev.seanboaden.hls.media.model.MediaType;
 import dev.seanboaden.hls.media.repository.MediaRepository;
 import dev.seanboaden.hls.media.service.MediaInfoPipelineService.MediaInfoPipelineResult;
+import dev.seanboaden.hls.tv.model.TvSeason;
+import dev.seanboaden.hls.tv.model.TvSeries;
+import dev.seanboaden.hls.tv.service.TvSeasonService;
+import dev.seanboaden.hls.tv.service.TvSeriesService;
 import jakarta.transaction.Transactional;
 
 import java.io.File;
@@ -28,13 +28,11 @@ public class MediaService extends AbstractCrudService<Media, String, MediaReposi
   @Autowired
   private MediaMetadataService mediaMetadataService;
   @Autowired
-  private MediaInfoService mediaInfoService;
-  @Autowired
   private MediaInfoPipelineService mediaInfoPipelineService;
   @Autowired
-  private TvSeriesCollectionService tvSeriesService;
+  private TvSeriesService tvSeriesService;
   @Autowired
-  private TvSeasonCollectionService tvSeasonService;
+  private TvSeasonService tvSeasonService;
 
   protected MediaService(MediaRepository repository) {
     super(repository);
@@ -96,8 +94,8 @@ public class MediaService extends AbstractCrudService<Media, String, MediaReposi
     Media media = this.findById(mediaId).orElseThrow();
 
     MediaInfo info = result.getMediaInfo();
-    TvSeriesCollection series = result.getSeries();
-    TvSeasonCollection season = result.getSeason();
+    TvSeries series = result.getSeries();
+    TvSeason season = result.getSeason();
     if (info == null)
       return;
 

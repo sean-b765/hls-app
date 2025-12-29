@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { TvSeriesCollection } from '../models';
+import type { TvSeries } from '../models';
 /**
  * TVSeriesApi - axios parameter creator
  */
@@ -30,13 +30,13 @@ export const TVSeriesApiAxiosParamCreator = function (configuration?: Configurat
     return {
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create1: async (tvSeriesCollection: TvSeriesCollection, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tvSeriesCollection' is not null or undefined
-            assertParamExists('create1', 'tvSeriesCollection', tvSeriesCollection)
+        create1: async (tvSeries: TvSeries, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tvSeries' is not null or undefined
+            assertParamExists('create1', 'tvSeries', tvSeries)
             const localVarPath = `/api/series`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -59,7 +59,7 @@ export const TVSeriesApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(tvSeriesCollection, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(tvSeries, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -248,13 +248,13 @@ export const TVSeriesApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsert1: async (tvSeriesCollection: TvSeriesCollection, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tvSeriesCollection' is not null or undefined
-            assertParamExists('upsert1', 'tvSeriesCollection', tvSeriesCollection)
+        upsert1: async (tvSeries: TvSeries, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tvSeries' is not null or undefined
+            assertParamExists('upsert1', 'tvSeries', tvSeries)
             const localVarPath = `/api/series`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -277,7 +277,7 @@ export const TVSeriesApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(tvSeriesCollection, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(tvSeries, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -295,12 +295,12 @@ export const TVSeriesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeriesCollection>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create1(tvSeriesCollection, options);
+        async create1(tvSeries: TvSeries, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeries>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create1(tvSeries, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TVSeriesApi.create1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -334,7 +334,7 @@ export const TVSeriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findAll1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TvSeriesCollection>>> {
+        async findAll1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TvSeries>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findAll1(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TVSeriesApi.findAll1']?.[localVarOperationServerIndex]?.url;
@@ -346,7 +346,7 @@ export const TVSeriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeriesCollection>> {
+        async findById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeries>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findById1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TVSeriesApi.findById1']?.[localVarOperationServerIndex]?.url;
@@ -358,7 +358,7 @@ export const TVSeriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findByIds1(requestBody: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TvSeriesCollection>>> {
+        async findByIds1(requestBody: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TvSeries>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findByIds1(requestBody, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TVSeriesApi.findByIds1']?.[localVarOperationServerIndex]?.url;
@@ -366,12 +366,12 @@ export const TVSeriesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async upsert1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeriesCollection>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.upsert1(tvSeriesCollection, options);
+        async upsert1(tvSeries: TvSeries, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TvSeries>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.upsert1(tvSeries, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TVSeriesApi.upsert1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -387,12 +387,12 @@ export const TVSeriesApiFactory = function (configuration?: Configuration, baseP
     return {
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig): AxiosPromise<TvSeriesCollection> {
-            return localVarFp.create1(tvSeriesCollection, options).then((request) => request(axios, basePath));
+        create1(tvSeries: TvSeries, options?: RawAxiosRequestConfig): AxiosPromise<TvSeries> {
+            return localVarFp.create1(tvSeries, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -417,7 +417,7 @@ export const TVSeriesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findAll1(options?: RawAxiosRequestConfig): AxiosPromise<Array<TvSeriesCollection>> {
+        findAll1(options?: RawAxiosRequestConfig): AxiosPromise<Array<TvSeries>> {
             return localVarFp.findAll1(options).then((request) => request(axios, basePath));
         },
         /**
@@ -426,7 +426,7 @@ export const TVSeriesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findById1(id: string, options?: RawAxiosRequestConfig): AxiosPromise<TvSeriesCollection> {
+        findById1(id: string, options?: RawAxiosRequestConfig): AxiosPromise<TvSeries> {
             return localVarFp.findById1(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -435,17 +435,17 @@ export const TVSeriesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findByIds1(requestBody: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<Array<TvSeriesCollection>> {
+        findByIds1(requestBody: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<Array<TvSeries>> {
             return localVarFp.findByIds1(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {TvSeriesCollection} tvSeriesCollection 
+         * @param {TvSeries} tvSeries 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsert1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig): AxiosPromise<TvSeriesCollection> {
-            return localVarFp.upsert1(tvSeriesCollection, options).then((request) => request(axios, basePath));
+        upsert1(tvSeries: TvSeries, options?: RawAxiosRequestConfig): AxiosPromise<TvSeries> {
+            return localVarFp.upsert1(tvSeries, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -456,12 +456,12 @@ export const TVSeriesApiFactory = function (configuration?: Configuration, baseP
 export class TVSeriesApi extends BaseAPI {
     /**
      * 
-     * @param {TvSeriesCollection} tvSeriesCollection 
+     * @param {TvSeries} tvSeries 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig) {
-        return TVSeriesApiFp(this.configuration).create1(tvSeriesCollection, options).then((request) => request(this.axios, this.basePath));
+    public create1(tvSeries: TvSeries, options?: RawAxiosRequestConfig) {
+        return TVSeriesApiFp(this.configuration).create1(tvSeries, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -515,12 +515,12 @@ export class TVSeriesApi extends BaseAPI {
 
     /**
      * 
-     * @param {TvSeriesCollection} tvSeriesCollection 
+     * @param {TvSeries} tvSeries 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public upsert1(tvSeriesCollection: TvSeriesCollection, options?: RawAxiosRequestConfig) {
-        return TVSeriesApiFp(this.configuration).upsert1(tvSeriesCollection, options).then((request) => request(this.axios, this.basePath));
+    public upsert1(tvSeries: TvSeries, options?: RawAxiosRequestConfig) {
+        return TVSeriesApiFp(this.configuration).upsert1(tvSeries, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

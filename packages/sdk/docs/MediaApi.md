@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**create3**](#create3) | **POST** /api/media | |
-|[**deleteById3**](#deletebyid3) | **DELETE** /api/media/{id} | |
-|[**deleteByIds3**](#deletebyids3) | **DELETE** /api/media | |
-|[**findAll3**](#findall3) | **GET** /api/media | |
-|[**findById3**](#findbyid3) | **GET** /api/media/{id} | |
-|[**findByIds3**](#findbyids3) | **POST** /api/media/fetch | |
-|[**upsert3**](#upsert3) | **PUT** /api/media | |
+|[**create2**](#create2) | **POST** /api/media | |
+|[**deleteById2**](#deletebyid2) | **DELETE** /api/media/{id} | |
+|[**deleteByIds2**](#deletebyids2) | **DELETE** /api/media | |
+|[**findAll2**](#findall2) | **GET** /api/media | |
+|[**findById2**](#findbyid2) | **GET** /api/media/{id} | |
+|[**findByIds2**](#findbyids2) | **POST** /api/media/fetch | |
+|[**upsert2**](#upsert2) | **PUT** /api/media | |
 
-# **create3**
-> Media create3(media)
+# **create2**
+> Media create2(media)
 
 
 ### Example
@@ -30,7 +30,7 @@ const apiInstance = new MediaApi(configuration);
 
 let media: Media; //
 
-const { status, data } = await apiInstance.create3(
+const { status, data } = await apiInstance.create2(
     media
 );
 ```
@@ -63,8 +63,8 @@ const { status, data } = await apiInstance.create3(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteById3**
-> object deleteById3()
+# **deleteById2**
+> object deleteById2()
 
 
 ### Example
@@ -80,7 +80,7 @@ const apiInstance = new MediaApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.deleteById3(
+const { status, data } = await apiInstance.deleteById2(
     id
 );
 ```
@@ -113,8 +113,8 @@ const { status, data } = await apiInstance.deleteById3(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteByIds3**
-> object deleteByIds3(requestBody)
+# **deleteByIds2**
+> object deleteByIds2(requestBody)
 
 
 ### Example
@@ -130,7 +130,7 @@ const apiInstance = new MediaApi(configuration);
 
 let requestBody: Array<string>; //
 
-const { status, data } = await apiInstance.deleteByIds3(
+const { status, data } = await apiInstance.deleteByIds2(
     requestBody
 );
 ```
@@ -163,8 +163,8 @@ const { status, data } = await apiInstance.deleteByIds3(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findAll3**
-> Array<Media> findAll3()
+# **findAll2**
+> Array<Media> findAll2()
 
 
 ### Example
@@ -178,7 +178,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
-const { status, data } = await apiInstance.findAll3();
+const { status, data } = await apiInstance.findAll2();
 ```
 
 ### Parameters
@@ -206,8 +206,8 @@ This endpoint does not have any parameters.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findById3**
-> Media findById3()
+# **findById2**
+> Media findById2()
 
 
 ### Example
@@ -223,7 +223,7 @@ const apiInstance = new MediaApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.findById3(
+const { status, data } = await apiInstance.findById2(
     id
 );
 ```
@@ -256,8 +256,8 @@ const { status, data } = await apiInstance.findById3(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findByIds3**
-> Array<Media> findByIds3(requestBody)
+# **findByIds2**
+> Array<Media> findByIds2(requestBody)
 
 
 ### Example
@@ -273,7 +273,7 @@ const apiInstance = new MediaApi(configuration);
 
 let requestBody: Array<string>; //
 
-const { status, data } = await apiInstance.findByIds3(
+const { status, data } = await apiInstance.findByIds2(
     requestBody
 );
 ```
@@ -306,8 +306,8 @@ const { status, data } = await apiInstance.findByIds3(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **upsert3**
-> Media upsert3(media)
+# **upsert2**
+> Media upsert2(media)
 
 
 ### Example
@@ -324,7 +324,7 @@ const apiInstance = new MediaApi(configuration);
 
 let media: Media; //
 
-const { status, data } = await apiInstance.upsert3(
+const { status, data } = await apiInstance.upsert2(
     media
 );
 ```

@@ -5,6 +5,6 @@ export * from './library';
 export * from './media';
 export * from './media-info';
 export * from './media-metadata';
-export * from './tv-season-collection';
-export * from './tv-series-collection';
+export * from './tv-season';
+export * from './tv-series';
 export * from './user';

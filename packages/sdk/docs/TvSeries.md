@@ -1,4 +1,4 @@
-# TvSeasonCollection
+# TvSeries
 
 
 ## Properties
@@ -8,34 +8,34 @@ Name | Type | Description | Notes
 **id** | **string** |  | [default to undefined]
 **createdAt** | **string** |  | [default to undefined]
 **updatedAt** | **string** |  | [optional] [default to undefined]
+**library** | [**Library**](Library.md) |  | [optional] [default to undefined]
 **externalId** | **string** |  | [optional] [default to undefined]
-**season** | **number** |  | [optional] [default to undefined]
 **name** | **string** |  | [default to undefined]
+**tagline** | **string** |  | [optional] [default to undefined]
 **description** | **string** |  | [optional] [default to undefined]
 **releaseDate** | **string** |  | [optional] [default to undefined]
 **thumbnail** | **string** |  | [optional] [default to undefined]
 **banner** | **string** |  | [optional] [default to undefined]
-**tvSeries** | [**TvSeriesCollection**](TvSeriesCollection.md) |  | [optional] [default to undefined]
-**mediaItems** | [**Array&lt;Media&gt;**](Media.md) |  | [optional] [default to undefined]
+**tvSeasons** | [**Array&lt;TvSeason&gt;**](TvSeason.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { TvSeasonCollection } from './api';
+import { TvSeries } from './api';
 
-const instance: TvSeasonCollection = {
+const instance: TvSeries = {
     id,
     createdAt,
     updatedAt,
+    library,
     externalId,
-    season,
     name,
+    tagline,
     description,
     releaseDate,
     thumbnail,
     banner,
-    tvSeries,
-    mediaItems,
+    tvSeasons,
 };
 ```
 
