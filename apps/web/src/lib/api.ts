@@ -1,6 +1,6 @@
 import type { JwtPayload } from '@/types/user'
 import { type AuthRequest, type Library, type Media, type TvSeries } from '@hls-app/sdk'
-import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
+import axios, { type AxiosInstance, type AxiosResponse, type AxiosResponseHeaders } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { emitter } from './event'
 import type { FolderNode } from '@/types/filesystem'
@@ -26,12 +26,7 @@ class BaseAPI {
     })
     this.axios.interceptors.response.use(
       (response) => {
-        if (response.headers['authorization']) {
-          const jwt = response.headers['authorization']
-          localStorage.setItem('access_token', 'Bearer ' + jwt)
-          emitter.emit('auth', this.getJwt())
-        }
-
+        this.saveHeaders(response.headers)
         this.refreshOrLogoutIfNecessary(response)
         return response
       },
@@ -53,7 +48,7 @@ class BaseAPI {
     return jwtDecode<JwtPayload>(token)
   }
 
-  protected async consumeRefreshToken() {
+  protected async refreshToken() {
     this.clearAuthorization()
     try {
       const response = await this.axios.post('/auth/refresh')
@@ -70,13 +65,26 @@ class BaseAPI {
     delete this.axios.defaults.headers.common.Authorization
   }
 
+  protected saveHeaders(headers: Partial<AxiosResponseHeaders>) {
+    if (headers['authorization']) {
+      // If an Authorization header was sent from the backend, this means we have been authenticated
+      const jwt = headers['authorization']
+      localStorage.setItem('access_token', 'Bearer ' + jwt)
+      emitter.emit('auth', this.getJwt())
+    }
+    if (headers['x-hls-token']) {
+      const hlsToken = headers['x-hls-token']
+      sessionStorage.setItem('hls_token', hlsToken)
+    }
+  }
+
   protected refreshOrLogoutIfNecessary(response: AxiosResponse) {
     if (!response) return
     if (response.status !== 403) return
 
     if (response.config.url !== '/auth/refresh') {
       // Try to use the refresh token
-      this.consumeRefreshToken()
+      this.refreshToken()
       return
     }
     // Ensure jwt is cleared from localStorage if we were forbidden and refresh token was unsuccessfully refreshed
@@ -104,7 +112,7 @@ export class AuthAPI extends BaseAPI {
     }
 
     if (jwt.exp <= nowEpochSeconds) {
-      await this.consumeRefreshToken()
+      await this.refreshToken()
     }
   }
 
@@ -118,6 +126,11 @@ export class AuthAPI extends BaseAPI {
     await this.axios.post(`/auth/logout`)
     this.clearAuthorization()
     emitter.emit('auth', null)
+  }
+
+  public async generateHlsToken(mediaId: string) {
+    const response = await this.axios.post(`/api/playlist/${mediaId}`)
+    console.log(response.headers['x-hls-token'])
   }
 }
 

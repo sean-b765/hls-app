@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -68,8 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       UserDetails user = this.userDetailsService.loadUserByUsername(userId);
 
       if (user == null) {
-        System.out.println("No user");
-        return;
+        throw new AccessDeniedException("User was not found.");
       }
 
       if (!this.jwtService.isTokenValid(accessToken, user)) {
@@ -102,6 +102,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     List<String> pathsToSkip = new ArrayList<>() {
       {
         add("/auth/**");
+        // Disable on HLS endpoint (secured with X-Hls-Token)
+        add("/api/video/**");
       }
     };
     return pathsToSkip.stream().anyMatch(p -> this.pathMatcher.match(p, request.getServletPath()));

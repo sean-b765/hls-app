@@ -16,10 +16,17 @@ public class CorsConfig {
     config.setAllowedOrigins(List.of("http://localhost:5173"));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
-    config.setExposedHeaders(List.of("Authorization"));
+    config.setExposedHeaders(List.of("Authorization", "X-Hls-Token"));
     config.setAllowCredentials(true);
 
+    CorsConfiguration hlsConfig = new CorsConfiguration();
+    hlsConfig.setAllowedOrigins(List.of("http://localhost:5173"));
+    hlsConfig.setAllowedMethods(List.of("*"));
+    hlsConfig.setAllowedHeaders(List.of("*"));
+    hlsConfig.setAllowCredentials(true);
+
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/api/video/**", hlsConfig);
     source.registerCorsConfiguration("/**", config);
 
     return source;
