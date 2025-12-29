@@ -1,0 +1,54 @@
+package dev.amethyst.app.media.model;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import dev.amethyst.app.config.base.AbstractBaseEntity;
+import dev.amethyst.app.config.base.LibraryEntity;
+import dev.amethyst.app.library.model.Library;
+import dev.amethyst.app.media.handler.MediaEventListener;
+import dev.amethyst.app.tv.model.TvSeason;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@Entity
+@Table(name = "media")
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(value = { MediaEventListener.class })
+public class Media extends LibraryEntity {
+  /**
+   * The absolute path to the media file
+   */
+  @Column(nullable = false, unique = true)
+  private String path;
+
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "metadataId")
+  @JsonManagedReference
+  private MediaMetadata metadata;
+
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "mediaInfoId")
+  @JsonManagedReference
+  private MediaInfo info;
+
+  @ManyToOne
+  @JoinColumn(name = "tvSeasonId", referencedColumnName = "id")
+  @JsonBackReference
+  private TvSeason tvSeason;
+}
