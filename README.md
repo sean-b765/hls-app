@@ -1,8 +1,17 @@
-# HlsApp
+<center>
+  <h1 align="center">
+    Amethyst
+  </h1>
+  <img src="./assets/logo.svg" width="48px" />
+</center>
+
+<h2 align="center">Free Home Media App</h2>
+
+---
 
 A full-stack monorepo containing the:
 
-- Backend: Java/Maven/Spring Boot
+- Backend: Java 21/Maven/Spring Boot
 - Web: Vue.js
 
 ## Scripts
