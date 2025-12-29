@@ -41,16 +41,16 @@ const mode = useColorMode()
       <div v-if="mode === 'dark'" class="overlay rounded-lg"></div>
     </div>
     <CardHeader class="z-10">
-      <CardTitle class="text-4xl font-bold text-white">
+      <CardTitle class="text-4xl font-bold text-white text-shadow-black text-shadow-sm">
         {{ name }}
       </CardTitle>
-      <CardDescription class="max-w-1/3 text-white">
+      <CardDescription class="max-w-1/3 text-white text-shadow-black text-shadow-sm">
         {{ moment(releaseDate).get('year') }}
       </CardDescription>
     </CardHeader>
     <CardContent class="z-10">
       <p
-        class="description text-white text-shadow-md text-shadow-black opacity-85"
+        class="description text-white text-shadow-sm text-shadow-black opacity-85"
         style="max-width: clamp(200px, 50%, 600px)"
       >
         {{ truncate(description, { length: 200 }) }}
