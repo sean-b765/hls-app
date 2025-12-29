@@ -28,7 +28,7 @@ function clickMedia(id: string | undefined) {
 
 <template>
   <div
-    class="w-full h-auto max-h-[calc(100vh-96px)] rounded-lg grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 overflow-y-auto"
+    class="w-full h-auto max-h-[calc(100vh-96px)] rounded-md grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 overflow-y-auto"
   >
     <template v-if="!selectedLibrary">
       <Empty class="col-span-full">

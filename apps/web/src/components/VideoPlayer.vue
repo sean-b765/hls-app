@@ -187,12 +187,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
   hls.stopLoad()
   hls.destroy()
-  hls = null
 })
 </script>
 
 <template>
-  <div class="video-container w-full h-fit flex flex-col items-center justify-center relative">
+  <div
+    class="video-container w-full h-fit flex flex-col items-center justify-center relative bg-red-700"
+  >
     <span v-if="duration <= buffered" class="loader absolute"></span>
     <video
       ref="player"
@@ -241,11 +242,11 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="flex items-center justify-end">
-            <span class="truncate text-xs">
+            <span class="truncate text-xs font-mono">
               {{ formatSeconds(currentTime, true) }}
             </span>
             <span class="text-xs mx-1 opacity-40">/</span>
-            <span class="truncate text-xs opacity-70">
+            <span class="truncate text-xs opacity-70 font-mono">
               {{ formatSeconds(duration, true) }}
             </span>
           </div>

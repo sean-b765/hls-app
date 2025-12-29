@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Manrope:wght@200..800&display=swap');
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 @import 'tw-animate-css';
@@ -6,6 +6,10 @@
 @custom-variant dark (&:is(.dark *));
 * {
   font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', 'Courier New', Courier, monospace;
 }
 
 @theme {
