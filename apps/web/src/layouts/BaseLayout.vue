@@ -27,3 +27,48 @@ import AuthProvider from '@/components/AuthProvider.vue'
     </RoomProvider>
   </AuthProvider>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* LEFT (forward) */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  transform-origin: center;
+}
+
+/* Forward */
+.slide-left-enter-from {
+  transform: translateX(20px) scale(0.98);
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-20px) scale(0.98);
+  opacity: 0;
+}
+
+/* Backward */
+.slide-right-enter-from {
+  transform: translateX(-20px) scale(0.98);
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(20px) scale(0.98);
+  opacity: 0;
+}
+</style>
