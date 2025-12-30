@@ -1,4 +1,5 @@
 import BaseLayout from '@/layouts/BaseLayout.vue'
+import PlayerLayout from '@/layouts/PlayerLayout.vue'
 import HomeView from '@/views/HomeView.vue'
 import LibrariesView from '@/views/LibrariesView.vue'
 import LibraryDetailView from '@/views/LibraryDetailView.vue'
@@ -32,13 +33,16 @@ const routes: RouteRecordRaw[] = [
         component: LibraryDetailView,
         name: 'Library',
       },
+    ],
+  },
+  {
+    path: '/watch',
+    component: PlayerLayout,
+    children: [
       {
-        path: 'libraries/:libraryId/watch/:mediaId',
+        path: ':mediaId',
         component: PlayerView,
         name: 'WatchMedia',
-        meta: {
-          icon: PlaySquare,
-        },
       },
     ],
   },

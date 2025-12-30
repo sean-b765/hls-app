@@ -70,3 +70,14 @@ export function getLibraryIcon(libraryOrIcon?: Library | string) {
       return Clapperboard
   }
 }
+
+export function supports<T extends object, K extends keyof T>(obj: T, prop: K): boolean {
+  return prop in obj
+}
+
+export function supportsPiP() {
+  return (
+    'webkitEnterPictureInPicture' in HTMLVideoElement.prototype ||
+    supports(HTMLVideoElement.prototype, 'requestPictureInPicture')
+  )
+}
