@@ -4,8 +4,10 @@ import { computed, ref } from 'vue'
 import { type UserRole, type JwtPayload } from '@/types/user'
 import { client } from '@/lib/SocketClient'
 import { emitter } from '@/lib/event'
+import { useBootstrapStore } from './bootstrap'
 
 export const useUserStore = defineStore('user', () => {
+  const bootstrapStore = useBootstrapStore()
   const user = ref<JwtPayload | null>()
   // Register the auth listener before constructing the auth api
   emitter.on('auth', (jwt) => {
@@ -36,6 +38,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function signout() {
     authApi.logout()
+    bootstrapStore.reset()
   }
 
   function handleIncomingWebSocketEvent(event: unknown) {}
