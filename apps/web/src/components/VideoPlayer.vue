@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Slider } from '@/components/ui/slider'
 import { authApi } from '@/lib/api'
-import { formatSeconds, getImage, supports, supportsPiP } from '@/lib/utils'
+import { formatSeconds, getImage, supportsPiP } from '@/lib/utils'
 import { usePlayerStore } from '@/stores/player'
 import { Media } from '@hls-app/sdk'
 import Hls, { Level } from 'hls.js'
@@ -130,6 +125,18 @@ function pictureInPicture() {
 
   const vid = player.value
   if (vid == null) return
+
+  if ('webkitEnterPictureInPicture' in vid) {
+    // @ts-expect-error safari
+    if (vid.webkitPresentationMode === 'picture-in-picture') {
+      // @ts-expect-error safari
+      vid.webkitExitPictureInPicture()
+    } else {
+      // @ts-expect-error safari
+      vid.webkitEnterPictureInPicture()
+    }
+    return
+  }
 
   if (document.pictureInPictureElement === vid) {
     document.exitPictureInPicture()
