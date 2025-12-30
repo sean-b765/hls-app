@@ -36,7 +36,7 @@ const topMovies = computed(() => (Array.isArray(movies.value) ? movies.value.sli
 const topSeries = computed(() => (Array.isArray(series.value) ? series.value.slice(0, 10) : []))
 </script>
 <template>
-  <div class="w-full h-full max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto flex flex-col">
+  <div class="w-full h-full max-h-[calc(100vh-96px)] rounded-md overflow-y-auto flex flex-col">
     <div class="w-full h-auto">
       <!-- HomeCard displays a featured movie on the homescreen, right now it is labled as 'Continue Watching and only displays one movie atm.'-->
       <HomeCard

@@ -30,7 +30,7 @@ function openEditDialog(library: Library) {
 
 <template>
   <div
-    class="w-full h-auto max-h-[calc(100vh-96px)] rounded-lg overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+    class="w-full h-auto max-h-[calc(100vh-96px)] rounded-md overflow-y-auto grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
   >
     <AddLibraryDialog v-model:open="addLibraryDialog" />
     <EditLibraryDialog
