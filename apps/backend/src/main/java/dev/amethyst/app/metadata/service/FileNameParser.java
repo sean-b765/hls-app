@@ -1,4 +1,4 @@
-package dev.amethyst.app.lib.service;
+package dev.amethyst.app.metadata.service;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -9,8 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.amethyst.app.lib.model.FileNameMetadata;
+import dev.amethyst.app.lib.service.MimeTypeService;
 import dev.amethyst.app.media.model.MediaType;
+import dev.amethyst.app.metadata.model.FileNameMetadata;
 
 @Service
 public class FileNameParser {

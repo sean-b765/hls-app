@@ -17,10 +17,6 @@ public class TvSeriesService
   @Autowired
   private TvSeasonService tvSeasonService;
 
-  protected TvSeriesService(TvSeriesRepository repository) {
-    super(repository);
-  }
-
   public Optional<TvSeries> findByName(String name) {
     return this.repository.findByName(name);
   }

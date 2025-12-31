@@ -6,13 +6,14 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.amethyst.app.config.base.AbstractBaseEntity;
 import dev.amethyst.app.media.handler.MediaInfoEventListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class MediaInfo extends AbstractBaseEntity {
   @NonNull
   @Column(nullable = false)
   private String name;
+  @Enumerated(EnumType.STRING)
   private MediaType type;
   private String tagline;
   private String description;

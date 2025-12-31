@@ -3,9 +3,9 @@ package dev.amethyst.app.playlist.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import dev.amethyst.app.lib.service.KeyframeExtractor;
 import dev.amethyst.app.media.model.Media;
-import dev.amethyst.app.playlist.model.KeyframeData;
+import dev.amethyst.app.metadata.model.KeyframeData;
+import dev.amethyst.app.metadata.service.KeyframeExtractor;
 import dev.amethyst.app.transcode.service.TranscodingService;
 import dev.amethyst.app.video.model.QualityProfiles;
 

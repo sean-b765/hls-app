@@ -14,6 +14,7 @@ public class JacksonConfig {
     return builder -> {
       builder.modules(new JavaTimeModule());
       builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+      builder.featuresToEnable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
     };
   }
 }

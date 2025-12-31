@@ -1,4 +1,4 @@
-package dev.amethyst.app.playlist.model;
+package dev.amethyst.app.metadata.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

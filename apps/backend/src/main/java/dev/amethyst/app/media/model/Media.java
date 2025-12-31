@@ -3,15 +3,11 @@ package dev.amethyst.app.media.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.amethyst.app.config.base.AbstractBaseEntity;
 import dev.amethyst.app.config.base.LibraryEntity;
-import dev.amethyst.app.library.model.Library;
-import dev.amethyst.app.media.handler.MediaEventListener;
 import dev.amethyst.app.tv.model.TvSeason;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -29,7 +25,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(value = { MediaEventListener.class })
 public class Media extends LibraryEntity {
   /**
    * The absolute path to the media file

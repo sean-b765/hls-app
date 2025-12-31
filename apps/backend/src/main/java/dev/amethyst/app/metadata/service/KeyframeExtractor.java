@@ -1,10 +1,11 @@
-package dev.amethyst.app.lib.service;
+package dev.amethyst.app.metadata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.amethyst.app.playlist.model.KeyframeData;
+import dev.amethyst.app.lib.service.FfmpegService;
+import dev.amethyst.app.metadata.model.KeyframeData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

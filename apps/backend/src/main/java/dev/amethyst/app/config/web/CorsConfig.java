@@ -12,15 +12,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class CorsConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
+    List<String> allowedOrigins = List.of("http://localhost:5173");
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5173"));
+    config.setAllowedOrigins(allowedOrigins);
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setExposedHeaders(List.of("Authorization", "X-Hls-Token"));
     config.setAllowCredentials(true);
 
     CorsConfiguration hlsConfig = new CorsConfiguration();
-    hlsConfig.setAllowedOrigins(List.of("http://localhost:5173"));
+    hlsConfig.setAllowedOrigins(allowedOrigins);
     hlsConfig.setAllowedMethods(List.of("*"));
     hlsConfig.setAllowedHeaders(List.of("*"));
     hlsConfig.setAllowCredentials(true);

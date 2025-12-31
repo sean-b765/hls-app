@@ -2,7 +2,7 @@ package dev.amethyst.app.lib;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.amethyst.app.lib.model.FileNameMetadata;
+import dev.amethyst.app.metadata.model.FileNameMetadata;
 
 public class ParsedAssert {
   private final FileNameMetadata actual;

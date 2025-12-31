@@ -1,4 +1,4 @@
-package dev.amethyst.app.lib.model;
+package dev.amethyst.app.metadata.model;
 
 import dev.amethyst.app.media.model.MediaType;
 import lombok.Data;

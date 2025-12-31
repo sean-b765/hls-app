@@ -6,12 +6,12 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.amethyst.app.lib.model.FileNameMetadata;
-import dev.amethyst.app.lib.service.FileNameParser;
 import dev.amethyst.app.media.broker.MediaMetadataBrokerService;
 import dev.amethyst.app.media.model.Media;
 import dev.amethyst.app.media.model.MediaInfo;
 import dev.amethyst.app.media.service.MediaInfoPipelineService.MediaInfoPipelineResult.MediaInfoPipelineResultBuilder;
+import dev.amethyst.app.metadata.model.FileNameMetadata;
+import dev.amethyst.app.metadata.service.FileNameParser;
 import dev.amethyst.app.tv.model.TvSeason;
 import dev.amethyst.app.tv.model.TvSeries;
 import dev.amethyst.app.tv.service.TvSeasonService;

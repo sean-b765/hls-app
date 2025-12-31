@@ -12,10 +12,6 @@ import dev.amethyst.app.tv.model.TvSeries;
 
 @Service
 public class SystemEventService extends AbstractCrudService<SystemEvent, String, SystemEventRepository> {
-  protected SystemEventService(SystemEventRepository repository) {
-    super(repository);
-  }
-
   public void record(MediaInfo mediaInfo) {
     SystemEvent event = SystemEvent
         .builder()

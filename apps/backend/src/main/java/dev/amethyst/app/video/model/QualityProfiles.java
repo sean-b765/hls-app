@@ -6,10 +6,10 @@ import lombok.Data;
 import java.util.Arrays;
 
 public class QualityProfiles {
-  public static final QualityProfile QHD1440P = QualityProfile.builder()
-      .name("QHD1440P")
-      .width(2560)
-      .height(1440)
+  public static final QualityProfile SOURCE = QualityProfile.builder()
+      .name("SOURCE")
+      .width(0)
+      .height(0)
       .bandwidthUpperBound(12_000_000)
       .encodingBitRate(8_000_000)
       .build();
@@ -43,7 +43,7 @@ public class QualityProfiles {
       .build();
 
   public static QualityProfile[] AllProfiles = new QualityProfile[] {
-      // QHD1440P,
+      SOURCE,
       FHD1080P,
       HD720P,
       SD480P,

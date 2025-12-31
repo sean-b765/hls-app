@@ -9,11 +9,6 @@ import dev.amethyst.app.user.repository.UserRepository;
 
 @Service
 public class UserService extends AbstractCrudService<User, String, UserRepository> {
-
-  protected UserService(UserRepository repository) {
-    super(repository);
-  }
-
   public Optional<User> findByUsername(String username) {
     return this.repository.findByUsername(username);
   }

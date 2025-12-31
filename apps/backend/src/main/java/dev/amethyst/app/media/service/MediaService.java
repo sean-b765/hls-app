@@ -34,10 +34,6 @@ public class MediaService extends AbstractCrudService<Media, String, MediaReposi
   @Autowired
   private TvSeasonService tvSeasonService;
 
-  protected MediaService(MediaRepository repository) {
-    super(repository);
-  }
-
   public Optional<Media> findByPath(String absolutePath) {
     return this.repository.findByPath(absolutePath);
   }

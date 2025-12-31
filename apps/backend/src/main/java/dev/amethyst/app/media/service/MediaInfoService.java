@@ -8,7 +8,4 @@ import dev.amethyst.app.media.repository.MediaInfoRepository;
 
 @Service
 public class MediaInfoService extends AbstractCrudService<MediaInfo, String, MediaInfoRepository> {
-  protected MediaInfoService(MediaInfoRepository repository) {
-    super(repository);
-  }
 }

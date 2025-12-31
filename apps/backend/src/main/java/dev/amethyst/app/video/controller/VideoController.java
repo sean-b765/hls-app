@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/video")
-public class HlsVideoController {
+public class VideoController {
   @Value("${transcode.dir}")
   private String transcodeDumpDirectory;
   @Autowired

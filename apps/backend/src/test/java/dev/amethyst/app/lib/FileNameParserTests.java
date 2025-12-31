@@ -2,8 +2,8 @@ package dev.amethyst.app.lib;
 
 import org.junit.jupiter.api.Test;
 
-import dev.amethyst.app.lib.model.FileNameMetadata;
-import dev.amethyst.app.lib.service.FileNameParser;
+import dev.amethyst.app.metadata.model.FileNameMetadata;
+import dev.amethyst.app.metadata.service.FileNameParser;
 
 public class FileNameParserTests {
   private FileNameParser fileNameParser = new FileNameParser();
