@@ -27,7 +27,7 @@ public class TranscodeWorker implements Runnable {
       Files.createDirectories(outputDirectory);
 
       String[] arguments = JobType.HLS.equals(this.transcodeJob.getType())
-          ? this.transcodeManager.getTranscodingService().getHlsArgs(this.transcodeJob, this.outputPath)
+          ? this.transcodeManager.getTranscodingService().getHlsArguments(this.transcodeJob, this.outputPath)
           : new String[] {};
 
       Process ffmpegProcess = this.transcodeManager.getFfmpegService().ffmpeg(this.outputPath, arguments);

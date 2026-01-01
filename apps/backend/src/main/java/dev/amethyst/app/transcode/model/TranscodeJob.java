@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -37,5 +38,20 @@ public class TranscodeJob {
   public enum JobType {
     HLS,
     MPEG_DASH
+  }
+
+  public String getWorkerKey() {
+    String tenant = "";
+    if (this.getRoomCode() == null)
+      tenant = this.getUserId();
+    else
+      tenant = this.getRoomCode();
+
+    return StringUtils.joinWith(
+        ":",
+        this.getType().name(),
+        this.getMedia().getId(),
+        this.getQuality().getName(),
+        tenant);
   }
 }
