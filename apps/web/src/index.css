@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Manrope:wght@200..800&display=swap');
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 @import 'tw-animate-css';
@@ -6,6 +6,10 @@
 @custom-variant dark (&:is(.dark *));
 * {
   font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', 'Courier New', Courier, monospace;
 }
 
 @theme {
@@ -126,4 +130,47 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* LEFT (forward) */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  transform-origin: center;
+}
+
+/* Forward */
+.slide-left-enter-from {
+  transform: translateX(20px) scale(0.98);
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-20px) scale(0.98);
+  opacity: 0;
+}
+
+/* Backward */
+.slide-right-enter-from {
+  transform: translateX(-20px) scale(0.98);
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(20px) scale(0.98);
+  opacity: 0;
 }

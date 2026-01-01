@@ -70,6 +70,13 @@ export function useCrudStore<T extends Identifiable>({ api }: CrudStoreOptions<T
     } catch {}
   }
 
+  /**
+   * Reset the store to it's initial state
+   */
+  function $reset() {
+    items.value = []
+  }
+
   return {
     items,
     getById,
@@ -78,5 +85,6 @@ export function useCrudStore<T extends Identifiable>({ api }: CrudStoreOptions<T
     create,
     upsert,
     deleteById,
+    $reset,
   }
 }

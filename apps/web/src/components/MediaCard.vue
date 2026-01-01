@@ -14,13 +14,11 @@ const { thumbnail, durationSeconds, name, releaseDate } = defineProps<{
 </script>
 
 <template>
-  <Card
-    class="flex items-end h-68 group relative overflow-hidden border-2 border-card cursor-pointer"
-  >
-    <div class="h-full w-full z-0 p-1 absolute transition-all group-hover:p-0">
+  <Card class="flex items-end h-80 group relative overflow-hidden cursor-pointer rounded-sm">
+    <div class="h-full w-full z-0 absolute transition-all">
       <div
         v-if="thumbnail"
-        class="bg-cover bg-center w-full h-full transition-all duration-150 rounded-lg group-hover:rounded-xl"
+        class="bg-cover bg-center w-full h-full transition-all"
         :style="{
           backgroundImage: `url('${getImage(thumbnail)}')`,
         }"
@@ -35,29 +33,28 @@ const { thumbnail, durationSeconds, name, releaseDate } = defineProps<{
         ></span>
       </div>
     </div>
-    <CardFooter class="w-full p-1 pt-0 transition-all duration-150 group-hover:p-0">
-      <div
-        class="w-full h-full bg-muted/90 flex backdrop-blur-lg items-start rounded-b-lg gap-2 flex-col py-2 px-4 z-1 transition-all duration-150 group-hover:bg-muted/80 group-hover:pb-3 group-hover:px-5"
-      >
-        <Tooltip>
-          <TooltipTrigger as="div" class="w-full truncate">
-            <span class="w-full truncate text-sm opacity-70 font-bold group-hover:opacity-100">
-              {{ name }}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" :side-offset="30">
-            <span>{{ name }}</span>
-          </TooltipContent>
-        </Tooltip>
-        <span class="w-full truncate flex justify-between">
-          <span class="truncate flex-1 text-xs opacity-50 group-hover:opacity-80">
-            {{ durationSeconds ? formatDuration(durationSeconds) : '' }}
-          </span>
-          <span class="truncate text-xs opacity-50 group-hover:opacity-80">
-            {{ moment(releaseDate).get('year') }}
-          </span>
+    <CardFooter
+      class="w-full h-auto bg-muted/50 flex backdrop-blur-lg items-start gap-1 flex-col pb-2 pt-2 px-3 z-1 transition-all duration-300 rounded-none group-hover:bg-muted/90"
+    >
+      <Tooltip>
+        <TooltipTrigger
+          as="span"
+          class="w-full text-sm truncate opacity-95 font-bold group-hover:opacity-100"
+        >
+          {{ name }}
+        </TooltipTrigger>
+        <TooltipContent side="bottom" :side-offset="30">
+          <span>{{ name }}</span>
+        </TooltipContent>
+      </Tooltip>
+      <span class="w-full truncate flex justify-between">
+        <span class="truncate flex-1 text-xs opacity-90 group-hover:opacity-100">
+          {{ moment(releaseDate).get('year') }}
         </span>
-      </div>
+        <span class="truncate text-xs opacity-60 group-hover:opacity-70">
+          {{ durationSeconds ? formatDuration(durationSeconds) : '' }}
+        </span>
+      </span>
     </CardFooter>
   </Card>
 </template>
