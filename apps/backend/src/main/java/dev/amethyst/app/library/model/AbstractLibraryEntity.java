@@ -1,8 +1,8 @@
-package dev.amethyst.app.config.base;
+package dev.amethyst.app.library.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.amethyst.app.library.model.Library;
+import dev.amethyst.app.config.base.AbstractBaseEntity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LibraryEntity extends AbstractBaseEntity {
+public abstract class AbstractLibraryEntity extends AbstractBaseEntity {
   @ManyToOne
   @JoinColumn(name = "libraryId", referencedColumnName = "id")
   @JsonManagedReference

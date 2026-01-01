@@ -3,7 +3,7 @@ package dev.amethyst.app.media.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import dev.amethyst.app.config.base.LibraryEntity;
+import dev.amethyst.app.library.model.AbstractLibraryEntity;
 import dev.amethyst.app.tv.model.TvSeason;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Media extends LibraryEntity {
+public class Media extends AbstractLibraryEntity {
   /**
    * The absolute path to the media file
    */

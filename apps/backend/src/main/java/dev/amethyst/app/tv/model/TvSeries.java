@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import dev.amethyst.app.config.base.LibraryEntity;
+import dev.amethyst.app.library.model.AbstractLibraryEntity;
 import dev.amethyst.app.tv.handler.TvSeriesEventListener;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(value = { TvSeriesEventListener.class })
-public class TvSeries extends LibraryEntity {
+public class TvSeries extends AbstractLibraryEntity {
   @Column(unique = true)
   private String externalId;
 
